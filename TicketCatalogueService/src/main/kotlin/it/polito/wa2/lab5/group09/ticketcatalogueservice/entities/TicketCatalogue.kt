@@ -9,4 +9,6 @@ data class TicketCatalogue(
     val ticketId: Long,
     val type: String,
     val price: Float,
+    val maxAge : Int? = null,
+    val minAge : Int? = null
 )

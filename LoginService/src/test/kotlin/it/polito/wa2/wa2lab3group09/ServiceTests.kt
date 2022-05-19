@@ -1,9 +1,9 @@
 package it.polito.wa2.wa2lab3group09
 
-import it.polito.wa2.wa2lab3group09.dtos.UserDTO
-import it.polito.wa2.wa2lab3group09.repositories.ActivationRepository
-import it.polito.wa2.wa2lab3group09.repositories.UserRepository
-import it.polito.wa2.wa2lab3group09.services.UserService
+import it.polito.wa2.wa2lab3group09.loginservice.dtos.UserDTO
+import it.polito.wa2.wa2lab3group09.loginservice.repositories.ActivationRepository
+import it.polito.wa2.wa2lab3group09.loginservice.repositories.UserRepository
+import it.polito.wa2.wa2lab3group09.loginservice.services.UserService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,7 +1,6 @@
-package it.polito.wa2.wa2lab4group09.security
+package it.polito.wa2.lab5.group09.ticketcatalogueservice.security
 
-import it.polito.wa2.wa2lab4group09.travelerservice.AppProperties
-import it.polito.wa2.wa2lab4group09.travelerservice.security.JWTAuthorizationFilter
+import it.polito.wa2.wa2lab4group09.AppProperties
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
@@ -12,7 +11,6 @@ import org.springframework.security.config.http.SessionCreationPolicy
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig : WebSecurityConfigurerAdapter() {
-
     @Autowired
     lateinit var appProperties: AppProperties
 

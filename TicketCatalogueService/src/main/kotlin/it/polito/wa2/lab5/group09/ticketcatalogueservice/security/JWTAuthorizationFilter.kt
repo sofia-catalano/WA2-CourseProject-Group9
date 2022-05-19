@@ -1,4 +1,4 @@
-package it.polito.wa2.wa2lab4group09.travelerservice.security
+package it.polito.wa2.lab5.group09.ticketcatalogueservice.security
 
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken

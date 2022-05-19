@@ -1,4 +1,4 @@
-package it.polito.wa2.wa2lab3group09.security
+package it.polito.wa2.wa2lab3group09.loginservice.security
 
 
 import com.fasterxml.jackson.databind.ObjectMapper

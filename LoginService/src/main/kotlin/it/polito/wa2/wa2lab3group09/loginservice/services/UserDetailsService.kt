@@ -1,6 +1,6 @@
-package it.polito.wa2.wa2lab3group09.services
+package it.polito.wa2.wa2lab3group09.loginservice.services
 
-import it.polito.wa2.wa2lab3group09.repositories.UserRepository
+import it.polito.wa2.wa2lab3group09.loginservice.repositories.UserRepository
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User

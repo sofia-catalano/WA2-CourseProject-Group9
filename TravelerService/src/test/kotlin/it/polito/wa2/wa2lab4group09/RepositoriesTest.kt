@@ -3,13 +3,13 @@ package it.polito.wa2.wa2lab4group09
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import it.polito.wa2.wa2lab4group09.dtos.toDTO
-import it.polito.wa2.wa2lab4group09.entities.TicketPurchased
-import it.polito.wa2.wa2lab4group09.entities.UserDetails
-import it.polito.wa2.wa2lab4group09.repositories.UserDetailsRepository
-import it.polito.wa2.wa2lab4group09.entities.Role
-import it.polito.wa2.wa2lab4group09.repositories.TicketPurchasedRepository
-import it.polito.wa2.wa2lab4group09.services.unwrap
+import it.polito.wa2.wa2lab4group09.travelerservice.dtos.toDTO
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.TicketPurchased
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.UserDetails
+import it.polito.wa2.wa2lab4group09.travelerservice.repositories.UserDetailsRepository
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.Role
+import it.polito.wa2.wa2lab4group09.travelerservice.repositories.TicketPurchasedRepository
+import it.polito.wa2.wa2lab4group09.travelerservice.services.unwrap
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach

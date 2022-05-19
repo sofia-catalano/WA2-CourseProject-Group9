@@ -1,4 +1,4 @@
-package it.polito.wa2.wa2lab3group09
+package it.polito.wa2.wa2lab3group09.loginservice
 
 import io.github.bucket4j.Bandwidth
 import io.github.bucket4j.Bucket

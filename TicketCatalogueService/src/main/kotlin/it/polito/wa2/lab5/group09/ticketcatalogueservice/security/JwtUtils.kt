@@ -1,10 +1,8 @@
-package it.polito.wa2.wa2lab4group09.travelerservice.security
+package it.polito.wa2.lab5.group09.ticketcatalogueservice.security
 
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import it.polito.wa2.wa2lab4group09.travelerservice.dtos.UserDetailsDTO
-import it.polito.wa2.wa2lab4group09.travelerservice.entities.Role
 
 object JwtUtils {
 
@@ -19,7 +17,7 @@ object JwtUtils {
     }
 
 
-    fun getDetailsFromJwtToken (authToken: String, key : String): UserDetailsDTO {
+    fun getDetailsFromJwtToken (authToken: String, key : String): UserDetailsDTO{
         try {
             //jwt automatically control that the expiry timestamp (named “exp”) is still valid
             val jwt = Jwts.parserBuilder().setSigningKey(Keys.hmacShaKeyFor(key.toByteArray())).build().parseClaimsJws(authToken)
@@ -31,4 +29,10 @@ object JwtUtils {
             throw IllegalArgumentException("${e.message}")
         }
     }
+}
+
+data class UserDetailsDTO(val username : String, val role : Role)
+
+enum class Role{
+    CUSTOMER,ADMIN
 }

@@ -1,6 +1,6 @@
-package it.polito.wa2.wa2lab3group09.dtos
+package it.polito.wa2.wa2lab3group09.loginservice.dtos
 
-import it.polito.wa2.wa2lab3group09.entities.Activation
+import it.polito.wa2.wa2lab3group09.loginservice.entities.Activation
 import java.time.LocalDateTime
 import java.util.*
 
@@ -12,6 +12,6 @@ data class ActivationDTO(
 )
 
 
-fun Activation.toDTO() : ActivationDTO{
+fun Activation.toDTO() : ActivationDTO {
     return ActivationDTO(id, attemptCounter, expirationDate, activationCode)
 }

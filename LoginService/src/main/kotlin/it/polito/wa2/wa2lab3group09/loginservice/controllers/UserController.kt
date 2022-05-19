@@ -1,8 +1,8 @@
-package it.polito.wa2.wa2lab3group09.controllers
+package it.polito.wa2.wa2lab3group09.loginservice.controllers
 
 
-import it.polito.wa2.wa2lab3group09.dtos.UserDTO
-import it.polito.wa2.wa2lab3group09.services.UserService
+import it.polito.wa2.wa2lab3group09.loginservice.dtos.UserDTO
+import it.polito.wa2.wa2lab3group09.loginservice.services.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult

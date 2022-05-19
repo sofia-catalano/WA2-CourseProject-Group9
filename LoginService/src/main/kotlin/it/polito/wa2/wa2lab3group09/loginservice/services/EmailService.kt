@@ -1,4 +1,4 @@
-package it.polito.wa2.wa2lab3group09.services
+package it.polito.wa2.wa2lab3group09.loginservice.services
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mail.SimpleMailMessage

@@ -1,6 +1,6 @@
-package it.polito.wa2.wa2lab4group09.dtos
+package it.polito.wa2.wa2lab4group09.travelerservice.dtos
 
-import it.polito.wa2.wa2lab4group09.entities.TicketPurchased
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.TicketPurchased
 import java.sql.Timestamp
 import java.util.UUID
 
@@ -12,6 +12,6 @@ data class TicketPurchasedDTO(
     var jws: String
 )
 
-fun TicketPurchased.toDTO(): TicketPurchasedDTO{
+fun TicketPurchased.toDTO(): TicketPurchasedDTO {
     return TicketPurchasedDTO(sub, iat, exp, zid, jws)
 }

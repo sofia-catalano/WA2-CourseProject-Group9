@@ -19,36 +19,45 @@ class AdminController(
     val orderRepository: OrderRepository
     ) {
 
-    private val travelerClient = WebClient.create("http://localhost:8081")
 
-    //@PreAuthorize("hasRole('ROLE_CUSTOMER')
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/admin/tickets")
     suspend fun addTicketToCatalogue(
         @RequestHeader("Authorization") jwt:String,
         @RequestBody ticket : TicketCatalogue
     ): ResponseEntity<Any> {
-
-        val newToken = jwt.replace("Bearer", "")
         return try {
+            //TODO CHIEDERE SE DEVE PASSARE PER IL SERVICE
             ticketCatalogueRepository.save(ticket)
-            ResponseEntity("Ticket added to catalogue", HttpStatus.OK)
+            ResponseEntity("Ticket added to catalogue", HttpStatus.CREATED)
         } catch (t: Throwable) {
             ResponseEntity(t.message, HttpStatus.BAD_REQUEST)
         }
     }
 
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/admin/orders")
-    suspend fun getAllUsersOrders() : Flow<Order> {
-        return orderRepository.findAll()
+    suspend fun getAllUsersOrders(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
+        return try {
+            val orders = ticketCatalogueService.getAllUsersOrders()
+            ResponseEntity(orders,HttpStatus.OK)
+        }catch (t: Throwable) {
+            ResponseEntity(t.message, HttpStatus.BAD_REQUEST)
+        }
+
     }
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/admin/orders/{userId}")
-    suspend fun getUserOrders(@PathVariable userId:String, @RequestHeader("Authorization") jwt:String ) : Flow<Order>{
-        val newToken = jwt.replace("Bearer", "")
-        return orderRepository.findByCustomerUsername(newToken) //TODO replicare filtri token?
+    suspend fun getUserOrders(@PathVariable userId:String, @RequestHeader("Authorization") jwt:String ) : ResponseEntity<Any>{
+        return try {
+            val orders = ticketCatalogueService.getUserOrders(userId)
+            ResponseEntity(orders,HttpStatus.OK)
+        }catch (t: Throwable) {
+            ResponseEntity(t.message, HttpStatus.BAD_REQUEST)
+        }
     }
 
 

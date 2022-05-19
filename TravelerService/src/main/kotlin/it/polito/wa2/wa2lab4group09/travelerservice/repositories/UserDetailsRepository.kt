@@ -1,6 +1,6 @@
-package it.polito.wa2.wa2lab4group09.repositories
+package it.polito.wa2.wa2lab4group09.travelerservice.repositories
 
-import it.polito.wa2.wa2lab4group09.entities.UserDetails
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.UserDetails
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository

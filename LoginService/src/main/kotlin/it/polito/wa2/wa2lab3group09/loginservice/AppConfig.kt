@@ -1,4 +1,4 @@
-package it.polito.wa2.wa2lab3group09
+package it.polito.wa2.wa2lab3group09.loginservice
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration

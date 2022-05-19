@@ -1,11 +1,11 @@
-package it.polito.wa2.wa2lab3group09.services
-import it.polito.wa2.wa2lab3group09.dtos.ActivationDTO
-import it.polito.wa2.wa2lab3group09.dtos.UserDTO
-import it.polito.wa2.wa2lab3group09.dtos.toDTO
-import it.polito.wa2.wa2lab3group09.entities.Activation
-import it.polito.wa2.wa2lab3group09.entities.User
-import it.polito.wa2.wa2lab3group09.repositories.ActivationRepository
-import it.polito.wa2.wa2lab3group09.repositories.UserRepository
+package it.polito.wa2.wa2lab3group09.loginservice.services
+import it.polito.wa2.wa2lab3group09.loginservice.dtos.ActivationDTO
+import it.polito.wa2.wa2lab3group09.loginservice.dtos.UserDTO
+import it.polito.wa2.wa2lab3group09.loginservice.dtos.toDTO
+import it.polito.wa2.wa2lab3group09.loginservice.entities.Activation
+import it.polito.wa2.wa2lab3group09.loginservice.entities.User
+import it.polito.wa2.wa2lab3group09.loginservice.repositories.ActivationRepository
+import it.polito.wa2.wa2lab3group09.loginservice.repositories.UserRepository
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -34,7 +34,8 @@ class UserService(val emailService: EmailService,
         val userEntity = User(userDTO.username, passwordEncoded.encode(userDTO.password), userDTO.email)
 
         val userElement = userRepository.save(userEntity)
-        val activation = activationRepository.save(Activation()
+        val activation = activationRepository.save(
+            Activation()
             .apply {
                 user = userEntity
                 expirationDate = e_date

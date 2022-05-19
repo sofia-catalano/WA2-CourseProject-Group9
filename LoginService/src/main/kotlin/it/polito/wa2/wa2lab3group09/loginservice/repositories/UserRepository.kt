@@ -1,6 +1,6 @@
-package it.polito.wa2.wa2lab3group09.repositories
+package it.polito.wa2.wa2lab3group09.loginservice.repositories
 
-import it.polito.wa2.wa2lab3group09.entities.User
+import it.polito.wa2.wa2lab3group09.loginservice.entities.User
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository

@@ -1,11 +1,10 @@
-package it.polito.wa2.wa2lab4group09.services
+package it.polito.wa2.wa2lab4group09.travelerservice.services
 
-import it.polito.wa2.wa2lab4group09.dtos.TicketPurchasedDTO
-import it.polito.wa2.wa2lab4group09.dtos.UserDetailsDTO
-import it.polito.wa2.wa2lab4group09.dtos.toDTO
-import it.polito.wa2.wa2lab4group09.repositories.TicketPurchasedRepository
-import it.polito.wa2.wa2lab4group09.repositories.UserDetailsRepository
-import it.polito.wa2.wa2lab4group09.security.JwtUtils
+import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TicketPurchasedDTO
+import it.polito.wa2.wa2lab4group09.travelerservice.dtos.UserDetailsDTO
+import it.polito.wa2.wa2lab4group09.travelerservice.dtos.toDTO
+import it.polito.wa2.wa2lab4group09.travelerservice.repositories.TicketPurchasedRepository
+import it.polito.wa2.wa2lab4group09.travelerservice.repositories.UserDetailsRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 

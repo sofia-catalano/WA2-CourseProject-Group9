@@ -2,13 +2,13 @@ package it.polito.wa2.wa2lab4group09
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import it.polito.wa2.wa2lab4group09.controllers.ActionTicket
-import it.polito.wa2.wa2lab4group09.controllers.UserDetailsUpdate
-import it.polito.wa2.wa2lab4group09.dtos.UserDetailsDTO
-import it.polito.wa2.wa2lab4group09.entities.Role
-import it.polito.wa2.wa2lab4group09.entities.TicketPurchased
-import it.polito.wa2.wa2lab4group09.entities.UserDetails
-import it.polito.wa2.wa2lab4group09.repositories.UserDetailsRepository
+import it.polito.wa2.wa2lab4group09.travelerservice.controllers.ActionTicket
+import it.polito.wa2.wa2lab4group09.travelerservice.controllers.UserDetailsUpdate
+import it.polito.wa2.wa2lab4group09.travelerservice.dtos.UserDetailsDTO
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.Role
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.TicketPurchased
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.UserDetails
+import it.polito.wa2.wa2lab4group09.travelerservice.repositories.UserDetailsRepository
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase

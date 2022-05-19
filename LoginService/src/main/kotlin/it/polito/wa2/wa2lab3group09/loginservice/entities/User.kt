@@ -1,4 +1,4 @@
-package it.polito.wa2.wa2lab3group09.entities
+package it.polito.wa2.wa2lab3group09.loginservice.entities
 
 import org.jetbrains.annotations.NotNull
 import javax.persistence.*

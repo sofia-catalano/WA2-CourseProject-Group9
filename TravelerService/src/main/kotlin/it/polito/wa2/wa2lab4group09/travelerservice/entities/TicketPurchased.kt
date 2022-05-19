@@ -1,8 +1,10 @@
-package it.polito.wa2.wa2lab4group09.entities
+package it.polito.wa2.wa2lab4group09.travelerservice.entities
 
 import java.sql.Timestamp
 import java.util.*
 import javax.persistence.*
+
+//TODO implement validFrom and type of a ticket
 
 @Entity
 @Table(name="ticket_purchased")

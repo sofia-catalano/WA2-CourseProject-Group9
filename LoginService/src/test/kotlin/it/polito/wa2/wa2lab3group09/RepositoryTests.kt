@@ -1,10 +1,10 @@
 package it.polito.wa2.wa2lab3group09
 
-import it.polito.wa2.wa2lab3group09.dtos.toDTO
-import it.polito.wa2.wa2lab3group09.entities.Activation
-import it.polito.wa2.wa2lab3group09.entities.User
-import it.polito.wa2.wa2lab3group09.repositories.ActivationRepository
-import it.polito.wa2.wa2lab3group09.repositories.UserRepository
+import it.polito.wa2.wa2lab3group09.loginservice.dtos.toDTO
+import it.polito.wa2.wa2lab3group09.loginservice.entities.Activation
+import it.polito.wa2.wa2lab3group09.loginservice.entities.User
+import it.polito.wa2.wa2lab3group09.loginservice.repositories.ActivationRepository
+import it.polito.wa2.wa2lab3group09.loginservice.repositories.UserRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach

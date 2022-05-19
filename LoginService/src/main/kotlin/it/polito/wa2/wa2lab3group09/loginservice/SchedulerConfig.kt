@@ -1,4 +1,4 @@
-package it.polito.wa2.wa2lab3group09
+package it.polito.wa2.wa2lab3group09.loginservice
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Configuration

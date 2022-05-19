@@ -1,6 +1,6 @@
-package it.polito.wa2.wa2lab3group09.security
+package it.polito.wa2.wa2lab3group09.loginservice.security
 
-import it.polito.wa2.wa2lab3group09.AppProperties
+import it.polito.wa2.wa2lab3group09.loginservice.AppProperties
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

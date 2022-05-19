@@ -1,4 +1,4 @@
-package it.polito.wa2.wa2lab4group09.travelerservice
+package it.polito.wa2.wa2lab4group09
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component

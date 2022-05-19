@@ -1,4 +1,4 @@
-package it.polito.wa2.wa2lab4group09.entities
+package it.polito.wa2.wa2lab4group09.travelerservice.entities
 
 import javax.persistence.*
 

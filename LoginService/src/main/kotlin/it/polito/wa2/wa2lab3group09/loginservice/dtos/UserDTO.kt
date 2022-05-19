@@ -1,5 +1,5 @@
-package it.polito.wa2.wa2lab3group09.dtos
-import it.polito.wa2.wa2lab3group09.entities.User
+package it.polito.wa2.wa2lab3group09.loginservice.dtos
+import it.polito.wa2.wa2lab3group09.loginservice.entities.User
 import org.jetbrains.annotations.NotNull
 import javax.validation.constraints.Email
 import javax.validation.constraints.Pattern
@@ -20,6 +20,6 @@ data class UserDTO(
     val password: String
 )
 
-fun User.toDTO() : UserDTO{
+fun User.toDTO() : UserDTO {
     return UserDTO(getId(), username, email, password)
 }
