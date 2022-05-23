@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS ticket_catalogue
 CREATE TABLE IF NOT EXISTS orders
 (
     orderId           uuid PRIMARY KEY,
-    status            pg_enum(0, 1, 2) not null,
+    status            varchar(20) NOT NULL CHECK (status IN('PENDING', 'CANCELED', 'ACCEPTED')),
     ticketCatalogueId bigint           not null,
     quantity          int              not null,
     customerUsername  varchar(255)     not null
