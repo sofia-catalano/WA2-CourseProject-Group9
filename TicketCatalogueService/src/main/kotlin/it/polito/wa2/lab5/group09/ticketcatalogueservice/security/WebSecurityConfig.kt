@@ -43,12 +43,9 @@ class WebSecurityConfig {
             .and()
             .csrf().disable()
             .addFilterAt(authorizationFilter, SecurityWebFiltersOrder.AUTHORIZATION)
-
             .authorizeExchange()
-
             .pathMatchers("/**")
             .authenticated()
-
             .and()
             .build()
     }

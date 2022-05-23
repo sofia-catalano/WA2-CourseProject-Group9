@@ -1,17 +1,15 @@
 package it.polito.wa2.lab5.group09.ticketcatalogueservice.security
 
-import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
-import org.springframework.stereotype.Component
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Mono
-
 
 
 class JWTAuthorizationFilter(
@@ -30,7 +28,14 @@ class JWTAuthorizationFilter(
             val userDetailsDTO = JwtUtils.getDetailsFromJwtToken(token.replace("Bearer", ""), key)
             val authorities = HashSet<GrantedAuthority>(1)
             authorities.add(SimpleGrantedAuthority("ROLE_"+userDetailsDTO.role.toString()))
+
+            //forced security context value
+            val ctx: SecurityContext = SecurityContextHolder.createEmptyContext()
+            SecurityContextHolder.setContext(ctx)
+            ctx.authentication = UsernamePasswordAuthenticationToken(userDetailsDTO.username, null, authorities)
+
             UsernamePasswordAuthenticationToken(userDetailsDTO.username, null, authorities)
+
         } catch (e: Exception) {
             return null
         }

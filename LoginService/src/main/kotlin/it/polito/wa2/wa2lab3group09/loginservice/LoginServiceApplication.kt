@@ -9,11 +9,6 @@ import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
 import java.util.*
 
-@SpringBootApplication
-class Wa2Lab3Group09Application
-
-
-
 @Bean
 fun javaMailSender(): JavaMailSender {
     val mailSender = JavaMailSenderImpl()
