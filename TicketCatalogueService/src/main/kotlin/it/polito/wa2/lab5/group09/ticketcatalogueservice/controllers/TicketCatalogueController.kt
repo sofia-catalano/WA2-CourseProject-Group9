@@ -2,7 +2,9 @@ package it.polito.wa2.lab5.group09.ticketcatalogueservice.controllers
 
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Order
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Status
+import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogue
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.OrderRepository
+import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.TicketCatalogueRepository
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.security.JwtUtils
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.security.Role
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.services.TicketCatalogueService
@@ -34,7 +36,8 @@ import java.util.*
 @RestController
 class TicketCatalogueController(
     val ticketCatalogueService: TicketCatalogueService,
-    val orderRepository: OrderRepository
+    val orderRepository: OrderRepository,
+    val ticketCatalogueRepository: TicketCatalogueRepository
 ) {
 
     private val travelerClient = WebClient.create("http://localhost:8081")
@@ -46,6 +49,12 @@ class TicketCatalogueController(
     @GetMapping("/hello")
     suspend fun hello(@RequestHeader("Authorization") jwt: String) : String{
         return "hello I'm testing"
+    }
+
+    @GetMapping("/prova")
+    suspend fun create(@RequestHeader("Authorization") jwt: String) : String {
+        ticketCatalogueRepository.save(TicketCatalogue( type="seasonal", price = 2.3f, maxAge = 100, minAge = 10))
+        return "Ok"
     }
 
     @GetMapping("/orders")
