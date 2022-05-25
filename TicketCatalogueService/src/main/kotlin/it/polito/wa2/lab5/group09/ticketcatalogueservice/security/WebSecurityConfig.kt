@@ -45,7 +45,7 @@ class WebSecurityConfig {
             .addFilterAt(authorizationFilter, SecurityWebFiltersOrder.AUTHORIZATION)
             .authorizeExchange()
             .pathMatchers("/shop/**").hasAuthority("ROLE_CUSTOMER")
-            .pathMatchers("/order/**").hasAuthority("ROLE_CUSTOMER")
+            .pathMatchers("/orders/**").hasAuthority("ROLE_CUSTOMER")
             .pathMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
             .and()
             .build()
