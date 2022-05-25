@@ -1,7 +1,6 @@
-package it.polito.wa2.wa2lab4group09.security
+package it.polito.wa2.wa2lab4group09.travelerservice.security
 
 import it.polito.wa2.wa2lab4group09.travelerservice.AppProperties
-import it.polito.wa2.wa2lab4group09.travelerservice.security.JWTAuthorizationFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
