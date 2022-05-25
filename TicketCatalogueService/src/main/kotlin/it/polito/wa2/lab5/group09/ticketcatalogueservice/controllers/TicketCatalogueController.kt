@@ -1,5 +1,6 @@
 package it.polito.wa2.lab5.group09.ticketcatalogueservice.controllers
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Order
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Status
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogue
@@ -13,10 +14,16 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.kafka.support.KafkaHeaders
+import org.springframework.messaging.Message
+import org.springframework.messaging.support.MessageBuilder
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -37,15 +44,18 @@ import java.util.*
 class TicketCatalogueController(
     val ticketCatalogueService: TicketCatalogueService,
     val orderRepository: OrderRepository,
-    val ticketCatalogueRepository: TicketCatalogueRepository
+    val ticketCatalogueRepository: TicketCatalogueRepository,
+    @Value("\${spring.kafka.producer.topics.product}") val topic: String,
+    @Autowired
+    private val kafkaTemplate: KafkaTemplate<String, Any>
 ) {
-
+    private val log = LoggerFactory.getLogger(javaClass)
     private val travelerClient = WebClient.create("http://localhost:8081")
 
     @Value("\${application.jwt.jwtSecret}")
     lateinit var key: String
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/hello")
     suspend fun hello(@RequestHeader("Authorization") jwt: String) : String{
         return "hello I'm testing"
@@ -100,17 +110,17 @@ class TicketCatalogueController(
 
     //TicketId sia nella richiesta del path che nel body?
 
-    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+
     @PostMapping("/shop/{ticketType}")
     suspend fun buyTickets(
         @PathVariable ticketType: String,
         @RequestHeader("Authorization") jwt: String,
         @RequestBody purchasingInfo: PurchasingInfo
     ): ResponseEntity<Any> = coroutineScope {
-
+        val newToken = jwt.replace("Bearer", "")
         var isValid = true
         val ticketCatalogue = ticketCatalogueService.getTicket(purchasingInfo.ticketId)
-        val username = JwtUtils.getDetailsFromJwtToken(jwt, key).username
+        val username = JwtUtils.getDetailsFromJwtToken(newToken, key).username
 
         if (ticketCatalogue.maxAge != null || ticketCatalogue.minAge != null) {
 
@@ -138,10 +148,19 @@ class TicketCatalogueController(
                     Status.PENDING,
                     purchasingInfo.ticketId,
                     purchasingInfo.numberOfTickets,
-                    username
+                    username,
                 )
             )
-            //todo -> inviare richiesta al payement service
+            val transaction=TransactionInfo(order.orderId!!,ticketCatalogue.price*purchasingInfo.numberOfTickets, purchasingInfo.paymentInfo )
+            log.info("Receiving product request")
+            log.info("Sending message to Kafka {}", order)
+            val message: Message<TransactionInfo> = MessageBuilder
+                .withPayload(transaction)
+                .setHeader(KafkaHeaders.TOPIC, topic)
+                .setHeader("X-Custom-Header", "Custom header here")
+                .build()
+            kafkaTemplate.send(message)
+            log.info("Message sent with success")
             ResponseEntity( order.orderId, HttpStatus.OK)
         } else {
             ResponseEntity("not permitted",HttpStatus.BAD_REQUEST)
@@ -162,6 +181,15 @@ data class PaymentInfo(
 )
 
 data class PurchasingInfo(val numberOfTickets: Int, val ticketId: Long, val paymentInfo: PaymentInfo)
+
+data class TransactionInfo(
+    @JsonProperty("orderId")
+    val orderId: UUID,
+    @JsonProperty("amount")
+    val amount: Float,
+    @JsonProperty("paymentInfo")
+    val paymentInfo: PaymentInfo
+)
 
 data class UserDetailDTO(
     val username: String,

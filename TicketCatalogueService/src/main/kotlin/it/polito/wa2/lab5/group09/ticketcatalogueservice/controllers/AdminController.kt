@@ -21,7 +21,6 @@ class AdminController(
 
 
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/admin/tickets")
     suspend fun addTicketToCatalogue(
         @RequestHeader("Authorization") jwt:String,

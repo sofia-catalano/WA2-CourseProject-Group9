@@ -17,7 +17,11 @@ class JWTAuthorizationFilter(
 ) : WebFilter {
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+    /*    println("Authorization")
+        println(exchange.request.headers.getFirst("Authorization")!!)*/
+        println(exchange.request.headers)
         val token = getAuthentication(exchange.request.headers.getFirst("Authorization")!!)
+        println("token")
         println(token)
         return chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(token));
     }
@@ -28,13 +32,16 @@ class JWTAuthorizationFilter(
             val userDetailsDTO = JwtUtils.getDetailsFromJwtToken(token.replace("Bearer", ""), key)
             val authorities = HashSet<GrantedAuthority>(1)
             authorities.add(SimpleGrantedAuthority("ROLE_"+userDetailsDTO.role.toString()))
-
+            println("auth")
+            println(userDetailsDTO.role.toString())
             //forced security context value
             val ctx: SecurityContext = SecurityContextHolder.createEmptyContext()
             SecurityContextHolder.setContext(ctx)
             ctx.authentication = UsernamePasswordAuthenticationToken(userDetailsDTO.username, null, authorities)
-
+            println(   ctx.authentication )
+            ReactiveSecurityContextHolder.withAuthentication(ctx.authentication)
             UsernamePasswordAuthenticationToken(userDetailsDTO.username, null, authorities)
+
 
         } catch (e: Exception) {
             return null
