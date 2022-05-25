@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS ticket_catalogue
 
 CREATE TABLE IF NOT EXISTS orders
 (
-    order_id            uuid PRIMARY KEY,
+    order_id            uuid default gen_random_uuid() PRIMARY KEY,
     status              varchar(20)  NOT NULL CHECK (status IN ('PENDING', 'CANCELED', 'ACCEPTED')),
     ticket_catalogue_id bigint       not null,
     quantity            int          not null,

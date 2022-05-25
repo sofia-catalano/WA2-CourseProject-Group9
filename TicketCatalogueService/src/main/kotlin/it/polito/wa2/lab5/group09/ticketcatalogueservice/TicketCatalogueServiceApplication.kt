@@ -1,7 +1,6 @@
 package it.polito.wa2.lab5.group09.ticketcatalogueservice
 
 import io.r2dbc.spi.ConnectionFactory
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

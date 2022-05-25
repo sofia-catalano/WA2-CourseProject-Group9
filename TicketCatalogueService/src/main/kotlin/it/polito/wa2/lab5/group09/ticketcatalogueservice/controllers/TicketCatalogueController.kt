@@ -144,11 +144,10 @@ class TicketCatalogueController(
             //mettere PENDING IN ORDER, poi mando al payment service, cambiare status ordine a seconda se va a buon fine o meno, se va a buon fine aggiungere in db nei ticketpurchased
             val order = orderRepository.save(
                 Order(
-                    UUID.randomUUID(),
-                    Status.PENDING,
-                    purchasingInfo.ticketId,
-                    purchasingInfo.numberOfTickets,
-                    username,
+                    status = Status.PENDING,
+                    ticketCatalogueId = purchasingInfo.ticketId,
+                    quantity = purchasingInfo.numberOfTickets,
+                    customerUsername = username,
                 )
             )
             val transaction=TransactionInfo(order.orderId!!,ticketCatalogue.price*purchasingInfo.numberOfTickets, purchasingInfo.paymentInfo )

@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
@@ -35,7 +36,7 @@ class JWTAuthorizationFilter(
             println("auth")
             println(userDetailsDTO.role.toString())
             //forced security context value
-            val ctx: SecurityContext = SecurityContextHolder.createEmptyContext()
+            val ctx: SecurityContext = SecurityContextHolder.getContext()
             SecurityContextHolder.setContext(ctx)
             ctx.authentication = UsernamePasswordAuthenticationToken(userDetailsDTO.username, null, authorities)
             println(   ctx.authentication )
