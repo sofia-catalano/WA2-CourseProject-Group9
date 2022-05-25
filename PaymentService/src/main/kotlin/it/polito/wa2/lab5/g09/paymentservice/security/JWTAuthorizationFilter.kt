@@ -1,4 +1,4 @@
-package it.polito.wa2.lab5.group09.ticketcatalogueservice.security
+package it.polito.wa2.lab5.g09.paymentservice.security
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.GrantedAuthority

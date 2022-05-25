@@ -1,4 +1,4 @@
-package it.polito.wa2.lab5.group09.ticketcatalogueservice
+package it.polito.wa2.lab5.g09.paymentservice
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component

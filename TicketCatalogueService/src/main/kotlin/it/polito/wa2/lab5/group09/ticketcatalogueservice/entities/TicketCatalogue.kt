@@ -4,11 +4,11 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 
 @Table("ticket_catalogue")
-data class TicketCatalogue(
+data class TicketCatalogue (
     @Id
-    val ticketId: Long,
+    val ticketId: Long? = null,
     val type: String,
     val price: Float,
     val maxAge : Int? = null,
-    val minAge : Int? = null
+    val minAge : Int? = null,
 )

@@ -1,6 +1,6 @@
-package it.polito.wa2.lab5.group09.ticketcatalogueservice.security
+package it.polito.wa2.lab5.g09.paymentservice.security
 
-import it.polito.wa2.lab5.group09.ticketcatalogueservice.AppProperties
+import it.polito.wa2.lab5.g09.paymentservice.AppProperties
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

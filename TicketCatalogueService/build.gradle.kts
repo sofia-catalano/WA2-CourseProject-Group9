@@ -32,7 +32,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.security:spring-security-test")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+
 }
 
 tasks.withType<KotlinCompile> {

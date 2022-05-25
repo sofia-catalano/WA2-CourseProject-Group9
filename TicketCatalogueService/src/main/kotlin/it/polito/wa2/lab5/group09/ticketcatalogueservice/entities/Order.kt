@@ -7,7 +7,7 @@ import java.util.UUID
 @Table("orders")
 data class Order(
     @Id
-    val orderId: UUID = UUID.randomUUID(),
+    val orderId: UUID? = UUID.randomUUID(),
     val status: Status = Status.PENDING,
     val ticketCatalogueId: Long,
     val quantity: Int,
