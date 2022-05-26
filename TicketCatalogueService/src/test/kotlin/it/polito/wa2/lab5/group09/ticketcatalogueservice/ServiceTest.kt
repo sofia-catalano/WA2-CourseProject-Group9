@@ -117,6 +117,18 @@ class ServiceTest {
 
     @Test
     @WithMockUser(username = "usernameTest", password = "pwd", roles = ["CUSTOMER"])
+    fun getOrderByUUIDNotAllowed(){
+            Assertions.assertThrows(IllegalArgumentException::class.java){
+                runBlocking {
+                    lateinit var orderId : UUID
+                    orderRepository.findAll().collect {  orderId = it.orderId!! }
+                    ticketCatalogueService.getOrderByUUID(orderId, generateAdminToken(_keyUser))
+                }
+            }
+    }
+
+    @Test
+    @WithMockUser(username = "usernameTest", password = "pwd", roles = ["CUSTOMER"])
     fun getCatalogue(){
         runBlocking {
             val catalogue = ticketCatalogueService.getCatalogue()
