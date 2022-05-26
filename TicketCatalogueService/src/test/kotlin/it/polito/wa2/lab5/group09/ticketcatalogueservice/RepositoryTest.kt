@@ -5,6 +5,7 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Status
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogue
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.OrderRepository
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.TicketCatalogueRepository
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.runBlocking
@@ -86,6 +87,33 @@ class RepositoryTest {
             val orderFound = orderRepository.findById(orderUpdated.orderId!!)
 
             Assertions.assertEquals(Status.ACCEPTED, orderFound!!.status)
+        }
+    }
+
+    @Test
+    fun getAllUsersOrders(){
+        runBlocking {
+            val userOrders = orderRepository.findAll()
+            Assertions.assertEquals(userOrders.count(), 1)
+        }
+    }
+
+    @Test
+    fun getOrderByCustomerUsername(){
+        runBlocking {
+            val orderFound = orderRepository.findByCustomerUsername(orderEntity.customerUsername)
+            Assertions.assertEquals(orderEntity.customerUsername, orderFound.first().customerUsername)
+        }
+    }
+
+    @Test
+    fun createTicketCatalogue(){
+        runBlocking {
+            val newTicketCatalogue = ticketCatalogueRepository.save(ticketCatalogueEntity)
+            val ticketCatalogueFound = ticketCatalogueRepository.findById(newTicketCatalogue.ticketId!!)
+            Assertions.assertEquals(2F, ticketCatalogueFound!!.price)
+            Assertions.assertEquals("DEF", ticketCatalogueFound.zones)
+            Assertions.assertEquals("updatedTestType", ticketCatalogueFound.type)
         }
     }
 
