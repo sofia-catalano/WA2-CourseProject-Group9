@@ -9,7 +9,7 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.OrderRepos
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.TicketCatalogueRepository
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.security.Role
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.services.TicketCatalogueService
-import kotlinx.coroutines.flow.Flow
+import it.polito.wa2.lab5.group09.ticketcatalogueservice.utils.PaymentResult
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.last
@@ -20,10 +20,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.web.reactive.function.client.WebClientRequestException
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
+
 
 @SpringBootTest
 class ServiceTest {
@@ -33,6 +34,7 @@ class ServiceTest {
     lateinit var orderRepository: OrderRepository
     @Autowired
     lateinit var ticketCatalogueService : TicketCatalogueService
+
     private final var _keyUser = "laboratorio4webapplications2ProfessorGiovanniMalnati"
     private final val ticketCatalogue =
         TicketCatalogue(
@@ -78,7 +80,6 @@ class ServiceTest {
     }
 
     @Test
-    @WithMockUser(username = "usernameTest", password = "pwd", roles = ["CUSTOMER"])
     fun getOrders(){
         runBlocking {
             val orders = ticketCatalogueService.getOrders(generateUserToken(_keyUser))
@@ -86,7 +87,6 @@ class ServiceTest {
         }
     }
     @Test
-    @WithMockUser(username = "usernameTest", password = "pwd", roles = ["CUSTOMER"])
     fun getOrderByUUID(){
         runBlocking {
             lateinit var orderId : UUID
@@ -97,7 +97,6 @@ class ServiceTest {
     }
 
     @Test
-    @WithMockUser(username = "usernameTest", password = "pwd", roles = ["CUSTOMER"])
     fun getOrderByUUIDNotAllowed(){
             Assertions.assertThrows(IllegalArgumentException::class.java){
                 runBlocking {
@@ -109,7 +108,6 @@ class ServiceTest {
     }
 
     @Test
-    @WithMockUser(username = "usernameTest", password = "pwd", roles = ["CUSTOMER"])
     fun getCatalogue(){
         runBlocking {
             val catalogue = ticketCatalogueService.getCatalogue()
@@ -117,7 +115,36 @@ class ServiceTest {
         }
     }
 
-    //TODO FAI LA SHOP
+
+
+//
+    @Test
+    fun updateOrderWithFailedPayment(){
+        runBlocking {
+            lateinit var orderId : UUID
+            orderRepository.findAll().collect {  orderId = it.orderId!! }
+            val paymentResult = PaymentResult(orderId,false)
+            ticketCatalogueService.updateOrder(paymentResult,generateUserToken(_keyUser))
+            val status = orderRepository.findById(orderId)!!.status
+            Assertions.assertEquals(status, Status.CANCELED)
+        }
+    }
+
+    /*------NOTE: TRAVELER SERVICE IS OFFLINE!------*/
+
+    @Test
+    fun updateOrderWithAcceptedPayment(){
+        Assertions.assertThrows(WebClientRequestException::class.java){
+            runBlocking {
+                lateinit var orderId : UUID
+                orderRepository.findAll().collect {  orderId = it.orderId!! }
+                val paymentResult = PaymentResult(orderId,true)
+                ticketCatalogueService.updateOrder(paymentResult,generateUserToken(_keyUser))
+                val status = orderRepository.findById(orderId)!!.status
+                Assertions.assertEquals(status, Status.ACCEPTED)
+            }
+        }
+    }
 
     @AfterEach
     fun deleteTicketCatalogueAndOrder(){

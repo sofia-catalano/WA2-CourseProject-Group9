@@ -12,14 +12,19 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.util.MultiValueMap
 import org.springframework.web.reactive.function.BodyInserter
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.WebClientRequestException
 import org.springframework.web.reactive.function.client.awaitBody
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
+import java.net.URI
 import java.util.*
 
 @Service
@@ -95,18 +100,22 @@ class TicketCatalogueService(
             println("Order updated")
 
             if(status == Status.ACCEPTED){
-                val traveler = async {
-                    travelerClient
-                        .post()
-                        .uri("/my/tickets")
-                        .header("Authorization", token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(ActionTicket("buy_tickets", order.quantity, zones?: "", order.ticketCatalogueId))
-                        .accept(MediaType.APPLICATION_JSON)
-                        .retrieve()
-                        .awaitBody<Unit>()
+                try {
+                    val traveler = async {
+                        travelerClient
+                            .post()
+                            .uri("/my/tickets")
+                            .header("Authorization", token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .bodyValue(ActionTicket("buy_tickets", order.quantity, zones?: "", order.ticketCatalogueId))
+                            .accept(MediaType.APPLICATION_JSON)
+                            .retrieve()
+                            .awaitBody<Unit>()
+                    }
+                    println(traveler.await())
+                }catch (t : Throwable){
+                    throw WebClientRequestException(t,HttpMethod.POST, URI("/my/tickets"), HttpHeaders.EMPTY)
                 }
-                println(traveler.await())
             }
         } catch (t: Throwable) {
             throw IllegalArgumentException("This ticket type doesn't exist!")
