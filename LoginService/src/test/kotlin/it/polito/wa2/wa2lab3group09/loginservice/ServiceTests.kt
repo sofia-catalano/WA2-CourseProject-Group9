@@ -1,8 +1,7 @@
-package it.polito.wa2.wa2lab3group09
+package it.polito.wa2.wa2lab3group09.loginservice
 
 import it.polito.wa2.wa2lab3group09.loginservice.dtos.UserDTO
 import it.polito.wa2.wa2lab3group09.loginservice.repositories.ActivationRepository
-import it.polito.wa2.wa2lab3group09.loginservice.repositories.UserRepository
 import it.polito.wa2.wa2lab3group09.loginservice.services.UserService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -13,8 +12,6 @@ import java.util.*
 
 @SpringBootTest
 class ServiceTests {
-    @Autowired
-    lateinit var userRepository: UserRepository
 
     @Autowired
     lateinit var activationRepository: ActivationRepository
@@ -33,21 +30,6 @@ class ServiceTests {
             )
         )
         Assertions.assertNotNull(activationID)
-    }
-
-    @Test
-    fun deleteUser() {
-        userService.createUser(
-            UserDTO(
-                null,
-                "luigineri",
-                "luigineri@gmail.com",
-                "Passwordluigi1@"
-            )
-        )
-        val id = userRepository.getByEmail("luigineri@gmail.com")!!.getId()!!
-        userRepository.deleteById(id)
-        Assertions.assertEquals(userRepository.existsById(1), false)
     }
 
     @Test

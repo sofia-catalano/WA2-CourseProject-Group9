@@ -1,4 +1,4 @@
-package it.polito.wa2.wa2lab3group09
+package it.polito.wa2.wa2lab3group09.loginservice
 
 import it.polito.wa2.wa2lab3group09.loginservice.controllers.VerificationInfo
 import it.polito.wa2.wa2lab3group09.loginservice.dtos.UserDTO
