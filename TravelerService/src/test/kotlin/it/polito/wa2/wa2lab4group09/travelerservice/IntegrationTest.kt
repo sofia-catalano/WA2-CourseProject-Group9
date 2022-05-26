@@ -1,4 +1,4 @@
-package it.polito.wa2.wa2lab4group09
+package it.polito.wa2.wa2lab4group09.travelerservice
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -85,7 +85,8 @@ class IntegrationTest {
             .setIssuedAt(Date.from(Instant.now()))
             .setExpiration(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
             .signWith(Keys.hmacShaKeyFor(_keyTicket.toByteArray())).compact(),
-        userDetails = userDetailsEntity
+        userDetails = userDetailsEntity,
+        typeId = 1
     )
 
 
@@ -191,7 +192,7 @@ class IntegrationTest {
         val tkn = generateUserToken(_keyUser)
         headers.set("Authorization", "Bearer$tkn")
         val requestEntity = HttpEntity<ActionTicket>(
-            ActionTicket("buy_tickets", 3, "ABC"),
+            ActionTicket("buy_tickets", 3, "ABC",1),
             headers
         )
         val response = restTemplate.exchange(
@@ -206,7 +207,7 @@ class IntegrationTest {
         val tkn = generateUserToken("129837y918273918273198723198731982739182739128273197")
         headers.set("Authorization", "Bearer$tkn")
         val requestEntity = HttpEntity<ActionTicket>(
-            ActionTicket("buy_tickets", 3, "ABC"),
+            ActionTicket("buy_tickets", 3, "ABC",1),
             headers
         )
         val response = restTemplate.exchange(
@@ -221,7 +222,7 @@ class IntegrationTest {
         val tkn = generateUserToken(_keyUser)
         headers.set("Authorization", "Bearer$tkn")
         val requestEntity = HttpEntity<ActionTicket>(
-            ActionTicket("invalid_command", 3, "ABC"),
+            ActionTicket("invalid_command", 3, "ABC",1),
             headers
         )
         val response = restTemplate.exchange(
@@ -236,7 +237,7 @@ class IntegrationTest {
         val tkn = generateUserToken(_keyUser)
         headers.set("Authorization", "Bearer$tkn")
         val requestEntity = HttpEntity<ActionTicket>(
-            ActionTicket("buy_tickets", -10, "ABC"),
+            ActionTicket("buy_tickets", -10, "ABC",1),
             headers
         )
         val response = restTemplate.exchange(

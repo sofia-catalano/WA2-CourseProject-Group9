@@ -1,4 +1,4 @@
-package it.polito.wa2.wa2lab4group09
+package it.polito.wa2.wa2lab4group09.travelerservice
 
 
 import io.jsonwebtoken.Jwts
@@ -52,7 +52,8 @@ class RepositoriesTest {
             .setIssuedAt(Date.from(Instant.now()))
             .setExpiration(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
             .signWith(Keys.hmacShaKeyFor(keyTicket.toByteArray())).compact(),
-        userDetails = userDetailsEntity
+        userDetails = userDetailsEntity,
+        typeId = 1
     )
 
     @BeforeEach

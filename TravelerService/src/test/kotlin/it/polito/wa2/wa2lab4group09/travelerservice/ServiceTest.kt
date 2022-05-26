@@ -1,4 +1,4 @@
-package it.polito.wa2.wa2lab4group09
+package it.polito.wa2.wa2lab4group09.travelerservice
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -6,17 +6,19 @@ import it.polito.wa2.wa2lab4group09.travelerservice.controllers.ActionTicket
 import it.polito.wa2.wa2lab4group09.travelerservice.controllers.UserDetailsUpdate
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.UserDetailsDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.toDTO
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.Role
 import it.polito.wa2.wa2lab4group09.travelerservice.entities.TicketPurchased
 import it.polito.wa2.wa2lab4group09.travelerservice.entities.UserDetails
 import it.polito.wa2.wa2lab4group09.travelerservice.repositories.TicketPurchasedRepository
-import it.polito.wa2.wa2lab4group09.travelerservice.entities.Role
 import it.polito.wa2.wa2lab4group09.travelerservice.repositories.UserDetailsRepository
 import it.polito.wa2.wa2lab4group09.travelerservice.services.AdminService
 import it.polito.wa2.wa2lab4group09.travelerservice.services.UserDetailsService
 import it.polito.wa2.wa2lab4group09.travelerservice.services.Username
 import it.polito.wa2.wa2lab4group09.travelerservice.services.unwrap
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.test.context.support.WithMockUser
@@ -82,7 +84,8 @@ class ServiceTest {
             .setIssuedAt(Date.from(Instant.now()))
             .setExpiration(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
             .signWith(Keys.hmacShaKeyFor(_keyTicket.toByteArray())).compact(),
-        userDetails = userDetailsEntity
+        userDetails = userDetailsEntity,
+        typeId = 1
     )
 
 
@@ -122,7 +125,7 @@ class ServiceTest {
     fun getUserDetailsValidToken(){
         val userDetailsDTO: UserDetailsDTO = userDetailsService.getUserDetails(generateUserToken(_keyUser))
         val userDetailsUpdate = UserDetailsUpdate(userDetailsDTO.name,userDetailsDTO.surname,userDetailsDTO.address,userDetailsDTO.date_of_birth,userDetailsDTO.telephone_number)
-        assertEquals(userDetailsUpdateEntity, userDetailsUpdate)
+        Assertions.assertEquals(userDetailsUpdateEntity, userDetailsUpdate)
     }
 
     @Test
@@ -139,8 +142,16 @@ class ServiceTest {
         userDetailsService.updateUserDetails(generateUserToken(_keyUser), updatedUserDetailsDTO)
 
         val userDetailFound = userDetailsRepository.findById(userDetailsEntity.username).unwrap()!!.toDTO()
-        assertEquals(
-            UserDetailsDTO("usernameTest",updatedUserDetailsDTO.name, updatedUserDetailsDTO.surname,updatedUserDetailsDTO.address, updatedUserDetailsDTO.date_of_birth, updatedUserDetailsDTO.telephone_number, Role.CUSTOMER ),
+        Assertions.assertEquals(
+            UserDetailsDTO(
+                "usernameTest",
+                updatedUserDetailsDTO.name,
+                updatedUserDetailsDTO.surname,
+                updatedUserDetailsDTO.address,
+                updatedUserDetailsDTO.date_of_birth,
+                updatedUserDetailsDTO.telephone_number,
+                Role.CUSTOMER
+            ),
             userDetailFound
         )
     }
@@ -159,11 +170,11 @@ class ServiceTest {
         userDetailsService.updateUserDetails(generateUserToken(_keyUser), updatedUserDetailsDTO)
 
         val userDetailFound: UserDetailsDTO = userDetailsRepository.findById(userDetailsEntity.username).unwrap()!!.toDTO()
-        assertEquals(updatedUserDetailsDTO.name, userDetailFound.name)
-        assertEquals(updatedUserDetailsDTO.surname, userDetailFound.surname)
-        assertEquals(updatedUserDetailsDTO.address, userDetailFound.address)
-        assertEquals(updatedUserDetailsDTO.date_of_birth, userDetailFound.date_of_birth)
-        assertEquals(updatedUserDetailsDTO.telephone_number, userDetailFound.telephone_number)
+        Assertions.assertEquals(updatedUserDetailsDTO.name, userDetailFound.name)
+        Assertions.assertEquals(updatedUserDetailsDTO.surname, userDetailFound.surname)
+        Assertions.assertEquals(updatedUserDetailsDTO.address, userDetailFound.address)
+        Assertions.assertEquals(updatedUserDetailsDTO.date_of_birth, userDetailFound.date_of_birth)
+        Assertions.assertEquals(updatedUserDetailsDTO.telephone_number, userDetailFound.telephone_number)
     }
 
     @Test
@@ -180,7 +191,10 @@ class ServiceTest {
         val exception: IllegalArgumentException  = Assertions.assertThrows(IllegalArgumentException::class.java) {
             userDetailsService.updateUserDetails(generateUserToken("ChiaveErrataUtileSoloATestareQuestaFunzioneInutile"), updatedUserDetailsDTO)
         }
-        assertEquals("JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.", exception.message.toString())
+        Assertions.assertEquals(
+            "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
+            exception.message.toString()
+        )
 
     }
 
@@ -206,7 +220,7 @@ class ServiceTest {
     fun getUserTicketsValidToken(){
         val expectedTickets = userDetailsEntity.tickets.map { it.toDTO() }
         val actualTicket = userDetailsService.getUserTickets(generateUserToken(_keyUser))
-        assertEquals(expectedTickets, actualTicket)
+        Assertions.assertEquals(expectedTickets, actualTicket)
     }
 
     @Test
@@ -215,11 +229,11 @@ class ServiceTest {
 
         val actualTickets = userDetailsService.buyTickets(
             generateUserToken(_keyUser),
-            ActionTicket("buy_tickets", 3, "ABC")
+            ActionTicket("buy_tickets", 3, "ABC",1)
         )
 
         val expectedTickets = ticketPurchasedRepository.findByUserDetails(userDetailsEntity).map{it.toDTO()}
-        assertEquals(expectedTickets, actualTickets)
+        Assertions.assertEquals(expectedTickets, actualTickets)
     }
 
     @Test
@@ -229,22 +243,22 @@ class ServiceTest {
         val exception: IllegalArgumentException  = Assertions.assertThrows(IllegalArgumentException::class.java) {
             userDetailsService.buyTickets(
                 generateUserToken(_keyUser),
-                ActionTicket("ThisIsAnInvalidCommand", 3, "ABC")
+                ActionTicket("ThisIsAnInvalidCommand", 3, "ABC",1)
             )
         }
-        assertEquals("action is not supported", exception.message.toString())
+        Assertions.assertEquals("action is not supported", exception.message.toString())
     }
 
     @Test
     fun getTravelers(){
         val usernames: List<Username> = adminService.getTravelers(generateAdminToken(_keyUser))
-        assertEquals("usernameTest", usernames[0].username)
+        Assertions.assertEquals("adminUsernameTest", usernames.last().username)
     }
 
     @Test
     fun getTravelerProfile(){
         val userDetailsDTO: UserDetailsDTO = adminService.getTravelerProfile(generateAdminToken(_keyUser), userDetailsEntity.username)
-        assertEquals(userDetailsEntity.toDTO(), userDetailsDTO)
+        Assertions.assertEquals(userDetailsEntity.toDTO(), userDetailsDTO)
     }
 
 
@@ -254,8 +268,6 @@ class ServiceTest {
         userDetailsRepository.delete(userDetailsEntity)
         userDetailsRepository.delete(adminEntity)
     }
-
-
 
 
 }
