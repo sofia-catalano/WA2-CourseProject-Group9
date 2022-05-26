@@ -1,5 +1,4 @@
 package it.polito.wa2.lab5.g09.paymentservice.security
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -13,11 +12,13 @@ import reactor.core.publisher.Mono
 
 
 class JWTAuthorizationFilter(
-     private val key: String
+    private val key: String
 ) : WebFilter {
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+        println(exchange.request.headers)
         val token = getAuthentication(exchange.request.headers.getFirst("Authorization")!!)
+        println("token")
         println(token)
         return chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(token));
     }
@@ -28,18 +29,19 @@ class JWTAuthorizationFilter(
             val userDetailsDTO = JwtUtils.getDetailsFromJwtToken(token.replace("Bearer", ""), key)
             val authorities = HashSet<GrantedAuthority>(1)
             authorities.add(SimpleGrantedAuthority("ROLE_"+userDetailsDTO.role.toString()))
-
+            println("auth")
+            println(userDetailsDTO.role.toString())
             //forced security context value
-            val ctx: SecurityContext = SecurityContextHolder.createEmptyContext()
+            val ctx: SecurityContext = SecurityContextHolder.getContext()
             SecurityContextHolder.setContext(ctx)
             ctx.authentication = UsernamePasswordAuthenticationToken(userDetailsDTO.username, null, authorities)
-
+            println(   ctx.authentication )
+            ReactiveSecurityContextHolder.withAuthentication(ctx.authentication)
             UsernamePasswordAuthenticationToken(userDetailsDTO.username, null, authorities)
+
 
         } catch (e: Exception) {
             return null
         }
     }
 }
-
-
