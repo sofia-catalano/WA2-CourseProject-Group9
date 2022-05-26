@@ -16,11 +16,9 @@ class KafkaConsumer(){
     @KafkaListener(topics = ["\${spring.kafka.consumer.topics}"], groupId = "\${spring.kafka.consumer.group-id}")
     fun listenGroupFoo(consumerRecord: ConsumerRecord<Any, Any>, ack: Acknowledgment) {
         logger.info("Message received {}", consumerRecord)
-        println((consumerRecord.headers().filter{it.key().equals("Authorization")})[0])
-        val header = consumerRecord.headers().filter{it.key().equals("Authorization")}[0]
-        val token = String(header.value(), StandardCharsets.UTF_8).replace("Bearer", "")
         runBlocking {
-            }
+
+        }
         ack.acknowledge()
     }
 }

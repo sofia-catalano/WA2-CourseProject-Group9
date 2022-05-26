@@ -37,6 +37,6 @@ class KafkaProducer(
 data class PaymentResult(
     @JsonProperty("orderId")
     val orderId: UUID,
-    @JsonProperty("isConfirmed")
-    val isConfirmed: Boolean
+    @JsonProperty("confirmed")
+    val confirmed: Boolean
 )
