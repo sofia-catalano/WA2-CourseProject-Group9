@@ -9,7 +9,7 @@ import java.util.UUID
 data class Order(
     @Id
     val orderId: UUID? = null,
-    val status: Status = Status.PENDING,
+    var status: Status = Status.PENDING,
     val ticketCatalogueId: Long,
     val quantity: Int,
     val customerUsername: String,

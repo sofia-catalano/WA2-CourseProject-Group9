@@ -15,6 +15,7 @@ class TicketPurchased (
     var exp: Timestamp,
     var zid: String,
     var jws: String,
+    var typeId : Long,
     @ManyToOne
     @JoinColumn(name = "user_details_username")
     var userDetails: UserDetails? = null

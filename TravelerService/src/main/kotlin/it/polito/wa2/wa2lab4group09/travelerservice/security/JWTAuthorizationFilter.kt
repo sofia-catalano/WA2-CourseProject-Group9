@@ -33,6 +33,8 @@ class JWTAuthorizationFilter(
         getAuthentication(header)?.also {
             SecurityContextHolder.getContext().authentication = it
         }
+
+        println("richiesta arrivata")
         chain.doFilter(req, res)
     }
 

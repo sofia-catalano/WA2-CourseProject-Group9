@@ -20,7 +20,7 @@ class KafkaConsumer(val paymentService: PaymentService){
         logger.info("Message received {}", consumerRecord)
         println((consumerRecord.headers().filter{it.key().equals("Authorization")})[0])
         val header = consumerRecord.headers().filter{it.key().equals("Authorization")}[0]
-        val token = String(header.value(), StandardCharsets.UTF_8).replace("Bearer", "")
+        val token = String(header.value(), StandardCharsets.UTF_8)
         runBlocking {
             paymentService.processTransaction(consumerRecord.value() as TransactionInfo, token)
         }

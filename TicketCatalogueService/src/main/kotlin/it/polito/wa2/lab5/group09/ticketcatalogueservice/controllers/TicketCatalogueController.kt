@@ -56,17 +56,6 @@ class TicketCatalogueController(
     @Value("\${application.jwt.jwtSecret}")
     lateinit var key: String
 
-    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @GetMapping("/hello")
-    suspend fun hello(@RequestHeader("Authorization") jwt: String) : String{
-        return "hello I'm testing"
-    }
-
-    @GetMapping("/prova")
-    suspend fun create(@RequestHeader("Authorization") jwt: String) : String {
-        ticketCatalogueRepository.save(TicketCatalogue( type="seasonal", price = 2.3f, maxAge = 100, minAge = 10))
-        return "Ok"
-    }
 
     @GetMapping("/orders")
     suspend fun getOrders(@RequestHeader("Authorization") jwt: String): ResponseEntity<Any> {

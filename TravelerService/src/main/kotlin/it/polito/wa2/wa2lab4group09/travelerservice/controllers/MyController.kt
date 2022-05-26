@@ -58,6 +58,7 @@ class MyController(val userDetailsService: UserDetailsService) {
     @PostMapping("/my/tickets")
     fun buyTickets(@RequestHeader("Authorization") jwt:String, @RequestBody actionTicket: ActionTicket) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
+        println(actionTicket)
         return try {
             val body = userDetailsService.buyTickets(newToken,actionTicket)
             ResponseEntity(body, HttpStatus.OK)
@@ -68,7 +69,7 @@ class MyController(val userDetailsService: UserDetailsService) {
     }
 }
 
-data class ActionTicket(val cmd : String, val quantity : Int, val zones : String)
+data class ActionTicket(val cmd : String, val quantity : Int, val zones : String, val type : Long)
 //to return a JSON-shaped error
 data class ErrorMessage(val error: String?)
 data class UserDetailsUpdate(val name : String?, val surname : String?, val address : String?, val date_of_birth : String?, val telephone_number : String?)

@@ -86,7 +86,8 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository, val t
                             iat = Timestamp(System.currentTimeMillis()),
                             exp = Timestamp(System.currentTimeMillis() + 3600000),
                             zid = actionTicket.zones,
-                            jws = token
+                            jws = token,
+                            typeId = actionTicket.type
                         )
                     )
                 tickets.add(t.toDTO())

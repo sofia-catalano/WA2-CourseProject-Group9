@@ -43,10 +43,11 @@ class PaymentService(val transactionRepository: TransactionRepository,
     }
 
     suspend fun processTransaction(transactionInfo: TransactionInfo, token:String) {
+        val newToken = token.replace("Bearer","")
         val isConfirmed = Random.nextBoolean()
         val transaction = Transaction(
             amount = transactionInfo.amount,
-            customerUsername = JwtUtils.getDetailsFromJwtToken(token, key).username,
+            customerUsername = JwtUtils.getDetailsFromJwtToken(newToken, key).username,
             orderId = transactionInfo.orderId,
             isConfirmed = isConfirmed
         )
@@ -58,6 +59,7 @@ class PaymentService(val transactionRepository: TransactionRepository,
             val message: Message<PaymentResult> = MessageBuilder
                 .withPayload(paymentResult)
                 .setHeader(KafkaHeaders.TOPIC, topic)
+                .setHeader("Authorization",token)
                 .build()
             kafkaTemplate.send(message)
             log.info("Message sent with success")

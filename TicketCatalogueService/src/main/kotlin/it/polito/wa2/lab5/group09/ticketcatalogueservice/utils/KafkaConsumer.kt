@@ -17,9 +17,11 @@ class KafkaConsumer(val ticketCatalogueService: TicketCatalogueService){
     @KafkaListener(topics = ["\${spring.kafka.consumer.topics}"], groupId = "\${spring.kafka.consumer.group-id}")
     fun listenGroupFoo(consumerRecord: ConsumerRecord<Any, Any>, ack: Acknowledgment) {
         logger.info("Message received {}", consumerRecord)
+        val header = consumerRecord.headers().filter{it.key().equals("Authorization")}[0]
+        val token = String(header.value(), StandardCharsets.UTF_8)
         runBlocking {
             println("sto eseguendo l'update")
-            ticketCatalogueService.updateOrder(consumerRecord.value() as PaymentResult)
+            ticketCatalogueService.updateOrder(consumerRecord.value() as PaymentResult, token)
         }
         ack.acknowledge()
     }
