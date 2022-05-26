@@ -9,15 +9,10 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.OrderRepos
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.TicketCatalogueRepository
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.security.Role
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.services.TicketCatalogueService
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.count
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.Assert
+import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.test.context.support.WithMockUser
@@ -77,17 +72,30 @@ class ServiceTest {
         }
     }
 
-    @Test
+  /*  @Test
     @WithMockUser(username = "usernameTest", password = "pwd", roles = ["CUSTOMER"])
     fun getOrders(){
         runBlocking {
             val orders = ticketCatalogueService.getOrders(generateUserToken(_keyUser))
-            Assertions.assertEquals(orders.count(),1)
+            Assert.assertEquals(1, orders.first().ticketCatalogueId)
+            Assert.assertEquals(1, orders.first().quantity)
+            Assert.assertEquals("usernameTest", orders.first().customerUsername)
+        }
+    }*/
+
+    @Test
+    @WithMockUser(username = "adminUsernameTest", password = "pwd", roles = ["ADMIN"])
+    fun getOrdersByAdmin(){
+       runBlocking {
+           val orders=ticketCatalogueService.getUserOrders("usernameTest")
+           Assert.assertEquals(1, orders.first().ticketCatalogueId)
+           Assert.assertEquals(1, orders.first().quantity)
+           Assert.assertEquals("usernameTest", orders.first().customerUsername)
         }
     }
     @Test
     @WithMockUser(username = "usernameTest", password = "pwd", roles = ["CUSTOMER"])
-    fun getOrderByUUID(){
+    fun getOrdersByUserId(){
         runBlocking {
             lateinit var orderId : UUID
             orderRepository.findAll().collect {  orderId = it.orderId!! }
@@ -95,6 +103,17 @@ class ServiceTest {
             Assertions.assertEquals(order.orderId,orderId)
         }
     }
+
+   /* @Test
+    @WithMockUser(username = "usernameTest", password = "pwd", roles = ["CUSTOMER"])
+    fun getOrdersByUUID(){
+        runBlocking {
+            lateinit var orderId : UUID
+            orderRepository.findAll().collect {  orderId = it.orderId!! }
+            val order = ticketCatalogueService.getOrderByUUID(orderId, generateUserToken(_keyUser))
+            Assertions.assertEquals(order.orderId,orderId)
+        }
+    }*/
 
     @Test
     @WithMockUser(username = "usernameTest", password = "pwd", roles = ["CUSTOMER"])
@@ -106,6 +125,26 @@ class ServiceTest {
     }
 
     //TODO FAI LA SHOP
+
+    @Test
+    @WithMockUser(username = "usernameTest", password = "pwd", roles = ["CUSTOMER"])
+    fun addTicketCatalogue(){
+        runBlocking {
+           ticketCatalogueService.addTicketToCatalogue(   TicketCatalogue(
+               type = "School",
+               price = 30.0f,
+               zones = "ABC",
+               maxAge = 20,
+               minAge = 6))
+           val tickets=ticketCatalogueService.getCatalogue()
+            Assert.assertEquals("School", tickets.last().type)
+            Assert.assertEquals(30.0f, tickets.last().price)
+            Assert.assertEquals("ABC", tickets.last().zones)
+            Assert.assertEquals(20, tickets.last().maxAge)
+            Assert.assertEquals(6, tickets.last().minAge)
+        }
+    }
+
 
     @AfterEach
     fun deleteTicketCatalogueAndOrder(){
