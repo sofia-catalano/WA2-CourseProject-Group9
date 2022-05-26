@@ -7,9 +7,9 @@ import org.springframework.data.relational.core.mapping.Table
 data class TicketCatalogue (
     @Id
     val ticketId: Long? = null,
-    val type: String,
-    val price: Float,
-    val zones : String,
+    var type: String,
+    var price: Float,
+    var zones : String,
     val maxAge : Int? = null,
     val minAge : Int? = null,
 )
