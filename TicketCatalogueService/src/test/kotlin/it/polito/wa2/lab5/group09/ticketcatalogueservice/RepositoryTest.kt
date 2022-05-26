@@ -118,7 +118,7 @@ class RepositoryTest {
     }
 
     @AfterEach
-     fun deleteUserDetails() {
+     fun deleteTicketCatalogueAndOrder() {
         runBlocking {
             ticketCatalogueRepository.findAll().last().also {
                 ticketCatalogueRepository.delete(it)
