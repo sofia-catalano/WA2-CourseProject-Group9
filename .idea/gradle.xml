@@ -8,8 +8,7 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/LoginService" />
-        <option name="gradleHome" value="$PROJECT_DIR$/../../../../../../../Program Files/gradle-7.4.1" />
-        <option name="gradleJvm" value="1.8" />
+        <option name="gradleJvm" value="18 (2)" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/LoginService" />
@@ -21,8 +20,7 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/PaymentService" />
-        <option name="gradleHome" value="$PROJECT_DIR$/../../../../../../../Program Files/gradle-7.4.1" />
-        <option name="gradleJvm" value="1.8" />
+        <option name="gradleJvm" value="18 (2)" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/PaymentService" />
@@ -34,8 +32,7 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/TicketCatalogueService" />
-        <option name="gradleHome" value="$PROJECT_DIR$/../../../../../../../Program Files/gradle-7.4.1" />
-        <option name="gradleJvm" value="1.8" />
+        <option name="gradleJvm" value="18 (2)" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/TicketCatalogueService" />
@@ -47,8 +44,7 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/TravelerService" />
-        <option name="gradleHome" value="$PROJECT_DIR$/../../../../../../../Program Files/gradle-7.4.1" />
-        <option name="gradleJvm" value="1.8" />
+        <option name="gradleJvm" value="18 (2)" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/TravelerService" />

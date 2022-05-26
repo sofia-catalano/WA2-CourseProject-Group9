@@ -17,5 +17,3 @@ CREATE TABLE IF NOT EXISTS orders
     quantity            int          not null,
     customer_username   varchar(255) not null
 );
-
-
