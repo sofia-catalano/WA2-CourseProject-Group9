@@ -86,26 +86,28 @@ class TicketCatalogueService(
             println(paymentResult)
             if (!paymentResult.confirmed) {
                 status = Status.CANCELED
-                throw IllegalArgumentException("Payment FAILED")
             }
             println(status)
             val order: Order = orderRepository.findById(paymentResult.orderId)!!
             order.status = status
             orderRepository.save(order)
+            val zones = ticketCatalogueRepository.findById(order.ticketCatalogueId)?.zones
             println("Order updated")
-            val traveler = async {
-                travelerClient
-                    .post()
-                    .uri("/my/tickets")
-                    .header("Authorization", token)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(ActionTicket("buy_tickets", order.quantity, "", order.ticketCatalogueId))
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .awaitBody<Unit>()
-            }
-            println(traveler.await())
 
+            if(status == Status.ACCEPTED){
+                val traveler = async {
+                    travelerClient
+                        .post()
+                        .uri("/my/tickets")
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(ActionTicket("buy_tickets", order.quantity, zones?: "", order.ticketCatalogueId))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .retrieve()
+                        .awaitBody<Unit>()
+                }
+                println(traveler.await())
+            }
         } catch (t: Throwable) {
             throw IllegalArgumentException("This ticket type doesn't exist!")
         }

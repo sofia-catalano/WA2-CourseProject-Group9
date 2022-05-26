@@ -27,7 +27,12 @@ class AdminController(
         @RequestBody ticket : TicketCatalogue
     ): ResponseEntity<Any> {
         return try {
-            //TODO CHIEDERE SE DEVE PASSARE PER IL SERVICE
+            if(ticket.minAge!=null && ticket.maxAge !=null && ticket.minAge > ticket.maxAge){
+                throw IllegalArgumentException("Max age should be greater than Min age")
+            }
+            if(ticket.price<=0){
+                throw IllegalArgumentException("Price should be a positive number")
+            }
             ticketCatalogueRepository.save(ticket)
             ResponseEntity("Ticket added to catalogue", HttpStatus.CREATED)
         } catch (t: Throwable) {
