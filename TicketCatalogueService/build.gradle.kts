@@ -34,7 +34,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.security:spring-security-test")
-
+    testImplementation ("org.testcontainers:junit-jupiter:1.17.1")
 }
 
 tasks.withType<KotlinCompile> {
@@ -46,4 +46,10 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.testcontainers:testcontainers-bom:1.16.3")
+    }
 }
