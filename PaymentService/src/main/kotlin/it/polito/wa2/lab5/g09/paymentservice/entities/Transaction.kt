@@ -4,12 +4,13 @@ import org.springframework.data.relational.core.mapping.Table
 import java.sql.Timestamp
 import java.util.*
 
-@Table("transaction")
+@Table("user_transaction")
 data class Transaction (
     @Id
-    val transactionId: UUID? = UUID.randomUUID(),
+    val transactionId: UUID? = null,
     val amount: Float,
     val customerUsername: String,
-    val orderId: Long,
-    val date: Timestamp = Timestamp(System.currentTimeMillis())
+    val orderId: UUID,
+    val date: Timestamp = Timestamp(System.currentTimeMillis()),
+    val isConfirmed: Boolean?
 )

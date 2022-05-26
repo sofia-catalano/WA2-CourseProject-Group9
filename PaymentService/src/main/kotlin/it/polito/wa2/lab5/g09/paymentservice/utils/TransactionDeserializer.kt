@@ -25,18 +25,17 @@ class TransactionDeserializer : Deserializer<TransactionInfo> {
     override fun close() {}
 }
 
-
 data class TransactionInfo(
     @JsonProperty("orderId")
     val orderId: UUID,
     @JsonProperty("amount")
     val amount: Float,
-    @JsonProperty("paymentInfo")
-    val paymentInfo: PaymentInfo
-)
-data class PaymentInfo(
+    @JsonProperty("creditCardNumber")
     val creditCardNumber: String,
+    @JsonProperty("expirationDate")
     val expirationDate: String,
+    @JsonProperty("cvv")
     val cvv: String,
+    @JsonProperty("cardHolder")
     val cardHolder: String
 )

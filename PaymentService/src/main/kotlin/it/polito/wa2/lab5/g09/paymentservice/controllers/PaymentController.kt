@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class PaymentController(val paymentService: PaymentService) {
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/admin/transactions")
     suspend fun getAllUsersTransactions(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
         return try {
@@ -23,7 +22,6 @@ class PaymentController(val paymentService: PaymentService) {
 
     }
 
-    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/transactions")
     suspend fun getAllTransactions(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
         val newToken = jwt.replace("Bearer", "")
@@ -33,7 +31,6 @@ class PaymentController(val paymentService: PaymentService) {
         }catch (t: Throwable) {
             ResponseEntity(t.message, HttpStatus.BAD_REQUEST)
         }
-
     }
     
 }

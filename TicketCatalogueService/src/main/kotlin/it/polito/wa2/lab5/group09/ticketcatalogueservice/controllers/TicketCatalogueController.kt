@@ -38,6 +38,7 @@ import org.springframework.web.reactive.function.client.exchangeToFlow
 import reactor.core.publisher.Mono
 import java.time.LocalDate
 import java.time.Period
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @RestController
@@ -45,7 +46,7 @@ class TicketCatalogueController(
     val ticketCatalogueService: TicketCatalogueService,
     val orderRepository: OrderRepository,
     val ticketCatalogueRepository: TicketCatalogueRepository,
-    @Value("\${spring.kafka.producer.topics.product}") val topic: String,
+    @Value("\${spring.kafka.producer.topics}") val topic: String,
     @Autowired
     private val kafkaTemplate: KafkaTemplate<String, Any>
 ) {
@@ -133,8 +134,11 @@ class TicketCatalogueController(
                     .retrieve()
                     .awaitBody<UserDetailDTO>()
             }
+            println(traveler.await())
 
-            val age = Period.between(LocalDate.parse(traveler.await().date_of_birth), LocalDate.now()).years
+
+            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            val age = Period.between(LocalDate.parse(traveler.await().date_of_birth, formatter), LocalDate.now()).years
 
             isValid =
                 (ticketCatalogue.maxAge != null && age <= ticketCatalogue.maxAge) && (ticketCatalogue.minAge != null && ticketCatalogue.minAge <= age)
@@ -150,13 +154,14 @@ class TicketCatalogueController(
                     customerUsername = username,
                 )
             )
-            val transaction=TransactionInfo(order.orderId!!,ticketCatalogue.price*purchasingInfo.numberOfTickets, purchasingInfo.paymentInfo )
+            println(topic)
+            val transaction=TransactionInfo(order.orderId!!,ticketCatalogue.price*purchasingInfo.numberOfTickets, purchasingInfo.paymentInfo.creditCardNumber, purchasingInfo.paymentInfo.expirationDate, purchasingInfo.paymentInfo.cvv, purchasingInfo.paymentInfo.cardHolder)
             log.info("Receiving product request")
             log.info("Sending message to Kafka {}", order)
             val message: Message<TransactionInfo> = MessageBuilder
                 .withPayload(transaction)
                 .setHeader(KafkaHeaders.TOPIC, topic)
-                .setHeader("X-Custom-Header", "Custom header here")
+                .setHeader("Authorization", jwt)
                 .build()
             kafkaTemplate.send(message)
             log.info("Message sent with success")
@@ -173,9 +178,13 @@ class TicketCatalogueController(
 data class ErrorMessage(val error: String?)
 
 data class PaymentInfo(
+    @JsonProperty("creditCardNumber")
     val creditCardNumber: String,
+    @JsonProperty("expirationDate")
     val expirationDate: String,
+    @JsonProperty("cvv")
     val cvv: String,
+    @JsonProperty("cardHolder")
     val cardHolder: String
 )
 
@@ -186,8 +195,14 @@ data class TransactionInfo(
     val orderId: UUID,
     @JsonProperty("amount")
     val amount: Float,
-    @JsonProperty("paymentInfo")
-    val paymentInfo: PaymentInfo
+    @JsonProperty("creditCardNumber")
+    val creditCardNumber: String,
+    @JsonProperty("expirationDate")
+    val expirationDate: String,
+    @JsonProperty("cvv")
+    val cvv: String,
+    @JsonProperty("cardHolder")
+    val cardHolder: String
 )
 
 data class UserDetailDTO(

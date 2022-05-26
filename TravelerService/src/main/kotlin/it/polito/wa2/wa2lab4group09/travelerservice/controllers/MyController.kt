@@ -20,8 +20,8 @@ class MyController(val userDetailsService: UserDetailsService) {
         val newToken = jwt.replace("Bearer", "")
         return try {
             val userDetailsDTO = userDetailsService.getUserDetails(newToken)
-            val body = UserDetailsUpdate(userDetailsDTO.name,userDetailsDTO.surname,userDetailsDTO.address,userDetailsDTO.date_of_birth,userDetailsDTO.telephone_number)
-            ResponseEntity(body, HttpStatus.OK)
+            //val body = UserDetailsUpdate(userDetailsDTO.name,userDetailsDTO.surname,userDetailsDTO.address,userDetailsDTO.date_of_birth,userDetailsDTO.telephone_number)
+            ResponseEntity(userDetailsDTO, HttpStatus.OK)
         } catch (t : Throwable){
             val error = ErrorMessage(t.message)
             ResponseEntity(error, HttpStatus.BAD_REQUEST)
