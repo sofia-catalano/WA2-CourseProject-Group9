@@ -81,9 +81,9 @@ class TicketCatalogueService(
     @Transactional
     suspend fun updateOrder(paymentResult: PaymentResult, token: String) = coroutineScope {
         try {
-            println(token)
+
             var status = Status.ACCEPTED
-            println(paymentResult)
+
             if (!paymentResult.confirmed) {
                 status = Status.CANCELED
             }
@@ -104,7 +104,7 @@ class TicketCatalogueService(
                             .retrieve()
                             .awaitBody<Unit>()
                     }
-                    println(traveler.await())
+
                 }catch (t : Throwable){
                     throw WebClientRequestException(t,HttpMethod.POST, URI("/my/tickets"), HttpHeaders.EMPTY)
                 }

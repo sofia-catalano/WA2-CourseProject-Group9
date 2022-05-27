@@ -58,7 +58,6 @@ class MyController(val userDetailsService: UserDetailsService) {
     @PostMapping("/my/tickets")
     fun buyTickets(@RequestHeader("Authorization") jwt:String, @RequestBody actionTicket: ActionTicket) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
-        println(actionTicket)
         return try {
             val body = userDetailsService.buyTickets(newToken,actionTicket)
             ResponseEntity(body, HttpStatus.OK)
