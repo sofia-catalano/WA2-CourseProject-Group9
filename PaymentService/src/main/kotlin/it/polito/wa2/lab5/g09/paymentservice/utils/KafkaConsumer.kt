@@ -6,10 +6,8 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets
-import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import org.springframework.http.MediaType
-import org.springframework.web.reactive.function.client.awaitBody
+
 
 @Component
 class KafkaConsumer(val paymentService: PaymentService){
@@ -18,7 +16,6 @@ class KafkaConsumer(val paymentService: PaymentService){
     @KafkaListener(topics = ["\${spring.kafka.consumer.topics}"], groupId = "\${spring.kafka.consumer.group-id}")
     fun listenGroupFoo(consumerRecord: ConsumerRecord<Any, Any>, ack: Acknowledgment) {
         logger.info("Message received {}", consumerRecord)
-        println((consumerRecord.headers().filter{it.key().equals("Authorization")})[0])
         val header = consumerRecord.headers().filter{it.key().equals("Authorization")}[0]
         val token = String(header.value(), StandardCharsets.UTF_8)
         runBlocking {

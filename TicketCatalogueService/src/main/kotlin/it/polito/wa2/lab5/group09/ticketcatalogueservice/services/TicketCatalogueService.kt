@@ -1,6 +1,5 @@
 package it.polito.wa2.lab5.group09.ticketcatalogueservice.services
 
-import it.polito.wa2.lab5.group09.ticketcatalogueservice.controllers.UserDetailDTO
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Order
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Status
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogue
@@ -17,13 +16,9 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.util.MultiValueMap
-import org.springframework.web.reactive.function.BodyInserter
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientRequestException
 import org.springframework.web.reactive.function.client.awaitBody
-import reactor.core.publisher.Mono
-import reactor.kotlin.core.publisher.toMono
 import java.net.URI
 import java.util.*
 
@@ -92,13 +87,10 @@ class TicketCatalogueService(
             if (!paymentResult.confirmed) {
                 status = Status.CANCELED
             }
-            println(status)
             val order: Order = orderRepository.findById(paymentResult.orderId)!!
             order.status = status
             orderRepository.save(order)
             val zones = ticketCatalogueRepository.findById(order.ticketCatalogueId)?.zones
-            println("Order updated")
-
             if(status == Status.ACCEPTED){
                 try {
                     val traveler = async {

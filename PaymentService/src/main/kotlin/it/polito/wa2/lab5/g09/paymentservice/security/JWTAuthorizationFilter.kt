@@ -22,7 +22,7 @@ class JWTAuthorizationFilter(
         val token = getAuthentication(exchange.request.headers.getFirst("Authorization")!!)
         println("token")
         println(token)
-        return chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(token));
+        return chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(token))
     }
 
     private fun getAuthentication(token: String): UsernamePasswordAuthenticationToken? {

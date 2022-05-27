@@ -12,7 +12,6 @@ class PaymentResultSerializer : Serializer<PaymentResult> {
 
     override fun serialize(topic: String?, data: PaymentResult?): ByteArray? {
         log.info("Serializing...")
-        println(data)
         return objectMapper.writeValueAsBytes(
             data ?: throw SerializationException("Error when serializing PaymentResult to ByteArray[]")
         )

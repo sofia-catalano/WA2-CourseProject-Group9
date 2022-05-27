@@ -1,22 +1,15 @@
 package it.polito.wa2.lab5.group09.ticketcatalogueservice.controllers
 
-import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Order
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogue
-import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.OrderRepository
-import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.TicketCatalogueRepository
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.services.TicketCatalogueService
-import kotlinx.coroutines.flow.Flow
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.reactive.function.client.WebClient
 
 @RestController
 class AdminController(
     val ticketCatalogueService: TicketCatalogueService,
-    val ticketCatalogueRepository: TicketCatalogueRepository,
-    val orderRepository: OrderRepository
     ) {
 
 

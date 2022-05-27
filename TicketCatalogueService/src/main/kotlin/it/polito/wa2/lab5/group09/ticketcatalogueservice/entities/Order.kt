@@ -1,6 +1,5 @@
 package it.polito.wa2.lab5.group09.ticketcatalogueservice.entities
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 import java.util.UUID

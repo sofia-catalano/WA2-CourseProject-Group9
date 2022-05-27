@@ -4,7 +4,6 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogu
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Mono
-import java.util.concurrent.Flow
 
 @Repository
 interface TicketCatalogueRepository: CoroutineCrudRepository<TicketCatalogue, Long>{

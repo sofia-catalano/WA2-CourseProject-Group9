@@ -12,8 +12,6 @@ import org.springframework.security.config.web.server.SecurityWebFiltersOrder
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.server.SecurityWebFilterChain
-import org.springframework.security.web.server.ServerAuthenticationEntryPoint
-import org.springframework.security.web.server.authorization.ServerAccessDeniedHandler
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 
@@ -30,14 +28,14 @@ class WebSecurityConfig {
         val authorizationFilter = JWTAuthorizationFilter(appProperties.key)
         return http
             .exceptionHandling()
-            .authenticationEntryPoint(ServerAuthenticationEntryPoint { swe: ServerWebExchange, e: AuthenticationException ->
+            .authenticationEntryPoint { swe: ServerWebExchange, _: AuthenticationException ->
                 Mono.fromRunnable {
                     swe.response.statusCode = HttpStatus.UNAUTHORIZED
                 }
-            })
-            .accessDeniedHandler(ServerAccessDeniedHandler { swe: ServerWebExchange, e: AccessDeniedException ->
+            }
+            .accessDeniedHandler { swe: ServerWebExchange, _: AccessDeniedException ->
                 Mono.fromRunnable { swe.response.statusCode = HttpStatus.FORBIDDEN }
-            })
+            }
             .and()
             .cors()
             .and()

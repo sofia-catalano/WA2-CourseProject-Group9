@@ -7,7 +7,6 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets
-import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 
 @Component
@@ -20,7 +19,6 @@ class KafkaConsumer(val ticketCatalogueService: TicketCatalogueService){
         val header = consumerRecord.headers().filter{it.key().equals("Authorization")}[0]
         val token = String(header.value(), StandardCharsets.UTF_8)
         runBlocking {
-            println("sto eseguendo l'update")
             ticketCatalogueService.updateOrder(consumerRecord.value() as PaymentResult, token)
         }
         ack.acknowledge()
