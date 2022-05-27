@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.boot.test.web.client.getForObject
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.http.*
 import org.springframework.test.context.DynamicPropertyRegistry
@@ -96,6 +97,21 @@ class IntegrationTest {
             ticketCatalogueRepository.save(ticketCatalogueEntity).also {
                 orderRepository.save(orderEntity)
             }
+        }
+    }
+
+
+    @Test
+    fun getTickets(){
+        runBlocking {
+            val headers = HttpHeaders()
+            val tkn = generateUserToken(_keyUser)
+            headers.set("Authorization", "Bearer$tkn")
+            val requestEntity = HttpEntity<Unit>(headers)
+            val response = restTemplate.exchange(
+                "http://localhost:$port/tickets", HttpMethod.GET, requestEntity, Any::class.java, TicketCatalogue::class.java
+            )
+            Assertions.assertEquals(HttpStatus.OK, response.statusCode)
         }
     }
 

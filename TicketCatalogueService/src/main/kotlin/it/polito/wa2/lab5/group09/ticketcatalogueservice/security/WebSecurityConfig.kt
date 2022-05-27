@@ -44,6 +44,7 @@ class WebSecurityConfig {
             .csrf().disable()
             .addFilterAt(authorizationFilter, SecurityWebFiltersOrder.AUTHORIZATION)
             .authorizeExchange()
+            .pathMatchers("/tickets").permitAll()
             .pathMatchers("/shop/**").hasAuthority("ROLE_CUSTOMER")
             .pathMatchers("/orders/**").hasAuthority("ROLE_CUSTOMER")
             .pathMatchers("/admin/**").hasAuthority("ROLE_ADMIN")

@@ -87,11 +87,6 @@ class TicketCatalogueController(
 
     }
 
-    //TODO VA BENE FARE RESPONSE ENTITY DI ANY?
-
-    //TicketId sia nella richiesta del path che nel body?
-
-
     @PostMapping("/shop/{ticketType}")
     suspend fun buyTickets(
         @PathVariable ticketType: String,
