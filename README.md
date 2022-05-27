@@ -3,12 +3,11 @@
 ## Instructions for launching the application
 1. Configure the docker container
 2. Open Database section on Intellij and create a connection with the postgres container.
-3. Right-click on the database and add a new one (New -> Database -> Ok)
-4. Open the project, in another window, in folder WA2-Lab3-Group09
-5. Modify the application properties with the options that you have just set
-6. Run this project, it will run in port 8080
-7. Open the project in folder WA2-Lab4-Group09
-8. Run this project, it will run in port 8081
+3. Right-click on the database and add three new databases (New -> Database -> Ok)
+4. Modify the application properties of each module with the options that you have just set
+5. Build and run the docker-compose.yml in main folder
+6. Build and run all the microservices
+
 ## Instructions to use the application
 #### Registration of a user
 In order to create a user with username 'USER1' execute those commands:

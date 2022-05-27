@@ -31,7 +31,7 @@ private fun configureJavaMailProperties(properties: Properties) {
     @Value("spring.mail.smtp.auth")
     properties["mail.smtp.auth"] = "spring.mail.smtp.auth"
     @Value("spring.mail.smtp.starttls.enable")
-    properties["mail.smtp.starttls.enable"] = "spring.mail..smtp.starttls.enable"
+    properties["mail.smtp.starttls.enable"] = "spring.mail.smtp.starttls.enable"
     @Value("spring.mail.debug")
     properties["mail.debug"] = "spring.mail.debug"
 }
