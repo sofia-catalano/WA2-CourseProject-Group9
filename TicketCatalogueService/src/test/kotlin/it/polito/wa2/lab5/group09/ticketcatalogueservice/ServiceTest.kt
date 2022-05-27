@@ -12,8 +12,10 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.services.TicketCatalogu
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.utils.PaymentResult
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.runBlocking
+import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -90,7 +92,6 @@ class ServiceTest {
     }
 
     @Test
-    @WithMockUser(username = "adminUsernameTest", password = "pwd", roles = ["ADMIN"])
     fun getOrdersByAdmin(){
        runBlocking {
            val orders=ticketCatalogueService.getUserOrders("usernameTest")
