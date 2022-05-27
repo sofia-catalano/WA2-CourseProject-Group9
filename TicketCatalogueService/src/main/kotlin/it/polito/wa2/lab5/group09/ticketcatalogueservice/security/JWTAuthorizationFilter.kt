@@ -21,10 +21,14 @@ class JWTAuthorizationFilter(
     /*    println("Authorization")
         println(exchange.request.headers.getFirst("Authorization")!!)*/
         println(exchange.request.headers)
-        val token = getAuthentication(exchange.request.headers.getFirst("Authorization")!!)
-        println("token")
-        println(token)
-        return chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(token));
+        return if(exchange.request.headers.getFirst("Authorization").isNullOrBlank()){
+            Mono.empty()
+        }else {
+            val token = getAuthentication(exchange.request.headers.getFirst("Authorization")!!)
+            println("token")
+            println(token)
+            chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(token));
+        }
     }
 
     private fun getAuthentication(token: String): UsernamePasswordAuthenticationToken? {

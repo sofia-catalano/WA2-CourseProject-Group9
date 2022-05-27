@@ -105,8 +105,6 @@ class IntegrationTest {
     fun getTickets(){
         runBlocking {
             val headers = HttpHeaders()
-            val tkn = generateUserToken(_keyUser)
-            headers.set("Authorization", "Bearer$tkn")
             val requestEntity = HttpEntity<Unit>(headers)
             val response = restTemplate.exchange(
                 "http://localhost:$port/tickets", HttpMethod.GET, requestEntity, Any::class.java, TicketCatalogue::class.java
