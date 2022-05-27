@@ -121,7 +121,7 @@ class IntegrationTest {
             val headers = HttpHeaders()
             val tkn = generateUserToken(_keyUser)
             headers.set("Authorization", "Bearer$tkn")
-            val requestEntity = HttpEntity<Flow<Order>>(headers)
+            val requestEntity = HttpEntity<Unit>(headers)
             val response = restTemplate.exchange(
                 "http://localhost:$port/orders", HttpMethod.GET, requestEntity, Any::class.java, Order::class.java
             )
@@ -135,7 +135,7 @@ class IntegrationTest {
             val headers = HttpHeaders()
             val tkn = generateUserToken("129837y918273918273198723198731982739182739128273197")
             headers.set("Authorization", "Bearer$tkn")
-            val requestEntity = HttpEntity<Flow<Order>>(headers)
+            val requestEntity = HttpEntity<Unit>(headers)
             val response = restTemplate.exchange(
                 "http://localhost:$port/orders", HttpMethod.GET, requestEntity, Any::class.java, Order::class.java
             )
@@ -187,41 +187,42 @@ class IntegrationTest {
     @Test
     fun getAdminUserOrdersInvalid() {
         val headers = HttpHeaders()
-        val tkn = generateUserToken("129837y918273918273198723198731982739182739128273197")
+        val tkn = generateAdminToken("129837y918273918273198723198731982739182739128273197")
         headers.set("Authorization", "Bearer$tkn")
         val requestEntity = HttpEntity<Unit>(headers)
         val url = "http://localhost:$port/admin/orders/${orderEntity.customerUsername}"
         val response = restTemplate.exchange(
             url, HttpMethod.GET, requestEntity, Any::class.java, Any::class.java
         )
-        Assertions.assertEquals(HttpStatus.FORBIDDEN, response.statusCode)
+        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
     }
 
     @Test
     fun addTicketToCatalogueValid() {
         val headers = HttpHeaders()
         val tkn = generateAdminToken(_keyUser)
-        headers.set("Authorization", "Bearer$tkn")
-        val requestEntity = HttpEntity<TicketCatalogue>(
-            TicketCatalogue(
-                type = "test1Type",
-                price = 1F,
-                zones = "testZones",
-                minAge = 1,
-                maxAge = 18
-            ),
+            headers.set("Authorization", "Bearer$tkn")
+        val tmp= TicketCatalogue(
+            type = "testAddTicket",
+            price = 1F,
+            zones = "testZones",
+            minAge = 1,
+            maxAge = 18
+        )
+        val ticket = HttpEntity<TicketCatalogue>(
+           tmp,
             headers
         )
-        val response = restTemplate.exchange(
-            "http://localhost:$port/admin/tickets", HttpMethod.POST, requestEntity, Any::class.java, Any::class.java
+       val response = restTemplate.exchange(
+            "http://localhost:8082/admin/tickets", HttpMethod.POST, ticket, Any::class.java, Any::class.java
         )
-        Assertions.assertEquals(HttpStatus.OK, response.statusCode)
+         Assertions.assertEquals(HttpStatus.OK, response.statusCode)
     }
 
     @Test
     fun addTicketToCatalogueInvalid() {
         val headers = HttpHeaders()
-        val tkn = generateUserToken("129837y918273918273198723198731982739182739128273197")
+        val tkn = generateAdminToken("129837y918273918273198723198731982739182739128273197")
         headers.set("Authorization", "Bearer$tkn")
         val requestEntity = HttpEntity<TicketCatalogue>(
             TicketCatalogue(
@@ -236,7 +237,7 @@ class IntegrationTest {
         val response = restTemplate.exchange(
             "http://localhost:$port/admin/tickets", HttpMethod.POST, requestEntity, Any::class.java, Any::class.java
         )
-        Assertions.assertEquals(HttpStatus.FORBIDDEN, response.statusCode)
+        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
     }
 
 
