@@ -7,26 +7,16 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogu
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.OrderRepository
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.TicketCatalogueRepository
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.security.Role
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.reactive.collect
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.boot.test.web.client.getForObject
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.http.*
-import org.springframework.test.context.DynamicPropertyRegistry
-import org.springframework.test.context.DynamicPropertySource
-import org.testcontainers.containers.PostgreSQLContainer
-import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
-import org.testcontainers.shaded.org.bouncycastle.crypto.tls.CipherType.block
-import reactor.core.publisher.Mono
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -63,8 +53,6 @@ class IntegrationTest {
     )
 
     private final var _keyUser = "laboratorio4webapplications2ProfessorGiovanniMalnati"
-
-    private final var _keyTicket = "questachievavieneutilizzataperfirmareiticketsLab4"
 
     fun generateUserToken(
         key: String,
