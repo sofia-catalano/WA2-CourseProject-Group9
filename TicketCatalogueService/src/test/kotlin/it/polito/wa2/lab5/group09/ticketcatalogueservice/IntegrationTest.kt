@@ -9,6 +9,7 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.TicketCata
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.security.Role
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.reactive.collect
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,6 +23,8 @@ import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import org.testcontainers.shaded.org.bouncycastle.crypto.tls.CipherType.block
+import reactor.core.publisher.Mono
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -185,19 +188,16 @@ class IntegrationTest {
             headers.set("Authorization", "Bearer$tkn")
         val tmp= TicketCatalogue(
             type = "testAddTicket",
-            price = 1f,
+            price = 1F,
             zones = "testZones",
             minAge = 1,
             maxAge = 18
         )
-        val requestEntity = HttpEntity<TicketCatalogue>(
-           tmp,
-            headers
+        val request = HttpEntity<TicketCatalogue>(tmp, headers)
+        val result: ResponseEntity<String> = restTemplate.postForEntity(
+            "http://localhost:$port/admin/tickets", request, String::class.java
         )
-       val response = restTemplate.exchange(
-            "http://localhost:$port/admin/tickets", HttpMethod.POST, requestEntity, Any::class.java, Any::class.java
-        )
-         Assertions.assertEquals(HttpStatus.OK, response.statusCode)
+         Assertions.assertEquals(HttpStatus.CREATED, result.statusCode)
     }
 
     @Test
@@ -218,17 +218,23 @@ class IntegrationTest {
         val response = restTemplate.exchange(
             "http://localhost:$port/admin/tickets", HttpMethod.POST, requestEntity, Any::class.java, Any::class.java
         )
-        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
-    }
+        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)    }
 
 
 
     @AfterEach
     fun deleteTicketCatalogueAndOrder() {
         runBlocking {
+            ticketCatalogueRepository.findByType("testAddTicket").also {
+                if(it.block() != null ){
+                    ticketCatalogueRepository.delete(it.block()!!)
+                }
+            }
+
             ticketCatalogueRepository.findAll().last().also {
                 ticketCatalogueRepository.delete(it)
             }
+
             orderRepository.findAll().last().also {
                 orderRepository.delete(it)
             }
