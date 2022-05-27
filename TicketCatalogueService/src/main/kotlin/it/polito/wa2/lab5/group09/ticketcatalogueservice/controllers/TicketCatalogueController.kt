@@ -106,7 +106,7 @@ class TicketCatalogueController(
             if(purchasingInfo.paymentInfo.creditCardNumber.length <= 15){
                 throw IllegalArgumentException("Credit card number length should be greater than 14 digit!")
             }
-            if(purchasingInfo.paymentInfo.cvv.length != 3){
+            if(!purchasingInfo.paymentInfo.cvv.matches("[0-9][0-9][0-9]".toRegex())){
                 throw IllegalArgumentException("Cvv should be a 3 digit number!")
             }
 

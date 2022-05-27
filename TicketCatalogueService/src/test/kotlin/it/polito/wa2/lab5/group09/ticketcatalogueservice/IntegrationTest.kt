@@ -2,6 +2,8 @@ package it.polito.wa2.lab5.group09.ticketcatalogueservice
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import it.polito.wa2.lab5.group09.ticketcatalogueservice.controllers.PaymentInfo
+import it.polito.wa2.lab5.group09.ticketcatalogueservice.controllers.PurchasingInfo
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Order
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogue
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.OrderRepository
@@ -42,8 +44,6 @@ class IntegrationTest {
         type = "testType",
         price = 1F,
         zones = "testZones",
-        minAge = 1,
-        maxAge = 18
     )
 
     private final val orderEntity = Order(
@@ -148,6 +148,70 @@ class IntegrationTest {
                 "http://localhost:$port/orders/fakeOrderId", HttpMethod.GET, requestEntity, Any::class.java, Order::class.java
             )
             Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
+        }
+    }
+
+    @Test
+    fun buyTicketsInvalidCreditCardNumber() {
+        runBlocking {
+            val headers = HttpHeaders()
+            val tkn = generateUserToken(_keyUser)
+            headers.set("Authorization", "Bearer$tkn")
+            val ticketId = ticketCatalogueRepository.findAll().last().ticketId!!
+            val purchasingInfo = PurchasingInfo(3,ticketId, PaymentInfo("1234567","11/28", "123","testName testSurname"))
+            val request = HttpEntity<PurchasingInfo>(purchasingInfo, headers)
+            val result: ResponseEntity<String> = restTemplate.postForEntity(
+                "http://localhost:$port/shop/$ticketId", request, String::class.java
+            )
+            Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.statusCode)
+        }
+    }
+
+    @Test
+    fun buyTicketsInvalidExpDate() {
+        runBlocking {
+            val headers = HttpHeaders()
+            val tkn = generateUserToken(_keyUser)
+            headers.set("Authorization", "Bearer$tkn")
+            val ticketId = ticketCatalogueRepository.findAll().last().ticketId!!
+            val purchasingInfo = PurchasingInfo(3,ticketId, PaymentInfo("12345678901234","11/18", "123","testName testSurname"))
+            val request = HttpEntity<PurchasingInfo>(purchasingInfo, headers)
+            val result: ResponseEntity<String> = restTemplate.postForEntity(
+                "http://localhost:$port/shop/$ticketId", request, String::class.java
+            )
+            Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.statusCode)
+        }
+    }
+
+    @Test
+    fun buyTicketsInvalidCvv() {
+        runBlocking {
+            val headers = HttpHeaders()
+            val tkn = generateUserToken(_keyUser)
+            headers.set("Authorization", "Bearer$tkn")
+            val ticketId = ticketCatalogueRepository.findAll().last().ticketId!!
+            val purchasingInfo = PurchasingInfo(3,ticketId, PaymentInfo("12345678901234","11/28", "0","testName testSurname"))
+            val request = HttpEntity<PurchasingInfo>(purchasingInfo, headers)
+            val result: ResponseEntity<String> = restTemplate.postForEntity(
+                "http://localhost:$port/shop/$ticketId", request, String::class.java
+            )
+            Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.statusCode)
+        }
+    }
+
+    @Test
+    fun buyTicketsInvalidNumberOfTickets() {
+        runBlocking {
+            val headers = HttpHeaders()
+            val tkn = generateUserToken(_keyUser)
+            headers.set("Authorization", "Bearer$tkn")
+            val ticketId = ticketCatalogueRepository.findAll().last().ticketId!!
+            val purchasingInfo = PurchasingInfo(-1,ticketId, PaymentInfo("12345678901234","11/28", "123","testName testSurname"))
+            val request = HttpEntity<PurchasingInfo>(purchasingInfo, headers)
+            val result: ResponseEntity<String> = restTemplate.postForEntity(
+                "http://localhost:$port/shop/$ticketId", request, String::class.java
+            )
+            Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.statusCode)
         }
     }
 

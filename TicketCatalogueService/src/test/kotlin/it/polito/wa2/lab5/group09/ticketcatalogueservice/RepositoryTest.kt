@@ -50,12 +50,24 @@ class RepositoryTest {
     @Test
      fun ticketCatalogueAndOrderExist(){
         runBlocking {
-            //val ticketCatalogueFound = ticketCatalogueRepository.findByType(ticketCatalogueEntity.type)
             val ticketCatalogueFound = ticketCatalogueRepository.findAll().last()
-            val orderFound = orderRepository.findByCustomerUsername(orderEntity.customerUsername)
+            val orderFound = orderRepository.findByCustomerUsername(orderEntity.customerUsername).first()
 
             Assertions.assertEquals(ticketCatalogueEntity.type, ticketCatalogueFound.type)
-            Assertions.assertEquals(orderEntity.customerUsername, orderFound.first().customerUsername)
+            Assertions.assertEquals(ticketCatalogueEntity.price, ticketCatalogueFound.price)
+            Assertions.assertEquals(ticketCatalogueEntity.zones, ticketCatalogueFound.zones)
+            Assertions.assertEquals(ticketCatalogueEntity.type, ticketCatalogueFound.type)
+            Assertions.assertEquals(ticketCatalogueEntity.maxAge, ticketCatalogueFound.maxAge)
+            Assertions.assertEquals(ticketCatalogueEntity.minAge, ticketCatalogueFound.minAge)
+
+            Assertions.assertEquals(orderEntity.customerUsername, orderFound.customerUsername)
+            Assertions.assertEquals(orderEntity.ticketCatalogueId, orderFound.ticketCatalogueId)
+            Assertions.assertEquals(orderEntity.status, orderFound.status)
+            Assertions.assertEquals(orderEntity.quantity, orderFound.quantity)
+
+
+
+
         }
     }
 
@@ -106,32 +118,15 @@ class RepositoryTest {
         }
     }
 
-    @Test
-    fun createTicketCatalogue(){
-         val ticketCatalogue = TicketCatalogue(
-            type = "testType2",
-            price = 1F,
-            zones = "testZones",
-            minAge = 1,
-            maxAge = 18
-        )
-
-        runBlocking {
-            val newTicketCatalogue = ticketCatalogueRepository.save(ticketCatalogue)
-            val ticketCatalogueFound = ticketCatalogueRepository.findById(newTicketCatalogue.ticketId!!)
-            Assertions.assertEquals(1F, ticketCatalogueFound!!.price)
-            Assertions.assertEquals("testZones", ticketCatalogueFound.zones)
-            Assertions.assertEquals("testType2", ticketCatalogueFound.type)
-        }
-    }
-
     @AfterEach
      fun deleteTicketCatalogueAndOrder() {
         runBlocking {
             ticketCatalogueRepository.findAll().last().also {
                 ticketCatalogueRepository.delete(it)
             }
-            orderRepository.deleteAll()
+            orderRepository.findAll().last().also {
+                orderRepository.delete(it)
+            }
         }
     }
 
