@@ -35,22 +35,6 @@ import java.util.*
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class IntegrationTest {
 
-    companion object {
-
-        @Container
-        val postgres = PostgreSQLContainer("postgres:latest")
-
-        @JvmStatic
-        @DynamicPropertySource
-        fun properties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url", postgres::getJdbcUrl)
-            registry.add("spring.datasource.username", postgres::getUsername)
-            registry.add("spring.datasource.password", postgres::getPassword)
-            registry.add("spring.jpa.hibernate.ddl-auto") { "create-drop" }
-
-        }
-    }
-
     @LocalServerPort
     protected final var  port = 0
 
@@ -109,9 +93,8 @@ class IntegrationTest {
     @BeforeEach
     fun createTicketCatalogueAndOrder(){
         runBlocking {
-            ticketCatalogueRepository.save(ticketCatalogueEntity).also {
-                orderRepository.save(orderEntity)
-            }
+            ticketCatalogueRepository.save(ticketCatalogueEntity)
+            orderRepository.save(orderEntity)
         }
     }
 
@@ -204,17 +187,17 @@ class IntegrationTest {
             headers.set("Authorization", "Bearer$tkn")
         val tmp= TicketCatalogue(
             type = "testAddTicket",
-            price = 1F,
+            price = 1f,
             zones = "testZones",
             minAge = 1,
             maxAge = 18
         )
-        val ticket = HttpEntity<TicketCatalogue>(
+        val requestEntity = HttpEntity<TicketCatalogue>(
            tmp,
             headers
         )
        val response = restTemplate.exchange(
-            "http://localhost:8082/admin/tickets", HttpMethod.POST, ticket, Any::class.java, Any::class.java
+            "http://localhost:$port/admin/tickets", HttpMethod.POST, requestEntity, Any::class.java, Any::class.java
         )
          Assertions.assertEquals(HttpStatus.OK, response.statusCode)
     }
