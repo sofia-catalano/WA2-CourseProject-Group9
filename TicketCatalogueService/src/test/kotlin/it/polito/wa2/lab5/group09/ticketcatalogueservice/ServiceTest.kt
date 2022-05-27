@@ -180,9 +180,16 @@ class ServiceTest {
     @AfterEach
     fun deleteTicketCatalogueAndOrder(){
         runBlocking {
+            ticketCatalogueRepository.findByType("School").also {
+                if(it.block() != null ){
+                    ticketCatalogueRepository.delete(it.block()!!)
+                }
+            }
+
             ticketCatalogueRepository.findAll().last().also {
                 ticketCatalogueRepository.delete(it)
             }
+
             orderRepository.findAll().last().also {
                 orderRepository.delete(it)
             }
