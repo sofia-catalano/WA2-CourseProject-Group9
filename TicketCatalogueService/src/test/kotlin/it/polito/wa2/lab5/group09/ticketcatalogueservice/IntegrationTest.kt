@@ -7,7 +7,6 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogu
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.OrderRepository
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.TicketCatalogueRepository
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.security.Role
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.*
@@ -16,10 +15,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.web.server.LocalServerPort
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.HttpStatus
+import org.springframework.http.*
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
@@ -209,14 +205,11 @@ class IntegrationTest {
             minAge = 1,
             maxAge = 18
         )
-        val ticket = HttpEntity<TicketCatalogue>(
-           tmp,
-            headers
+        val request = HttpEntity<TicketCatalogue>(tmp, headers)
+        val result: ResponseEntity<String> = restTemplate.postForEntity(
+            "http://localhost:8082/admin/tickets", request, String::class.java
         )
-       val response = restTemplate.exchange(
-            "http://localhost:8082/admin/tickets", HttpMethod.POST, ticket, Any::class.java, Any::class.java
-        )
-         Assertions.assertEquals(HttpStatus.OK, response.statusCode)
+         Assertions.assertEquals(HttpStatus.CREATED, result.statusCode)
     }
 
     @Test
