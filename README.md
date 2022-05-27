@@ -59,6 +59,10 @@ curl --request GET -H "Authorization: {Bearer...}" -v -i  http://localhost:8081/
 ```
 curl --request POST -H "Authorization: {Bearer...}" -H "Accept: application/json" -H "Content-Type:application/json" -d '{"cmd":"buy_tickets","quantity":"3","zones":"ABC"}' -v -i  http://localhost:8081/my/tickets
 ```
+- Get /transactions → get transactions of the current user
+```
+curl GET -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8083/transactions
+```
 
 ---
 
@@ -89,7 +93,6 @@ The endpoint will return the profile corresponding to userID.
 ```
 curl GET -v -i 'http://localhost:8081/admin/traveler/USER1/tickets' -H "Authorization:{Bearer...}"
 ```
-The endpoint will return the tickets owned by userID
 
 - POST /admin/tickets → Admin add to catalog new available tickets
 ```
@@ -99,10 +102,12 @@ curl POST -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -H 
 ```
 curl GET -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8082/admin/orders
 ```
-The endpoint will return all the users orders
-
 - GET /admin/orders/{userID} → returns all the orders of a user.
 ```
 curl GET -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8082/admin/orders/USER1
+``` 
+
+- Get /admin/transactions → get transactions of all users
 ```
-The endpoint will return all the orders of a user
+curl GET -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8083/admin/transactions
+```
