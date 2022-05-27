@@ -33,7 +33,7 @@ class AdminController(
             if(ticket.price<=0){
                 throw IllegalArgumentException("Price should be a positive number")
             }
-            ticketCatalogueRepository.save(ticket)
+            ticketCatalogueService.addTicketToCatalogue(ticket)
             ResponseEntity("Ticket added to catalogue", HttpStatus.CREATED)
         } catch (t: Throwable) {
             ResponseEntity(t.message, HttpStatus.BAD_REQUEST)

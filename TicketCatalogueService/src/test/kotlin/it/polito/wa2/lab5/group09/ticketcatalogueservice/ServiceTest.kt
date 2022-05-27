@@ -83,7 +83,20 @@ class ServiceTest {
     fun getOrders(){
         runBlocking {
             val orders = ticketCatalogueService.getOrders(generateUserToken(_keyUser))
-            Assertions.assertEquals(orders.count(),1)
+            Assert.assertEquals(1, orders.first().ticketCatalogueId)
+            Assert.assertEquals(1, orders.first().quantity)
+            Assert.assertEquals("usernameTest", orders.first().customerUsername)
+        }
+    }
+
+    @Test
+    @WithMockUser(username = "adminUsernameTest", password = "pwd", roles = ["ADMIN"])
+    fun getOrdersByAdmin(){
+       runBlocking {
+           val orders=ticketCatalogueService.getUserOrders("usernameTest")
+           Assert.assertEquals(1, orders.first().ticketCatalogueId)
+           Assert.assertEquals(1, orders.first().quantity)
+           Assert.assertEquals("usernameTest", orders.first().customerUsername)
         }
     }
     @Test
@@ -145,6 +158,25 @@ class ServiceTest {
             }
         }
     }
+
+    @Test
+    fun addTicketCatalogue(){
+        runBlocking {
+           ticketCatalogueService.addTicketToCatalogue(   TicketCatalogue(
+               type = "School",
+               price = 30.0f,
+               zones = "ABC",
+               maxAge = 20,
+               minAge = 6))
+           val tickets=ticketCatalogueService.getCatalogue()
+            Assert.assertEquals("School", tickets.last().type)
+            Assert.assertEquals(30.0f, tickets.last().price)
+            Assert.assertEquals("ABC", tickets.last().zones)
+            Assert.assertEquals(20, tickets.last().maxAge)
+            Assert.assertEquals(6, tickets.last().minAge)
+        }
+    }
+
 
     @AfterEach
     fun deleteTicketCatalogueAndOrder(){

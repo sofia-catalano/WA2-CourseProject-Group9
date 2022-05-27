@@ -90,3 +90,19 @@ The endpoint will return the profile corresponding to userID.
 curl GET -v -i 'http://localhost:8081/admin/traveler/USER1/tickets' -H "Authorization:{Bearer...}"
 ```
 The endpoint will return the tickets owned by userID
+
+- POST /admin/tickets → Admin add to catalog new available tickets
+```
+curl POST -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -H "Accept: application/json" -d '{"type":"seasonal","price":"2.30",  "zones":"ABC", "maxAge":"30", "minAge":"18"}' -v -i 'http://localhost:8082/admin/tickets' 
+```
+- GET /admin/orders → returns all the users orders.
+```
+curl GET -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8082/admin/orders
+```
+The endpoint will return all the users orders
+
+- GET /admin/orders/{userID} → returns all the orders of a user.
+```
+curl GET -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8082/admin/orders/USER1
+```
+The endpoint will return all the orders of a user

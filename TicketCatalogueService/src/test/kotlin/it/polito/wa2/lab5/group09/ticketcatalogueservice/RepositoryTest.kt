@@ -108,12 +108,20 @@ class RepositoryTest {
 
     @Test
     fun createTicketCatalogue(){
+         val ticketCatalogue = TicketCatalogue(
+            type = "testType2",
+            price = 1F,
+            zones = "testZones",
+            minAge = 1,
+            maxAge = 18
+        )
+
         runBlocking {
-            val newTicketCatalogue = ticketCatalogueRepository.save(ticketCatalogueEntity)
+            val newTicketCatalogue = ticketCatalogueRepository.save(ticketCatalogue)
             val ticketCatalogueFound = ticketCatalogueRepository.findById(newTicketCatalogue.ticketId!!)
-            Assertions.assertEquals(2F, ticketCatalogueFound!!.price)
-            Assertions.assertEquals("DEF", ticketCatalogueFound.zones)
-            Assertions.assertEquals("updatedTestType", ticketCatalogueFound.type)
+            Assertions.assertEquals(1F, ticketCatalogueFound!!.price)
+            Assertions.assertEquals("testZones", ticketCatalogueFound.zones)
+            Assertions.assertEquals("testType2", ticketCatalogueFound.type)
         }
     }
 

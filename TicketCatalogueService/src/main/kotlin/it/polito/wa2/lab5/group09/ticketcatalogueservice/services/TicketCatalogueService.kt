@@ -121,6 +121,14 @@ class TicketCatalogueService(
             throw IllegalArgumentException("This ticket type doesn't exist!")
         }
     }
+
+    suspend fun addTicketToCatalogue(ticket: TicketCatalogue) {
+         try {
+            ticketCatalogueRepository.save(ticket)
+        } catch (t: Throwable) {
+            throw IllegalArgumentException("Something weny wrong")
+        }
+    }
 }
 
 data class ActionTicket(val cmd: String, val quantity: Int, val zones: String, val type: Long)
