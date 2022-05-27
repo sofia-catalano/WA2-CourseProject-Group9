@@ -11,11 +11,9 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.security.Role
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.services.TicketCatalogueService
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.utils.PaymentResult
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -85,9 +83,9 @@ class ServiceTest {
     fun getOrders(){
         runBlocking {
             val orders = ticketCatalogueService.getOrders(generateUserToken(_keyUser))
-            Assert.assertEquals(1, orders.first().ticketCatalogueId)
-            Assert.assertEquals(1, orders.first().quantity)
-            Assert.assertEquals("usernameTest", orders.first().customerUsername)
+            Assertions.assertEquals(1, orders.first().ticketCatalogueId)
+            Assertions.assertEquals(1, orders.first().quantity)
+            Assertions.assertEquals("usernameTest", orders.first().customerUsername)
         }
     }
 
@@ -95,9 +93,9 @@ class ServiceTest {
     fun getOrdersByAdmin(){
        runBlocking {
            val orders=ticketCatalogueService.getUserOrders("usernameTest")
-           Assert.assertEquals(1, orders.first().ticketCatalogueId)
-           Assert.assertEquals(1, orders.first().quantity)
-           Assert.assertEquals("usernameTest", orders.first().customerUsername)
+           Assertions.assertEquals(1, orders.first().ticketCatalogueId)
+           Assertions.assertEquals(1, orders.first().quantity)
+           Assertions.assertEquals("usernameTest", orders.first().customerUsername)
         }
     }
     @Test
@@ -125,7 +123,7 @@ class ServiceTest {
     fun getCatalogue(){
         runBlocking {
             val catalogue = ticketCatalogueService.getCatalogue()
-            Assertions.assertEquals(catalogue.count(),1)
+            Assertions.assertEquals(catalogue.last().type,ticketCatalogue.type)
         }
     }
 
@@ -170,11 +168,11 @@ class ServiceTest {
                maxAge = 20,
                minAge = 6))
            val tickets=ticketCatalogueService.getCatalogue()
-            Assert.assertEquals("School", tickets.last().type)
-            Assert.assertEquals(30.0f, tickets.last().price)
-            Assert.assertEquals("ABC", tickets.last().zones)
-            Assert.assertEquals(20, tickets.last().maxAge)
-            Assert.assertEquals(6, tickets.last().minAge)
+            Assertions.assertEquals("School", tickets.last().type)
+            Assertions.assertEquals(30.0f, tickets.last().price)
+            Assertions.assertEquals("ABC", tickets.last().zones)
+            Assertions.assertEquals(20, tickets.last().maxAge)
+            Assertions.assertEquals(6, tickets.last().minAge)
         }
     }
 

@@ -7,7 +7,6 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogu
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.OrderRepository
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.TicketCatalogueRepository
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.security.Role
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.*
@@ -17,10 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.http.*
-import org.springframework.test.context.DynamicPropertyRegistry
-import org.springframework.test.context.DynamicPropertySource
-import org.testcontainers.containers.PostgreSQLContainer
-import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -58,8 +53,6 @@ class IntegrationTest {
     )
 
     private final var _keyUser = "laboratorio4webapplications2ProfessorGiovanniMalnati"
-
-    private final var _keyTicket = "questachievavieneutilizzataperfirmareiticketsLab4"
 
     fun generateUserToken(
         key: String,
@@ -109,6 +102,7 @@ class IntegrationTest {
             Assertions.assertEquals(HttpStatus.OK, response.statusCode)
         }
     }
+
 
     @Test
     fun getUserOrdersInvalid(){

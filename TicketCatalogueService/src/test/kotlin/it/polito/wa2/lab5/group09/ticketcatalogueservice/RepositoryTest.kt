@@ -131,9 +131,7 @@ class RepositoryTest {
             ticketCatalogueRepository.findAll().last().also {
                 ticketCatalogueRepository.delete(it)
             }
-            orderRepository.findAll().last().also {
-                orderRepository.delete(it)
-            }
+            orderRepository.deleteAll()
         }
     }
 
