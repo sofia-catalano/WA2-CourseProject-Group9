@@ -126,7 +126,7 @@ class TicketCatalogueController(
                         .retrieve()
                         .awaitBody<UserDetailDTO>()
                 }
-                println(traveler.await())
+
 
                 if(traveler.await().date_of_birth.isNullOrBlank()){
                     throw IllegalArgumentException("You have to set your age in my/profile first because this kind of ticket has age restriction!")
@@ -149,7 +149,7 @@ class TicketCatalogueController(
                         customerUsername = username,
                     )
                 )
-                println(topic)
+
                 val transaction=TransactionInfo(order.orderId!!,ticketCatalogue.price*purchasingInfo.numberOfTickets, purchasingInfo.paymentInfo.creditCardNumber, purchasingInfo.paymentInfo.expirationDate, purchasingInfo.paymentInfo.cvv, purchasingInfo.paymentInfo.cardHolder)
                 log.info("Receiving product request")
                 log.info("Sending message to Kafka {}", order)
