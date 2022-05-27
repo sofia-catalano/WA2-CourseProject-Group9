@@ -106,7 +106,7 @@ class RepositoryTest {
     fun getAllUsersOrders(){
         runBlocking {
             val userOrders = orderRepository.findAll()
-            Assertions.assertEquals(userOrders.count(), 1)
+            Assertions.assertEquals(userOrders.last().status, orderEntity.status)
         }
     }
 

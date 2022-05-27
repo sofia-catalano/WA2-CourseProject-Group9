@@ -83,9 +83,9 @@ class ServiceTest {
     fun getOrders(){
         runBlocking {
             val orders = ticketCatalogueService.getOrders(generateUserToken(_keyUser))
-            Assertions.assertEquals(1, orders.first().ticketCatalogueId)
-            Assertions.assertEquals(1, orders.first().quantity)
-            Assertions.assertEquals("usernameTest", orders.first().customerUsername)
+            Assertions.assertEquals(1, orders.last().ticketCatalogueId)
+            Assertions.assertEquals(1, orders.last().quantity)
+            Assertions.assertEquals("usernameTest", orders.last().customerUsername)
         }
     }
 
@@ -93,9 +93,9 @@ class ServiceTest {
     fun getOrdersByAdmin(){
        runBlocking {
            val orders=ticketCatalogueService.getUserOrders("usernameTest")
-           Assertions.assertEquals(1, orders.first().ticketCatalogueId)
-           Assertions.assertEquals(1, orders.first().quantity)
-           Assertions.assertEquals("usernameTest", orders.first().customerUsername)
+           Assertions.assertEquals(1, orders.last().ticketCatalogueId)
+           Assertions.assertEquals(1, orders.last().quantity)
+           Assertions.assertEquals("usernameTest", orders.last().customerUsername)
         }
     }
     @Test
