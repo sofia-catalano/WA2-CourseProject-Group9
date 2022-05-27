@@ -76,7 +76,7 @@ class TicketCatalogueController(
     }
 
     @GetMapping("/tickets")
-    suspend fun getTickets(@RequestHeader("Authorization") jwt: String): ResponseEntity<Any> {
+    suspend fun getTickets(): ResponseEntity<Any> {
         return try {
             val ticketCatalogue = ticketCatalogueService.getCatalogue()
             ResponseEntity(ticketCatalogue, HttpStatus.OK)
