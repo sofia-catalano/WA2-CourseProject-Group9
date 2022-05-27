@@ -16,10 +16,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.web.server.LocalServerPort
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.HttpStatus
+import org.springframework.http.*
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
@@ -93,8 +90,9 @@ class IntegrationTest {
     @BeforeEach
     fun createTicketCatalogueAndOrder(){
         runBlocking {
-            ticketCatalogueRepository.save(ticketCatalogueEntity)
-            orderRepository.save(orderEntity)
+            ticketCatalogueRepository.save(ticketCatalogueEntity).also {
+                orderRepository.save(orderEntity)
+            }
         }
     }
 
