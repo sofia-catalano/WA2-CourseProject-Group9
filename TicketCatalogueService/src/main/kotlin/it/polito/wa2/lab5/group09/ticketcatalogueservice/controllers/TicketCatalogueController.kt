@@ -76,7 +76,7 @@ class TicketCatalogueController(
     }
 
     @GetMapping("/tickets")
-    suspend fun getTickets(@RequestHeader("Authorization") jwt: String): ResponseEntity<Any> {
+    suspend fun getTickets(): ResponseEntity<Any> {
         return try {
             val ticketCatalogue = ticketCatalogueService.getCatalogue()
             ResponseEntity(ticketCatalogue, HttpStatus.OK)
@@ -86,11 +86,6 @@ class TicketCatalogueController(
         }
 
     }
-
-    //TODO VA BENE FARE RESPONSE ENTITY DI ANY?
-
-    //TicketId sia nella richiesta del path che nel body?
-
 
     @PostMapping("/shop/{ticketType}")
     suspend fun buyTickets(
