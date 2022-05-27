@@ -7,6 +7,7 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogu
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.OrderRepository
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.TicketCatalogueRepository
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.security.Role
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.reactive.collect
 import kotlinx.coroutines.runBlocking
@@ -33,22 +34,6 @@ import java.util.*
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class IntegrationTest {
-
-    companion object {
-
-        @Container
-        val postgres = PostgreSQLContainer("postgres:latest")
-
-        @JvmStatic
-        @DynamicPropertySource
-        fun properties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url", postgres::getJdbcUrl)
-            registry.add("spring.datasource.username", postgres::getUsername)
-            registry.add("spring.datasource.password", postgres::getPassword)
-            registry.add("spring.jpa.hibernate.ddl-auto") { "create-drop" }
-
-        }
-    }
 
     @LocalServerPort
     protected final var  port = 0

@@ -5,6 +5,7 @@ import io.jsonwebtoken.security.Keys
 import it.polito.wa2.lab5.g09.paymentservice.entities.Transaction
 import it.polito.wa2.lab5.g09.paymentservice.repositories.TransactionRepository
 import it.polito.wa2.lab5.g09.paymentservice.security.Role
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,6 +22,7 @@ import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import java.sql.Timestamp
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -30,22 +32,6 @@ import java.util.*
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class IntegrationTest {
-
-    companion object {
-
-        @Container
-        val postgres = PostgreSQLContainer("postgres:latest")
-
-        @JvmStatic
-        @DynamicPropertySource
-        fun properties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url", postgres::getJdbcUrl)
-            registry.add("spring.datasource.username", postgres::getUsername)
-            registry.add("spring.datasource.password", postgres::getPassword)
-            registry.add("spring.jpa.hibernate.ddl-auto") { "create-drop" }
-
-        }
-    }
 
     @LocalServerPort
     protected final var  port = 0
@@ -107,7 +93,7 @@ class IntegrationTest {
             headers.set("Authorization", "Bearer$tkn")
             val requestEntity = HttpEntity<Unit>(headers)
             val response = restTemplate.exchange(
-                "http://localhost:$port/admin/transactions", HttpMethod.GET, requestEntity, Any::class.java, Order::class.java
+                "http://localhost:$port/admin/transactions", HttpMethod.GET, requestEntity, Any::class.java, Transaction::class.java
             )
             Assertions.assertEquals(HttpStatus.OK, response.statusCode)
         }
@@ -121,7 +107,7 @@ class IntegrationTest {
             headers.set("Authorization", "Bearer$tkn")
             val requestEntity = HttpEntity<Unit>(headers)
             val response = restTemplate.exchange(
-                "http://localhost:$port/admin/transactions", HttpMethod.GET, requestEntity, Any::class.java, Order::class.java
+                "http://localhost:$port/admin/transactions", HttpMethod.GET, requestEntity, Any::class.java, Transaction::class.java
             )
             Assertions.assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
         }
@@ -135,7 +121,7 @@ class IntegrationTest {
             headers.set("Authorization", "Bearer$tkn")
             val requestEntity = HttpEntity<Unit>(headers)
             val response = restTemplate.exchange(
-                "http://localhost:$port/transactions", HttpMethod.GET, requestEntity, Any::class.java, Order::class.java
+                "http://localhost:$port/transactions", HttpMethod.GET, requestEntity, Any::class.java, Transaction::class.java
             )
             Assertions.assertEquals(HttpStatus.OK, response.statusCode)
         }
@@ -149,7 +135,7 @@ class IntegrationTest {
             headers.set("Authorization", "Bearer$tkn")
             val requestEntity = HttpEntity<Unit>(headers)
             val response = restTemplate.exchange(
-                "http://localhost:$port/transactions", HttpMethod.GET, requestEntity, Any::class.java, Order::class.java
+                "http://localhost:$port/transactions", HttpMethod.GET, requestEntity, Any::class.java, Transaction::class.java
             )
             Assertions.assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
         }
@@ -158,7 +144,9 @@ class IntegrationTest {
     @AfterEach
     fun deleteTicketCatalogueAndOrder() {
         runBlocking {
-            transactionRepository.delete(transactionEntity)
+            transactionRepository.findAll().last().also {
+                transactionRepository.delete(it)
+            }
         }
     }
 }

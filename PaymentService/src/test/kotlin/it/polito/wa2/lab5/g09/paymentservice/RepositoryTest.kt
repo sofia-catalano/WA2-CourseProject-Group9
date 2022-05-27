@@ -39,11 +39,11 @@ class RepositoryTest {
     fun getTransactionsByCustomerUsername(){
         runBlocking {
             val transactionsFound = transactionRepository.findByCustomerUsername(transactionEntity.customerUsername)
-            Assertions.assertEquals(transactionEntity.customerUsername, transactionsFound.first().customerUsername)
-            Assertions.assertEquals(transactionEntity.orderId, transactionsFound.first().orderId)
-            Assertions.assertEquals(transactionEntity.date, transactionsFound.first().date)
-            Assertions.assertEquals(transactionEntity.amount, transactionsFound.first().amount)
-            Assertions.assertEquals(transactionEntity.isConfirmed, transactionsFound.first().isConfirmed)
+            Assertions.assertEquals(transactionEntity.customerUsername, transactionsFound.last().customerUsername)
+            Assertions.assertEquals(transactionEntity.orderId, transactionsFound.last().orderId)
+            Assertions.assertEquals(transactionEntity.date, transactionsFound.last().date)
+            Assertions.assertEquals(transactionEntity.amount, transactionsFound.last().amount)
+            Assertions.assertEquals(transactionEntity.isConfirmed, transactionsFound.last().isConfirmed)
         }
     }
 
@@ -51,11 +51,11 @@ class RepositoryTest {
     fun getAllUsersTransactions(){
         runBlocking {
             val transactionsFound = transactionRepository.findAll()
-            Assertions.assertEquals(transactionEntity.customerUsername, transactionsFound.first().customerUsername)
-            Assertions.assertEquals(transactionEntity.orderId, transactionsFound.first().orderId)
-            Assertions.assertEquals(transactionEntity.date, transactionsFound.first().date)
-            Assertions.assertEquals(transactionEntity.amount, transactionsFound.first().amount)
-            Assertions.assertEquals(transactionEntity.isConfirmed, transactionsFound.first().isConfirmed)
+            Assertions.assertEquals(transactionEntity.customerUsername, transactionsFound.last().customerUsername)
+            Assertions.assertEquals(transactionEntity.orderId, transactionsFound.last().orderId)
+            Assertions.assertEquals(transactionEntity.date, transactionsFound.last().date)
+            Assertions.assertEquals(transactionEntity.amount, transactionsFound.last().amount)
+            Assertions.assertEquals(transactionEntity.isConfirmed, transactionsFound.last().isConfirmed)
         }
     }
 
