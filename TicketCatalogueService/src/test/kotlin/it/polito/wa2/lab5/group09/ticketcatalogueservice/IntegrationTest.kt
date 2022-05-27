@@ -8,6 +8,7 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.OrderRepos
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.TicketCatalogueRepository
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.security.Role
 import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.reactive.collect
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,6 +22,8 @@ import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
+import org.testcontainers.shaded.org.bouncycastle.crypto.tls.CipherType.block
+import reactor.core.publisher.Mono
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -207,7 +210,7 @@ class IntegrationTest {
         )
         val request = HttpEntity<TicketCatalogue>(tmp, headers)
         val result: ResponseEntity<String> = restTemplate.postForEntity(
-            "http://localhost:8082/admin/tickets", request, String::class.java
+            "http://localhost:$port/admin/tickets", request, String::class.java
         )
          Assertions.assertEquals(HttpStatus.CREATED, result.statusCode)
     }
@@ -230,17 +233,23 @@ class IntegrationTest {
         val response = restTemplate.exchange(
             "http://localhost:$port/admin/tickets", HttpMethod.POST, requestEntity, Any::class.java, Any::class.java
         )
-        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
-    }
+        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)    }
 
 
 
     @AfterEach
     fun deleteTicketCatalogueAndOrder() {
         runBlocking {
+            ticketCatalogueRepository.findByType("testAddTicket").also {
+                if(it.block() != null ){
+                    ticketCatalogueRepository.delete(it.block()!!)
+                }
+            }
+
             ticketCatalogueRepository.findAll().last().also {
                 ticketCatalogueRepository.delete(it)
             }
+
             orderRepository.findAll().last().also {
                 orderRepository.delete(it)
             }
