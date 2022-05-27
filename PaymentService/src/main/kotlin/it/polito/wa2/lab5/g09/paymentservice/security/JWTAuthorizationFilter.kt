@@ -16,6 +16,8 @@ class JWTAuthorizationFilter(
 ) : WebFilter {
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+        /*    println("Authorization")
+            println(exchange.request.headers.getFirst("Authorization")!!)*/
         println(exchange.request.headers)
         val token = getAuthentication(exchange.request.headers.getFirst("Authorization")!!)
         println("token")

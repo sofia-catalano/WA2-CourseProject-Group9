@@ -16,6 +16,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation ("org.apache.kafka:kafka-clients:3.0.0")
     implementation("org.springframework.kafka:spring-kafka")
@@ -35,6 +36,7 @@ dependencies {
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation ("org.testcontainers:junit-jupiter:1.17.1")
+    testImplementation("org.testcontainers:postgresql:1.17.1")
 }
 
 tasks.withType<KotlinCompile> {
