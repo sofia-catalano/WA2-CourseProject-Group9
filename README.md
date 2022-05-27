@@ -105,9 +105,33 @@ curl GET -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -v -
 - GET /admin/orders/{userID} → returns all the orders of a user.
 ```
 curl GET -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8082/admin/orders/USER1
-``` 
-
+```
 - Get /admin/transactions → get transactions of all users
 ```
 curl GET -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8083/admin/transactions
 ```
+Now use the token to perform actions in 8082 microservice (TicketCatalogue):
+
+Please add a new ticket catalogue in the db manually or with admin route.
+
+- Get /tickets → get all tickets available in the catalogue
+```
+curl GET -v -i 'http://localhost:8082/tickets'
+```
+- POST /shop/ticketId → to buy tickets of a ticket type (this route will return the orderId if the payment has success, BAD REQUEST otherwise)
+```
+curl --request POST -H "Authorization: {Bearer...}" -H "Content-Type: application/json" -H "Accept: application/json" -d '{"numberOfTickets":"3","ticketId":"1", "paymentInfo":{"creditCardNumber":"1234568911111122","expirationDate":"10/22", "cvv":"123","cardHolder":"User" }}' -v -i 'http://localhost:8082/shop/{ticketId}'
+```
+- GET /orders → return a list of all orders made by the customer
+```
+curl GET -H "Authorization: {Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8082/orders
+```
+- GET /orders/{ordersId} → return a list of all orders made by the customer
+```
+curl GET -H "Authorization: {Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8082/orders/{orderId}
+```
+
+
+
+
+
