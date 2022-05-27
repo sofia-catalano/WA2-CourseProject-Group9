@@ -18,7 +18,7 @@ class JWTAuthorizationFilter(
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         return if(exchange.request.headers.getFirst("Authorization").isNullOrBlank()){
-            Mono.empty()
+            chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(null))
         }else {
             val token = getAuthentication(exchange.request.headers.getFirst("Authorization")!!)
             chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(token))

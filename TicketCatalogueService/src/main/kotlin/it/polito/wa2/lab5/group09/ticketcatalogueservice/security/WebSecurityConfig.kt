@@ -23,20 +23,11 @@ class WebSecurityConfig {
     @Autowired
     lateinit var appProperties: AppProperties
 
+
     @Bean
     fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain? {
         val authorizationFilter = JWTAuthorizationFilter(appProperties.key)
         return http
-            .exceptionHandling()
-            .authenticationEntryPoint { swe: ServerWebExchange, _: AuthenticationException ->
-                Mono.fromRunnable {
-                    swe.response.statusCode = HttpStatus.UNAUTHORIZED
-                }
-            }
-            .accessDeniedHandler { swe: ServerWebExchange, _: AccessDeniedException ->
-                Mono.fromRunnable { swe.response.statusCode = HttpStatus.FORBIDDEN }
-            }
-            .and()
             .cors()
             .and()
             .csrf().disable()
@@ -48,6 +39,16 @@ class WebSecurityConfig {
             .pathMatchers("/shop/**").hasAuthority("ROLE_CUSTOMER")
             .pathMatchers("/orders/**").hasAuthority("ROLE_CUSTOMER")
             .pathMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+            .and()
+            .exceptionHandling()
+            .authenticationEntryPoint { swe: ServerWebExchange, _: AuthenticationException ->
+                Mono.fromRunnable {
+                    swe.response.statusCode = HttpStatus.UNAUTHORIZED
+                }
+            }
+            .accessDeniedHandler { swe: ServerWebExchange, _: AccessDeniedException ->
+                Mono.fromRunnable { swe.response.statusCode = HttpStatus.FORBIDDEN }
+            }
             .and()
             .build()
     }
