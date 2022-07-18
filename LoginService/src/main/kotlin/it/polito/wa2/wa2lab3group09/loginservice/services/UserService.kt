@@ -6,6 +6,8 @@ import it.polito.wa2.wa2lab3group09.loginservice.entities.Activation
 import it.polito.wa2.wa2lab3group09.loginservice.entities.User
 import it.polito.wa2.wa2lab3group09.loginservice.repositories.ActivationRepository
 import it.polito.wa2.wa2lab3group09.loginservice.repositories.UserRepository
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.bson.types.ObjectId
@@ -13,7 +15,6 @@ import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import reactor.kotlin.extra.bool.not
 import java.time.LocalDateTime
 import java.util.*
 
@@ -95,9 +96,9 @@ class UserService(val emailService: EmailService,
     fun deleteExpiredDate(){
         //fetch all the IDs of user with expiring data
         val idList = activationRepository.getExpiredUserIDs()
-
-        idList.forEach {
-            userRepository.deleteById(it)
+        //TODO VEDERE SE FUNZIONAA
+        idList.flatMap{ value ->
+            userRepository.deleteById(value)
         }
     }
 

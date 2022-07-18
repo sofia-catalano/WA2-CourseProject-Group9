@@ -2,11 +2,12 @@ package it.polito.wa2.wa2lab3group09.loginservice.repositories
 
 import it.polito.wa2.wa2lab3group09.loginservice.entities.Activation
 import it.polito.wa2.wa2lab3group09.loginservice.entities.User
-import kotlinx.coroutines.reactive.awaitFirstOrNull
+import kotlinx.coroutines.flow.Flow
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.repository.Query
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import org.springframework.stereotype.Repository
+import reactor.core.publisher.Flux
 import java.time.LocalDateTime
 
 
@@ -31,8 +32,7 @@ interface ActivationRepository: ReactiveMongoRepository<Activation, ObjectId> {
     */
 
     @Query("{ expirationDate: { \$lt: ?0 }}")
-    fun getExpiredUserIDs(date: LocalDateTime = LocalDateTime.now()): List<ObjectId>
-
+    fun getExpiredUserIDs(date: LocalDateTime = LocalDateTime.now()): Flux<ObjectId>
 
 
 }
