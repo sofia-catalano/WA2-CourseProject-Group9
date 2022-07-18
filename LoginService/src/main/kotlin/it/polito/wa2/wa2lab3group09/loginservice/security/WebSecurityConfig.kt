@@ -1,22 +1,28 @@
 package it.polito.wa2.wa2lab3group09.loginservice.security
 
 import it.polito.wa2.wa2lab3group09.loginservice.AppProperties
+import it.polito.wa2.wa2lab3group09.loginservice.services.UserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.ReactiveAuthenticationManager
+import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService
+//import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.DefaultSecurityFilterChain
+import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository
 
 @Configuration
-class WebSecurityConfig(val userDetailsService: UserDetailsService) : WebSecurityConfigurerAdapter() {
-
+class WebSecurityConfig(val userDetailsService: UserDetailsService) {
     @Autowired
     lateinit var appProperties: AppProperties
 
@@ -24,25 +30,22 @@ class WebSecurityConfig(val userDetailsService: UserDetailsService) : WebSecurit
     fun passwordEncoded(): PasswordEncoder {
         return BCryptPasswordEncoder()
     }
-    override fun configure (auth: AuthenticationManagerBuilder) {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoded())
-    }
-    override fun configure(web: WebSecurity) {
-        super.configure(web)
-    }
 
     @Bean
-    @Throws(Exception::class)
-    override fun authenticationManagerBean(): AuthenticationManager {
-        return super.authenticationManagerBean()
+    fun reactiveAuthenticationManager(reactiveUserDetailsService: UserDetailsService,
+                                      passwordEncoder: PasswordEncoder): ReactiveAuthenticationManager {
+        val manager = UserDetailsRepositoryReactiveAuthenticationManager(reactiveUserDetailsService)
+        manager.setPasswordEncoder(passwordEncoder)
+        return manager
     }
 
 
-    override fun configure(http: HttpSecurity) {
-        val authenticationFilter = JWTAuthenticationFilter(authenticationManager(),appProperties.jwtHeader,appProperties.jwtHeaderStart,appProperties.key)
+    @Bean
+    fun configureSecurity(http: HttpSecurity) : DefaultSecurityFilterChain? {
+        val authenticationFilter = JWTAuthenticationFilter(reactiveAuthenticationManager(userDetailsService, passwordEncoded()),appProperties.jwtHeader,appProperties.jwtHeaderStart,appProperties.key)
 
         authenticationFilter.setFilterProcessesUrl("/user/login")
-        http
+        return http
             .cors()
             .and()
             .csrf().disable()
@@ -63,6 +66,7 @@ class WebSecurityConfig(val userDetailsService: UserDetailsService) : WebSecurit
             .logout()
             .permitAll()
             .and()
+            .build()
     }
 
 }

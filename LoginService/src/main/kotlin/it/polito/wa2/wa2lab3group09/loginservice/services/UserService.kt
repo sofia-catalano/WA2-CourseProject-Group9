@@ -6,10 +6,14 @@ import it.polito.wa2.wa2lab3group09.loginservice.entities.Activation
 import it.polito.wa2.wa2lab3group09.loginservice.entities.User
 import it.polito.wa2.wa2lab3group09.loginservice.repositories.ActivationRepository
 import it.polito.wa2.wa2lab3group09.loginservice.repositories.UserRepository
+import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.bson.types.ObjectId
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import reactor.kotlin.extra.bool.not
 import java.time.LocalDateTime
 import java.util.*
 
@@ -20,16 +24,19 @@ class UserService(val emailService: EmailService,
                   val activationRepository: ActivationRepository,
                   val passwordEncoded: PasswordEncoder) {
 
-    fun createUser(userDTO: UserDTO): UUID {
+    suspend fun createUser(userDTO: UserDTO): ObjectId {
         val userEntity = User(userDTO.username, passwordEncoded.encode(userDTO.password), userDTO.email)
 
-        val userElement = userRepository.save(userEntity)
-        val activation = activationRepository.save(Activation().apply {
+        val userElement = userRepository.save(userEntity).awaitFirstOrNull()
+        activationRepository.save(Activation().apply {
             user = userEntity
+            userElement?.let{
+                emailService.sendEmail("Activation Code", "Hi thanks for your subscription, to verify this email please use this activation code: ${this.activationCode} ", userElement.email)
+            }
+            return this.id
         })
-        emailService.sendEmail("Activation Code", "Hi thanks for your subscription, to verify this email please use this activation code: ${activation.activationCode} ", userElement.email)
-        return activation.id
     }
+    /*
     fun createUser(userDTO: UserDTO, e_date : LocalDateTime): UUID {
         val userEntity = User(userDTO.username, passwordEncoded.encode(userDTO.password), userDTO.email)
 
@@ -43,35 +50,43 @@ class UserService(val emailService: EmailService,
         emailService.sendEmail("Activation Code", "Hi thanks for your subscription, to verify this email please use this activation code: ${activation.activationCode} ", userElement.email)
         return activation.id
     }
+     */
 
-    fun verifyActivationCode(provisionalId: UUID, activationCode: Int): UserDTO {
-        if(!activationRepository.existsById(provisionalId)) throw IllegalArgumentException("Provisional ID not found!")
+    suspend fun verifyActivationCode(provisionalId: ObjectId, activationCode: Int): UserDTO? {
+        if(!(activationRepository.existsById(provisionalId).awaitFirst())) throw IllegalArgumentException("Provisional ID not found!")
 
-        val activationInfo : ActivationDTO = activationRepository.getById(provisionalId)!!.toDTO()
-        val user = activationRepository.getUserByUUID(provisionalId)
+        val activation : Activation = activationRepository.getById(provisionalId)!!
+        val activationInfo: ActivationDTO = activation.toDTO()
+        val user = activationRepository.getById(provisionalId)?.user
 
-        if(activationInfo.activationCode == activationCode) {
-            if(activationInfo.expirationDate >= LocalDateTime.now()){
-                activationRepository.delete(activationRepository.getByUser(user)!!)
-                userRepository.makeActive(user.getId()!!)
-                return user.toDTO()
-            }else{
-                userRepository.delete(user)
-                throw IllegalArgumentException("Activation date expired! Deleting user registration data...")
-            }
+        user?.let{
+            if(activationInfo.activationCode == activationCode) {
+                if(activationInfo.expirationDate >= LocalDateTime.now()){
+                    activationRepository.delete(activationRepository.getByUser(user)!!)
 
-        } else {
-            when (activationInfo.attemptCounter) {
-                1 ->{
+                    userRepository.save(it.copy(isActive = true ))
+
+
+                    return user.toDTO()
+                }else{
                     userRepository.delete(user)
-                    throw IllegalArgumentException("Max number of activation attempt reached! Deleting user registration data...")
+                    throw IllegalArgumentException("Activation date expired! Deleting user registration data...")
                 }
-                else -> {
-                    activationRepository.reduceAttempt(provisionalId)
-                    throw IllegalArgumentException("Invalid activation code!")
+
+            } else {
+                when (activationInfo.attemptCounter) {
+                    1 ->{
+                        userRepository.delete(user)
+                        throw IllegalArgumentException("Max number of activation attempt reached! Deleting user registration data...")
+                    }
+                    else -> {
+                        activationRepository.save(activation.copy(attemptCounter = activation.attemptCounter - 1))
+                        throw IllegalArgumentException("Invalid activation code!")
+                    }
                 }
             }
         }
+        return null
     }
 
     @Scheduled(fixedRate = 30000)

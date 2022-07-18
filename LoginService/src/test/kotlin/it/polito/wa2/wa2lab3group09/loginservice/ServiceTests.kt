@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.time.LocalDateTime
 import java.util.*
 
 @SpringBootTest
@@ -56,6 +55,7 @@ class ServiceTests {
         Assertions.assertEquals(exception.message.toString(),"Provisional ID not found!")
     }
 
+    /*
     @Test
     fun expiredActivationDate() {
         val provisionalId = userService.createUser(
@@ -74,7 +74,7 @@ class ServiceTests {
         userRepository.findAll().last().also { userRepository.delete(it) }
         Assertions.assertEquals(exception.message.toString(),"Activation date expired! Deleting user registration data...")
     }
-
+*/
     @Test
     fun overcomeAttemptCounter() {
 

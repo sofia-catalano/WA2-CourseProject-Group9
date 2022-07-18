@@ -1,12 +1,13 @@
 package it.polito.wa2.wa2lab3group09.loginservice.dtos
 import it.polito.wa2.wa2lab3group09.loginservice.entities.User
+import org.bson.types.ObjectId
 import org.jetbrains.annotations.NotNull
 import javax.validation.constraints.Email
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 data class UserDTO(
-    val id: Long?,
+    val id: ObjectId,
     @field:NotNull
     @field:Size(min = 1)
     val username: String,
@@ -21,5 +22,5 @@ data class UserDTO(
 )
 
 fun User.toDTO() : UserDTO {
-    return UserDTO(getId(), username, email, password)
+    return UserDTO(id, username, email, password)
 }

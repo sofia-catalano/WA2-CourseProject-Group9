@@ -41,15 +41,6 @@ class RepositoryTests {
     }
 
     @Test
-    @Transactional
-    fun updateUser() {
-        val userEntity = User("mariorossi00", "passwordmario", "mariorossi00@gmail.com")
-        val userID=userRepository.save(userEntity).getId()
-        userRepository.updateUsername("mario.rossi", userID!!)
-        Assertions.assertEquals(userRepository.getByUsername("mario.rossi")?.getId() ?: 0, userID)
-    }
-
-    @Test
     fun createActivation(){
         val userEntity=userRepository.getByUsername("mariorossi")
         activationRepository.save(Activation().apply {

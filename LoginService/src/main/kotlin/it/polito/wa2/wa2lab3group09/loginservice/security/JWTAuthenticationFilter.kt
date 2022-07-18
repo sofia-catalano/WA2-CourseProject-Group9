@@ -4,14 +4,16 @@ package it.polito.wa2.wa2lab3group09.loginservice.security
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import org.springframework.security.authentication.AuthenticationManager
+import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.security.authentication.AuthenticationServiceException
+import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import reactor.core.publisher.Mono
 import java.io.BufferedReader
 import java.io.IOException
 import java.time.Instant
@@ -25,7 +27,7 @@ import kotlin.collections.ArrayList
 
 
 class JWTAuthenticationFilter(
-    private val authManager: AuthenticationManager, private val jwtHeader: String, private val jwtHeaderStart: String, private val key: String
+    private val authManager: ReactiveAuthenticationManager, private val jwtHeader: String, private val jwtHeaderStart: String, private val key: String
     ) : UsernamePasswordAuthenticationFilter() {
 
     @Throws(AuthenticationException::class)
@@ -48,7 +50,7 @@ class JWTAuthenticationFilter(
                 authReq.username,
                 authReq.password,
                 ArrayList()
-            ))
+            )).block()!!
         } catch (e: IOException) {
             throw AuthenticationServiceException(e.message)
         }

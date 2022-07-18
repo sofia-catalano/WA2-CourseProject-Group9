@@ -3,10 +3,13 @@ package it.polito.wa2.wa2lab3group09.loginservice
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
+import org.springframework.security.core.userdetails.UserDetailsService
 import java.util.*
 
 @Bean
@@ -36,7 +39,8 @@ private fun configureJavaMailProperties(properties: Properties) {
     properties["mail.debug"] = "spring.mail.debug"
 }
 
-@SpringBootApplication
+@SpringBootApplication(exclude = [DataSourceAutoConfiguration::class])
+@EnableReactiveMongoRepositories
 class LoginServiceApplication
 
 fun main(args: Array<String>) {

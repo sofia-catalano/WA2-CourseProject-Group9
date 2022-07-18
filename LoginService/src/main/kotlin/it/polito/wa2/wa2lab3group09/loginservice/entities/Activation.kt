@@ -1,25 +1,21 @@
 package it.polito.wa2.wa2lab3group09.loginservice.entities
 
-import org.hibernate.annotations.GenericGenerator
+import org.bson.types.ObjectId
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.OneToOne
 import kotlin.math.floor
 
-@Entity
-class Activation(
+@Document
+data class Activation(
+    val attemptCounter: Int = 5,
+    val expirationDate : LocalDateTime = LocalDateTime.now().plusHours(1),
+    val activationCode : Int = floor(100000 + Math.random() * 900000).toInt(), //6 digits activation code
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name="uuid2", strategy="uuid2")
-    var id: UUID = UUID.randomUUID(),
-    var attemptCounter: Int = 5,
-    var expirationDate : LocalDateTime = LocalDateTime.now().plusHours(1),
-    var activationCode : Int = floor(100000 + Math.random() * 900000).toInt() //6 digits activation code
+    val id: ObjectId = ObjectId.get()
 ) {
 
-    @OneToOne
+ //   @OneToOne
     var user: User? = null
 }
