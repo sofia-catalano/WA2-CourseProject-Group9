@@ -1,8 +1,12 @@
 package it.polito.wa2.wa2lab3group09.loginservice.entities
 
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import org.bson.types.ObjectId
 import org.jetbrains.annotations.NotNull
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
@@ -13,6 +17,7 @@ import javax.validation.constraints.Size
 data class User (
     @NotNull
     @NotEmpty(message = "Username cannot be empty")
+    @Indexed(unique=true)
     val username: String,
     @NotNull
     @NotEmpty(message = "Password cannot be empty")
@@ -21,6 +26,7 @@ data class User (
     val password: String,
     @NotNull
     @NotEmpty(message = "Email cannot be empty")
+    @Indexed(unique=true)
     @Email
     val email: String,
     val role: Role = Role.CUSTOMER,

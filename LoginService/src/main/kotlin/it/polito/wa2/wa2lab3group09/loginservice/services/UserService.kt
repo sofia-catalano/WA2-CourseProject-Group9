@@ -6,17 +6,13 @@ import it.polito.wa2.wa2lab3group09.loginservice.entities.Activation
 import it.polito.wa2.wa2lab3group09.loginservice.entities.User
 import it.polito.wa2.wa2lab3group09.loginservice.repositories.ActivationRepository
 import it.polito.wa2.wa2lab3group09.loginservice.repositories.UserRepository
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.reactive.awaitFirst
-import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.bson.types.ObjectId
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
-import java.util.*
 
 
 @Service
@@ -25,34 +21,24 @@ class UserService(val emailService: EmailService,
                   val activationRepository: ActivationRepository,
                   val passwordEncoded: PasswordEncoder) {
 
-    suspend fun createUser(userDTO: UserDTO): ObjectId {
-        val userEntity = User(userDTO.username, passwordEncoded.encode(userDTO.password), userDTO.email)
-
-        val userElement = userRepository.save(userEntity).awaitFirstOrNull()
-        activationRepository.save(Activation().apply {
-            user = userEntity
-            userElement?.let{
-                emailService.sendEmail("Activation Code", "Hi thanks for your subscription, to verify this email please use this activation code: ${this.activationCode} ", userElement.email)
-            }
+    suspend fun createUser(userDTO: UserDTO): ObjectId? {
+        val userEntity = User(
+            username = userDTO.username,
+            password = passwordEncoded.encode(userDTO.password),
+            email = userDTO.email
+        )
+        val usr = userRepository.save(userEntity).awaitFirst()
+        val activation = Activation().apply {
+            user = usr
+        }
+        activationRepository.save(activation).awaitFirst().apply {
+            sendEmail(this)
             return this.id
-        })
-    }
-    /*
-    fun createUser(userDTO: UserDTO, e_date : LocalDateTime): UUID {
-        val userEntity = User(userDTO.username, passwordEncoded.encode(userDTO.password), userDTO.email)
+        }
 
-        val userElement = userRepository.save(userEntity)
-        val activation = activationRepository.save(
-            Activation()
-            .apply {
-                user = userEntity
-                expirationDate = e_date
-            })
-        emailService.sendEmail("Activation Code", "Hi thanks for your subscription, to verify this email please use this activation code: ${activation.activationCode} ", userElement.email)
-        return activation.id
     }
-     */
 
+    //TODO VERIFICARE CHE FUNZIONA
     suspend fun verifyActivationCode(provisionalId: ObjectId, activationCode: Int): UserDTO? {
         if(!(activationRepository.existsById(provisionalId).awaitFirst())) throw IllegalArgumentException("Provisional ID not found!")
 
@@ -88,6 +74,10 @@ class UserService(val emailService: EmailService,
             }
         }
         return null
+    }
+
+    fun sendEmail(activation: Activation){
+        emailService.sendEmail("Activation Code", "Hi thanks for your subscription, to verify this email please use this activation code: ${activation.activationCode} ", activation.user!!.email)
     }
 
     @Scheduled(fixedRate = 30000)

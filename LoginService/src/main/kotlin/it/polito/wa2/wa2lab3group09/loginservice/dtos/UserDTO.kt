@@ -7,7 +7,7 @@ import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 data class UserDTO(
-    val id: ObjectId,
+    val id: ObjectId?,
     @field:NotNull
     @field:Size(min = 1)
     val username: String,
