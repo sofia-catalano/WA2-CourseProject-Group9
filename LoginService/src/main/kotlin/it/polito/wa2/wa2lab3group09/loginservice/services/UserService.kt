@@ -7,6 +7,7 @@ import it.polito.wa2.wa2lab3group09.loginservice.entities.User
 import it.polito.wa2.wa2lab3group09.loginservice.repositories.ActivationRepository
 import it.polito.wa2.wa2lab3group09.loginservice.repositories.UserRepository
 import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.reactive.awaitSingle
 import org.bson.types.ObjectId
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
@@ -38,36 +39,48 @@ class UserService(val emailService: EmailService,
 
     }
 
-    //TODO VERIFICARE CHE FUNZIONA
     suspend fun verifyActivationCode(provisionalId: ObjectId, activationCode: Int): UserDTO? {
         if(!(activationRepository.existsById(provisionalId).awaitFirst())) throw IllegalArgumentException("Provisional ID not found!")
 
-        val activation : Activation = activationRepository.getById(provisionalId)!!
-        val activationInfo: ActivationDTO = activation.toDTO()
-        val user = activationRepository.getById(provisionalId)?.user
+        lateinit var activationInfo: ActivationDTO
+
+        val activation : Activation? = activationRepository.getById(provisionalId).awaitSingle()?.apply {
+            activationInfo = this.toDTO()
+        }
+
+        val user = activationRepository.getById(provisionalId).awaitSingle()?.user
+
 
         user?.let{
             if(activationInfo.activationCode == activationCode) {
                 if(activationInfo.expirationDate >= LocalDateTime.now()){
-                    activationRepository.delete(activationRepository.getByUser(user)!!)
+                    if (activation != null) {
+                        activationRepository.delete(activation).subscribe()
+                    }
 
-                    userRepository.save(it.copy(isActive = true ))
+                    userRepository.save(it.copy(isActive = true )).awaitSingle().apply {
+                        println(this)
+                    }
 
 
                     return user.toDTO()
                 }else{
-                    userRepository.delete(user)
+                    userRepository.delete(user).subscribe()
                     throw IllegalArgumentException("Activation date expired! Deleting user registration data...")
                 }
 
             } else {
                 when (activationInfo.attemptCounter) {
                     1 ->{
-                        userRepository.delete(user)
+                        userRepository.delete(user).subscribe()
+                        activationRepository.delete(activation!!).subscribe()
+
                         throw IllegalArgumentException("Max number of activation attempt reached! Deleting user registration data...")
                     }
                     else -> {
-                        activationRepository.save(activation.copy(attemptCounter = activation.attemptCounter - 1))
+                        if (activation != null) {
+                            activationRepository.save(activation.copy(attemptCounter = activation.attemptCounter - 1)).awaitFirst()
+                        }
                         throw IllegalArgumentException("Invalid activation code!")
                     }
                 }

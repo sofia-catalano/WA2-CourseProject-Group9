@@ -1,6 +1,7 @@
 package it.polito.wa2.wa2lab3group09.loginservice.services
 
 import it.polito.wa2.wa2lab3group09.loginservice.repositories.UserRepository
+import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactor.mono
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -16,7 +17,7 @@ class UserDetailsService (private val userRepository: UserRepository) : Reactive
 
     @Throws(UsernameNotFoundException::class)
     override fun findByUsername(username: String?): Mono<UserDetails> = mono {
-        val user = username?.let { userRepository.getByUsername(it) } ?: throw UsernameNotFoundException("The username $username doesn't exist")
+        val user = username?.let { userRepository.getByUsername(it).awaitFirst() } ?: throw UsernameNotFoundException("The username $username doesn't exist")
         val authorities = ArrayList<GrantedAuthority>()
         authorities.add(SimpleGrantedAuthority(user.role.toString()))
         return@mono User(

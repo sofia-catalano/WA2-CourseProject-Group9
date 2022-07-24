@@ -2,21 +2,22 @@ package it.polito.wa2.wa2lab3group09.loginservice.repositories
 
 import it.polito.wa2.wa2lab3group09.loginservice.entities.Activation
 import it.polito.wa2.wa2lab3group09.loginservice.entities.User
-import kotlinx.coroutines.flow.Flow
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.repository.Query
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import java.time.LocalDateTime
 
 
 @Repository
 interface ActivationRepository: ReactiveMongoRepository<Activation, ObjectId> {
 
-    suspend fun getByUser(user : User) : Activation?
+    fun getByUser(user : User) : Mono<Activation?>
 
-    suspend fun getById(id: ObjectId): Activation?
+    fun getById(id: ObjectId): Mono<Activation?>
+
 /*
     @Query("select A.user from Activation A where A.id = :uuid")
     fun getUserByUUID (uuid: UUID) : User
