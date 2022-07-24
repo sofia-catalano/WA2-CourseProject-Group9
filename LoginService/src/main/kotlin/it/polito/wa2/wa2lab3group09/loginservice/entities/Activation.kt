@@ -15,7 +15,5 @@ data class Activation(
     @Id
     val id: ObjectId = ObjectId.get()
 ) {
-
- //   @OneToOne
-    var user: User? = null
+    lateinit var user: User
 }

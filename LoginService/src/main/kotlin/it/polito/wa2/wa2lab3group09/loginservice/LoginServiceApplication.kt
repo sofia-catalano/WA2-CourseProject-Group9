@@ -38,6 +38,10 @@ class MongoReactiveApplication : AbstractReactiveMongoConfiguration() {
         return MongoClients.create()
     }
 
+    override fun autoIndexCreation(): Boolean {
+        return true
+    }
+
     override fun getDatabaseName(): String {
         return "loginservice"
     }

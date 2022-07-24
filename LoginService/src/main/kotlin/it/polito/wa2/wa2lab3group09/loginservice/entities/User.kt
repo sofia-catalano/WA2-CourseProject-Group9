@@ -1,8 +1,6 @@
 package it.polito.wa2.wa2lab3group09.loginservice.entities
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
+
 import org.bson.types.ObjectId
 import org.jetbrains.annotations.NotNull
 import org.springframework.data.annotation.Id
@@ -26,19 +24,14 @@ data class User (
     val password: String,
     @NotNull
     @NotEmpty(message = "Email cannot be empty")
-    @Indexed(unique=true)
     @Email
+    @Indexed(unique=true)
     val email: String,
     val role: Role = Role.CUSTOMER,
     val isActive : Boolean = false,
     @Id
     val id: ObjectId = ObjectId.get()
     )
-{
-
-   // @OneToOne(mappedBy = "user", cascade = [CascadeType.REMOVE])
-    var activation: Activation? = null
-}
 
 
 enum class Role{

@@ -21,7 +21,7 @@ class UserService(val emailService: EmailService,
                   val activationRepository: ActivationRepository,
                   val passwordEncoded: PasswordEncoder) {
 
-    suspend fun createUser(userDTO: UserDTO): ObjectId? {
+    suspend fun createUser(userDTO: UserDTO): String? {
         val userEntity = User(
             username = userDTO.username,
             password = passwordEncoded.encode(userDTO.password),
@@ -33,7 +33,7 @@ class UserService(val emailService: EmailService,
         }
         activationRepository.save(activation).awaitFirst().apply {
             sendEmail(this)
-            return this.id
+            return this.id.toString()
         }
 
     }
