@@ -2,19 +2,17 @@ package it.polito.wa2.wa2lab4group09.travelerservice.repositories
 
 import it.polito.wa2.wa2lab4group09.travelerservice.entities.TicketPurchased
 import it.polito.wa2.wa2lab4group09.travelerservice.entities.UserDetails
-import org.springframework.data.jpa.repository.Modifying
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
+import kotlinx.coroutines.flow.Flow
+import org.bson.types.ObjectId
+
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
+import reactor.core.publisher.Flux
 
 @Repository
-interface TicketPurchasedRepository: CrudRepository<TicketPurchased, Int> {
+interface TicketPurchasedRepository: ReactiveMongoRepository<TicketPurchased, ObjectId> {
 
-    fun findByUserDetails(userDetails: UserDetails) : List<TicketPurchased>
+    fun findAllByUserDetails(userDetails: UserDetails) : Flow<TicketPurchased>
 
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM TicketPurchased WHERE userDetails =:userDetails")
     fun deleteAllByUserDetails(userDetails: UserDetails)
 }

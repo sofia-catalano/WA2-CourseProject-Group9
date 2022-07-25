@@ -1,11 +1,15 @@
 package it.polito.wa2.wa2lab4group09.travelerservice.entities
 
+import org.bson.types.ObjectId
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.Indexed
+import org.springframework.data.mongodb.core.mapping.Document
 import java.sql.Timestamp
-import java.util.*
-import javax.persistence.*
+
 
 //TODO implement validFrom and type of a ticket
 
+/*
 @Entity
 @Table(name="ticket_purchased")
 class TicketPurchased (
@@ -21,4 +25,17 @@ class TicketPurchased (
     var userDetails: UserDetails? = null
 ){
 
-}
+}*/
+
+@Document(collection = "ticketPurchased")
+data class TicketPurchased(
+    @Id
+    @Indexed(unique = true)
+    var sub : ObjectId = ObjectId.get(),
+    var iat: Timestamp,
+    var exp: Timestamp,
+    var zid: String,
+    var jws: String,
+    var typeId : Long,
+    var userDetails: UserDetails? = null
+)

@@ -2,30 +2,54 @@ package it.polito.wa2.wa2lab4group09.travelerservice.security
 
 import it.polito.wa2.wa2lab4group09.travelerservice.AppProperties
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpStatus
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder
+import org.springframework.security.config.web.server.ServerHttpSecurity
+import org.springframework.security.core.AuthenticationException
+import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.web.server.ServerWebExchange
+import reactor.core.publisher.Mono
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-class WebSecurityConfig : WebSecurityConfigurerAdapter() {
+@EnableWebFluxSecurity
+class WebSecurityConfig{
 
     @Autowired
     lateinit var appProperties: AppProperties
 
-    override fun configure(http: HttpSecurity) {
-        val authorizationFilter = JWTAuthorizationFilter(authenticationManager(), appProperties.jwtHeader, appProperties.jwtHeaderStart, appProperties.key)
-        http
+    @Bean
+    fun securityWebFilterChain(http: ServerHttpSecurity) : SecurityWebFilterChain?{
+        val authorizationFilter = JWTAuthorizationFilter(appProperties.key)
+        return http
             .cors()
             .and()
             .csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // no sessions
+            .addFilterAt(authorizationFilter, SecurityWebFiltersOrder.AUTHORIZATION)
+            .authorizeExchange()
+            .pathMatchers("/my/profile").hasAnyAuthority("ROLE_CUSTOMER","ROLE_ADMIN")
+            .pathMatchers("/my/tickets").hasAuthority("ROLE_CUSTOMER")
+            .pathMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
             .and()
-            .addFilter(authorizationFilter)
-            .antMatcher("/**")
-            .authorizeRequests()
-            .anyRequest().authenticated()
+            .exceptionHandling()
+            .authenticationEntryPoint { swe: ServerWebExchange, _: AuthenticationException ->
+                Mono.fromRunnable {
+                    swe.response.statusCode = HttpStatus.UNAUTHORIZED
+                }
+            }
+            .accessDeniedHandler { swe: ServerWebExchange, _: AccessDeniedException ->
+                Mono.fromRunnable { swe.response.statusCode = HttpStatus.FORBIDDEN }
+            }
+            .and()
+            .build()
+
     }
 }

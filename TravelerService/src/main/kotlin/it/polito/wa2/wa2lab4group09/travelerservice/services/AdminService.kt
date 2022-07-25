@@ -1,10 +1,13 @@
 package it.polito.wa2.wa2lab4group09.travelerservice.services
 
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TicketPurchasedDTO
-import it.polito.wa2.wa2lab4group09.travelerservice.dtos.UserDetailsDTO
-import it.polito.wa2.wa2lab4group09.travelerservice.dtos.toDTO
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.UserDetails
 import it.polito.wa2.wa2lab4group09.travelerservice.repositories.TicketPurchasedRepository
 import it.polito.wa2.wa2lab4group09.travelerservice.repositories.UserDetailsRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -13,27 +16,23 @@ class AdminService(val userDetailsRepository: UserDetailsRepository, val ticketP
     @Value("\${application.jwt.jwtSecret}")
     lateinit var key: String
 
-    fun getTravelers(jwt:String): List<Username> {
-        val travelers = mutableListOf<Username>()
-        userDetailsRepository.getUsers().forEach { travelers.add(Username(it)) }
-        return travelers
+    suspend fun getTravelers(jwt:String): Flow<Username> {
+        return userDetailsRepository.findAll().asFlow().map {
+            Username(it.username)
+        }
     }
 
-    fun getTravelerProfile(jwt:String, userID:String): UserDetailsDTO {
-        val userDetail = userDetailsRepository.findById(userID).unwrap()
-        if (userDetail == null)
-            throw IllegalArgumentException("User doesn't exist!")
-        else
-            return userDetail.toDTO()
+    suspend fun getTravelerProfile(jwt:String, userID:String): UserDetails {
+        return userDetailsRepository.findById(userID).awaitFirst() ?:throw IllegalArgumentException("User doesn't exist!")
     }
 
-    fun getTravelerTickets(jwt:String, userID:String): List<TicketPurchasedDTO> {
+    suspend fun getTravelerTickets(jwt:String, userID:String): List<TicketPurchasedDTO> {
         val tickets = mutableListOf<TicketPurchasedDTO>()
-        val userDetail = userDetailsRepository.findById(userID).unwrap()
+        val userDetail = userDetailsRepository.findById(userID).awaitFirst()
         if (userDetail == null)
             throw IllegalArgumentException("User doesn't exist!")
         else{
-            ticketPurchasedRepository.findByUserDetails(userDetail).forEach {
+            ticketPurchasedRepository.findAllByUserDetails(userDetail).map {
                 tickets.add(TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws))
             }
             return tickets

@@ -1,15 +1,13 @@
 package it.polito.wa2.wa2lab4group09.travelerservice.repositories
 
 import it.polito.wa2.wa2lab4group09.travelerservice.entities.UserDetails
-import org.springframework.data.jpa.repository.Modifying
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface UserDetailsRepository: CrudRepository<UserDetails, String> {
+interface UserDetailsRepository: ReactiveMongoRepository<UserDetails, String> {
 
-    @Modifying(clearAutomatically = true)
+    /*@Modifying(clearAutomatically = true)
     @Query("update UserDetails set " +
             "name=(CASE WHEN :newName IS NULL THEN name ELSE :newName END), " +
             "surname = (CASE WHEN :newSurname IS NULL THEN surname ELSE :newSurname END), " +
@@ -20,6 +18,6 @@ interface UserDetailsRepository: CrudRepository<UserDetails, String> {
     fun updateUserDetails(newName : String?, newSurname:String?, newAddress:String?, newDate_of_birth : String?, new_number: String?, username : String)
 
     @Query("select username from UserDetails")
-    fun getUsers():List<String>
+    fun getUsers():List<String>*/
 
 }

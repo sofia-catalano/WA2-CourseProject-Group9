@@ -1,9 +1,10 @@
 package it.polito.wa2.wa2lab4group09.travelerservice.controllers
 
+import it.polito.wa2.wa2lab4group09.travelerservice.dtos.toDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.services.UserDetailsService
+import kotlinx.coroutines.flow.map
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -14,12 +15,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class MyController(val userDetailsService: UserDetailsService) {
 
-    @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/my/profile")
-    fun getUserDetails(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
+    suspend fun getUserDetails(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
         return try {
-            val userDetailsDTO = userDetailsService.getUserDetails(newToken)
+            val userDetailsDTO = userDetailsService.getUserDetails(newToken).toDTO()
             //val body = UserDetailsUpdate(userDetailsDTO.name,userDetailsDTO.surname,userDetailsDTO.address,userDetailsDTO.date_of_birth,userDetailsDTO.telephone_number)
             ResponseEntity(userDetailsDTO, HttpStatus.OK)
         } catch (t : Throwable){
@@ -28,9 +28,8 @@ class MyController(val userDetailsService: UserDetailsService) {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_ADMIN')")
     @PutMapping("/my/profile")
-    fun updateUserDetails(@RequestHeader("Authorization") jwt:String, @RequestBody userDetailsUpdate: UserDetailsUpdate) : ResponseEntity<Any>{
+    suspend fun updateUserDetails(@RequestHeader("Authorization") jwt:String, @RequestBody userDetailsUpdate: UserDetailsUpdate) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
         return try {
             userDetailsService.updateUserDetails(newToken,userDetailsUpdate)
@@ -41,12 +40,13 @@ class MyController(val userDetailsService: UserDetailsService) {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/my/tickets")
-    fun getUserTickets(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
+    suspend fun getUserTickets(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
         return try {
-            val body = userDetailsService.getUserTickets(newToken)
+            val body = userDetailsService.getUserTickets(newToken).map {
+                t-> t.toDTO()
+            }
             ResponseEntity(body, HttpStatus.OK)
         } catch (t : Throwable){
             val error = ErrorMessage(t.message)
@@ -54,9 +54,8 @@ class MyController(val userDetailsService: UserDetailsService) {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PostMapping("/my/tickets")
-    fun buyTickets(@RequestHeader("Authorization") jwt:String, @RequestBody actionTicket: ActionTicket) : ResponseEntity<Any>{
+    suspend fun buyTickets(@RequestHeader("Authorization") jwt:String, @RequestBody actionTicket: ActionTicket) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
         return try {
             val body = userDetailsService.buyTickets(newToken,actionTicket)
