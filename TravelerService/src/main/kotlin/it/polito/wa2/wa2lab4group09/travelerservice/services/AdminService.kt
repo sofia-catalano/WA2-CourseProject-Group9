@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -23,7 +24,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository, val ticketP
     }
 
     suspend fun getTravelerProfile(jwt:String, userID:String): UserDetails {
-        return userDetailsRepository.findById(userID).awaitFirst() ?:throw IllegalArgumentException("User doesn't exist!")
+        return userDetailsRepository.findById(userID).awaitFirstOrNull() ?:throw IllegalArgumentException("User doesn't exist!")
     }
 
     suspend fun getTravelerTickets(jwt:String, userID:String): List<TicketPurchasedDTO> {

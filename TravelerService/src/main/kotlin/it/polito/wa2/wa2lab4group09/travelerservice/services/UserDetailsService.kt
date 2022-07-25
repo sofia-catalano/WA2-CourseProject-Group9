@@ -14,6 +14,7 @@ import it.polito.wa2.wa2lab4group09.travelerservice.repositories.UserDetailsRepo
 import it.polito.wa2.wa2lab4group09.travelerservice.security.JwtUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
@@ -33,7 +34,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository, val t
     suspend fun getUserDetails(jwt : String): UserDetails {
         val username = JwtUtils.getDetailsFromJwtToken(jwt, key).username
         val role: Role = JwtUtils.getDetailsFromJwtToken(jwt, key).role
-        return userDetailsRepository.findById(username).awaitFirst() ?: userDetailsRepository.save(
+        return userDetailsRepository.findById(username).awaitFirstOrNull() ?: userDetailsRepository.save(
             UserDetails(
                 username,
                 role = role

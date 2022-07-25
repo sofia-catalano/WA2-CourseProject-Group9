@@ -31,7 +31,7 @@ class UserDetails(
 @Document(collection = "userDetails")
 data class UserDetails(
     @Id
-    @Indexed(unique = true)
+    @Indexed
     var username: String,
     var name: String? = null,
     var surname: String? = null,

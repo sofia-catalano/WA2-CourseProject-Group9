@@ -30,7 +30,7 @@ class TicketPurchased (
 @Document(collection = "ticketPurchased")
 data class TicketPurchased(
     @Id
-    @Indexed(unique = true)
+    @Indexed
     var sub : ObjectId = ObjectId.get(),
     var iat: Timestamp,
     var exp: Timestamp,
