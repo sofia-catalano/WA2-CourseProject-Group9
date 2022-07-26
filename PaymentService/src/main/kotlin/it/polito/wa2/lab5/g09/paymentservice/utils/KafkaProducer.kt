@@ -4,6 +4,7 @@ package it.polito.wa2.lab5.g09.paymentservice.utils
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
+import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -36,7 +37,7 @@ class KafkaProducer(
 
 data class PaymentResult(
     @JsonProperty("orderId")
-    val orderId: UUID,
+    val orderId: ObjectId,
     @JsonProperty("confirmed")
     val confirmed: Boolean
 )

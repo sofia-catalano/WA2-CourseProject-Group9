@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class Order(
     @Id
     @Indexed
-    val orderId: ObjectId? = null,
+    val orderId: ObjectId = ObjectId.get(),
     var status: Status = Status.PENDING,
     val ticketCatalogueId: ObjectId,
     val quantity: Int,

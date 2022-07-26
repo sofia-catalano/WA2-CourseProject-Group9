@@ -2,11 +2,13 @@ package it.polito.wa2.lab5.g09.paymentservice.repositories
 
 import it.polito.wa2.lab5.g09.paymentservice.entities.Transaction
 import kotlinx.coroutines.flow.Flow
-import org.springframework.data.repository.kotlin.CoroutineCrudRepository
+import org.bson.types.ObjectId
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
-interface TransactionRepository: CoroutineCrudRepository<Transaction, UUID> {
+interface TransactionRepository: ReactiveMongoRepository<Transaction, ObjectId> {
+
     fun findByCustomerUsername(customerUsername : String) : Flow<Transaction>
+
 }
