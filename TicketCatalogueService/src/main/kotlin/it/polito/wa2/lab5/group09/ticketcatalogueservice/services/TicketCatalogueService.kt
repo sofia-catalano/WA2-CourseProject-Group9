@@ -10,6 +10,10 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.utils.PaymentResult
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -37,8 +41,8 @@ class TicketCatalogueService(
         return orderRepository.findByCustomerUsername(JwtUtils.getDetailsFromJwtToken(jwt, key).username)
     }
 
-    suspend fun getOrderByUUID(orderId: UUID, jwt: String): Order {
-        val order = orderRepository.findById(orderId)
+    suspend fun getOrderByUUID(orderId: ObjectId, jwt: String): Order {
+        val order = orderRepository.findById(orderId).awaitFirstOrNull()
         if (order?.customerUsername == JwtUtils.getDetailsFromJwtToken(jwt, key).username) {
             return order
         } else {
@@ -48,7 +52,7 @@ class TicketCatalogueService(
 
     suspend fun getAllUsersOrders(): Flow<Order> {
         return try {
-            orderRepository.findAll()
+            orderRepository.findAll().asFlow()
         } catch (t: Throwable) {
             throw IllegalArgumentException("Something went wrong")
         }
@@ -64,15 +68,15 @@ class TicketCatalogueService(
 
     suspend fun getCatalogue(): Flow<TicketCatalogue> {
         return try {
-            ticketCatalogueRepository.findAll()
+            ticketCatalogueRepository.findAll().asFlow()
         } catch (t: Throwable) {
             throw IllegalArgumentException("Something went wrong")
         }
     }
 
-    suspend fun getTicket(ticketId: Long): TicketCatalogue {
+    suspend fun getTicket(ticketId: ObjectId): TicketCatalogue {
         return try {
-            ticketCatalogueRepository.findById(ticketId)!!
+            ticketCatalogueRepository.findById(ticketId).awaitFirst()
         } catch (t: Throwable) {
             throw IllegalArgumentException("This ticket type doesn't exist!")
         }
@@ -87,10 +91,10 @@ class TicketCatalogueService(
             if (!paymentResult.confirmed) {
                 status = Status.CANCELED
             }
-            val order: Order = orderRepository.findById(paymentResult.orderId)!!
+            val order: Order = orderRepository.findById(paymentResult.orderId).awaitFirst()
             order.status = status
-            orderRepository.save(order)
-            val zones = ticketCatalogueRepository.findById(order.ticketCatalogueId)?.zones
+            orderRepository.save(order).awaitFirst()
+            val zones = ticketCatalogueRepository.findById(order.ticketCatalogueId).awaitFirst().zones
             if(status == Status.ACCEPTED){
                 try {
                     val traveler = async {
@@ -123,4 +127,4 @@ class TicketCatalogueService(
     }
 }
 
-data class ActionTicket(val cmd: String, val quantity: Int, val zones: String, val type: Long)
+data class ActionTicket(val cmd: String, val quantity: Int, val zones: String, val type: ObjectId)

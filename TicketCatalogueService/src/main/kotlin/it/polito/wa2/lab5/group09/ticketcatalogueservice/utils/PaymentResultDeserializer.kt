@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.kafka.common.errors.SerializationException
 import org.slf4j.LoggerFactory
-import java.util.*
 import org.apache.kafka.common.serialization.Deserializer
+import org.bson.types.ObjectId
 import kotlin.text.Charsets.UTF_8
 
 class PaymentResultDeserializer : Deserializer<PaymentResult> {
@@ -27,7 +27,7 @@ class PaymentResultDeserializer : Deserializer<PaymentResult> {
 
 data class PaymentResult(
     @JsonProperty("orderId")
-    val orderId: UUID,
+    val orderId: ObjectId,
     @JsonProperty("confirmed")
     val confirmed: Boolean
 )

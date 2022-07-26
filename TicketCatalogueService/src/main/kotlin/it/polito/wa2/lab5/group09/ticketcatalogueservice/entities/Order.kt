@@ -1,15 +1,19 @@
 package it.polito.wa2.lab5.group09.ticketcatalogueservice.entities
 
+import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
-import org.springframework.data.relational.core.mapping.Table
-import java.util.UUID
+import org.springframework.data.mongodb.core.index.Indexed
+import org.springframework.data.mongodb.core.mapping.Document
 
-@Table("orders")
+
+
+@Document(collection = "orders")
 data class Order(
     @Id
-    val orderId: UUID? = null,
+    @Indexed
+    val orderId: ObjectId? = null,
     var status: Status = Status.PENDING,
-    val ticketCatalogueId: Long,
+    val ticketCatalogueId: ObjectId,
     val quantity: Int,
     val customerUsername: String,
 )
