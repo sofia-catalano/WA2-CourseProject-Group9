@@ -35,7 +35,7 @@ class MongoReactiveApplication : AbstractReactiveMongoConfiguration() {
     }
 
     override fun getDatabaseName(): String {
-        return "payementservice"
+        return "paymentservice"
     }
 }
 
