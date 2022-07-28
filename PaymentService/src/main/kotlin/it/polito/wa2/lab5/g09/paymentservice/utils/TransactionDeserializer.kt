@@ -7,6 +7,7 @@ import org.apache.kafka.common.serialization.Serializer
 import org.slf4j.LoggerFactory
 import java.util.*
 import org.apache.kafka.common.serialization.Deserializer
+import org.bson.types.ObjectId
 import kotlin.text.Charsets.UTF_8
 
 class TransactionDeserializer : Deserializer<TransactionInfo> {
@@ -27,7 +28,7 @@ class TransactionDeserializer : Deserializer<TransactionInfo> {
 
 data class TransactionInfo(
     @JsonProperty("orderId")
-    val orderId: UUID,
+    val orderId: ObjectId,
     @JsonProperty("amount")
     val amount: Float,
     @JsonProperty("creditCardNumber")

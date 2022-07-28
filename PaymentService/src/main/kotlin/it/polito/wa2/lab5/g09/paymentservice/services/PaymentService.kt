@@ -6,6 +6,7 @@ import it.polito.wa2.lab5.g09.paymentservice.security.JwtUtils
 import it.polito.wa2.lab5.g09.paymentservice.utils.PaymentResult
 import it.polito.wa2.lab5.g09.paymentservice.utils.TransactionInfo
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.reactive.asFlow
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -28,7 +29,7 @@ class PaymentService(val transactionRepository: TransactionRepository,
 
     suspend fun getAllUsersTransactions() : Flow<Transaction>{
         return try {
-            transactionRepository.findAll()
+            transactionRepository.findAll().asFlow()
         }catch (t : Throwable){
             throw IllegalArgumentException("Something went wrong")
         }
@@ -53,7 +54,7 @@ class PaymentService(val transactionRepository: TransactionRepository,
         )
         val paymentResult = PaymentResult(transactionInfo.orderId, isConfirmed)
         try {
-           transactionRepository.save(transaction)
+           transactionRepository.save(transaction).subscribe()
             log.info("Receiving product request")
             log.info("Sending message to Kafka {}", paymentResult)
             val message: Message<PaymentResult> = MessageBuilder

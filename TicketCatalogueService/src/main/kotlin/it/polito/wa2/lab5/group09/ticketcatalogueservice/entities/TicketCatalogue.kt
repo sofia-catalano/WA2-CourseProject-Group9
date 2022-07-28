@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class TicketCatalogue (
     @Id
     @Indexed
-    val ticketId: ObjectId? = null,
+    val ticketId: ObjectId = ObjectId.get(),
     var type: String,
     var price: Float,
     var zones : String,

@@ -10,6 +10,8 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.services.TicketCatalogu
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.reactor.awaitSingle
+import org.bson.types.ObjectId
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -62,7 +64,7 @@ class TicketCatalogueController(
 
     @GetMapping("/orders/{orderId}")
     suspend fun getOrdersByUUID(
-        @PathVariable orderId: UUID,
+        @PathVariable orderId: ObjectId,
         @RequestHeader("Authorization") jwt: String
     ): ResponseEntity<Any> {
         val newToken = jwt.replace("Bearer", "")
@@ -148,9 +150,9 @@ class TicketCatalogueController(
                         quantity = purchasingInfo.numberOfTickets,
                         customerUsername = username,
                     )
-                )
+                ).awaitSingle()
 
-                val transaction=TransactionInfo(order.orderId!!,ticketCatalogue.price*purchasingInfo.numberOfTickets, purchasingInfo.paymentInfo.creditCardNumber, purchasingInfo.paymentInfo.expirationDate, purchasingInfo.paymentInfo.cvv, purchasingInfo.paymentInfo.cardHolder)
+                val transaction=TransactionInfo(order.orderId,ticketCatalogue.price*purchasingInfo.numberOfTickets, purchasingInfo.paymentInfo.creditCardNumber, purchasingInfo.paymentInfo.expirationDate, purchasingInfo.paymentInfo.cvv, purchasingInfo.paymentInfo.cardHolder)
                 log.info("Receiving product request")
                 log.info("Sending message to Kafka {}", order)
                 val message: Message<TransactionInfo> = MessageBuilder
@@ -187,11 +189,11 @@ data class PaymentInfo(
     val cardHolder: String
 )
 
-data class PurchasingInfo(val numberOfTickets: Int, val ticketId: Long, val paymentInfo: PaymentInfo)
+data class PurchasingInfo(val numberOfTickets: Int, val ticketId: ObjectId, val paymentInfo: PaymentInfo)
 
 data class TransactionInfo(
     @JsonProperty("orderId")
-    val orderId: UUID,
+    val orderId: ObjectId,
     @JsonProperty("amount")
     val amount: Float,
     @JsonProperty("creditCardNumber")
