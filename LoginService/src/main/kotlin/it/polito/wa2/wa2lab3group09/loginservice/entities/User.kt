@@ -29,6 +29,7 @@ data class User (
     val email: String,
     val role: Role = Role.CUSTOMER,
     val isActive : Boolean = false,
+    var enroll:Boolean=false,
     @Id
     val id: ObjectId = ObjectId.get()
     )
