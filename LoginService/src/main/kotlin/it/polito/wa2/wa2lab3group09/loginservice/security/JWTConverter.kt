@@ -36,5 +36,8 @@ class JWTConverter(private val jacksonDecoder: AbstractJackson2Decoder) : Server
             .awaitFirstOrNull()
     }
 }
-
+class AuthReq {
+    var username: String? = null
+    var password: String? = null
+}
 

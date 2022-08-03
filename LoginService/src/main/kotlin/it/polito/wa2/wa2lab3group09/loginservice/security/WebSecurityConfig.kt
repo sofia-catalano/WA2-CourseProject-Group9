@@ -20,7 +20,9 @@ import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
 import org.springframework.security.config.web.server.ServerHttpSecurity
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter
+import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers
@@ -49,14 +51,21 @@ class WebSecurityConfig(val userDetailsService: UserDetailsService) {
     @Bean
     fun jacksonDecoder(): AbstractJackson2Decoder = Jackson2JsonDecoder()
 
-
     @Bean
-    fun configureSecurity(http: ServerHttpSecurity) : SecurityWebFilterChain? {
-        val authenticationFilter = JWTAuthenticationFilter(reactiveAuthenticationManager(userDetailsService, passwordEncoded()),jacksonDecoder(),  appProperties.jwtHeader,appProperties.jwtHeaderStart,appProperties.key)
-        val jwtConverter=JWTConverter(jacksonDecoder())
-        authenticationFilter.setServerAuthenticationConverter(jwtConverter)
-        authenticationFilter.setAuthenticationSuccessHandler(JWTServerAuthenticationSuccessHandler(appProperties))
-        authenticationFilter.setRequiresAuthenticationMatcher { ServerWebExchangeMatchers.pathMatchers("/user/login").matches(it) }
+    fun authenticationWebFilter(reactiveAuthenticationManager: ReactiveAuthenticationManager,
+                                jwtConverter: ServerAuthenticationConverter,
+                                serverAuthenticationSuccessHandler: ServerAuthenticationSuccessHandler,
+                                serverAuthenticationFailureHandler: ServerAuthenticationFailureHandler): AuthenticationWebFilter {
+
+        val authenticationWebFilter = AuthenticationWebFilter(reactiveAuthenticationManager)
+        authenticationWebFilter.setRequiresAuthenticationMatcher { ServerWebExchangeMatchers.pathMatchers("/user/login").matches(it) }
+        authenticationWebFilter.setServerAuthenticationConverter(jwtConverter)
+        authenticationWebFilter.setAuthenticationSuccessHandler(serverAuthenticationSuccessHandler)
+        authenticationWebFilter.setAuthenticationFailureHandler(serverAuthenticationFailureHandler)
+        return authenticationWebFilter
+    }
+    @Bean
+    fun configureSecurity(http: ServerHttpSecurity,  authenticationWebFilter: AuthenticationWebFilter) : SecurityWebFilterChain? {
         val authorizationFilter = JWTAuthorizationFilter(appProperties.key)
 
         return http
@@ -71,7 +80,7 @@ class WebSecurityConfig(val userDetailsService: UserDetailsService) {
             .pathMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
             .and()
             .addFilterAt(RateLimitFilter(), SecurityWebFiltersOrder.FIRST)
-            .addFilterAt(authenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+            .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .addFilterAt(authorizationFilter, SecurityWebFiltersOrder.AUTHORIZATION)
             .build()
     }
