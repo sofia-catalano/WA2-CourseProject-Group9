@@ -5,12 +5,14 @@ import io.github.bucket4j.Bucket
 import io.github.bucket4j.Bucket4j
 import io.github.bucket4j.Refill
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.stereotype.Component
-import org.springframework.web.servlet.HandlerInterceptor
+import org.springframework.web.server.ServerWebExchange
+import org.springframework.web.server.WebFilter
+import org.springframework.web.server.WebFilterChain
+import reactor.core.publisher.Mono
 import java.time.Duration
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
-
+/*
 @Component
 class RateLimitInterceptor: HandlerInterceptor {
 
@@ -35,4 +37,25 @@ class RateLimitInterceptor: HandlerInterceptor {
             false
         }
     }
+}*/
+@Component
+class RateLimitFilter: WebFilter {
+
+    val tokenBucket: Bucket = Bucket4j.builder()
+        .addLimit(Bandwidth.classic(10, Refill.greedy(10, Duration.ofSeconds(1))))
+        .build()
+
+    override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+        println("RATE LIMIT FILTER ")
+        val probe = tokenBucket.tryConsumeAndReturnRemaining(1)
+         if (probe.isConsumed) {
+            exchange.getResponse().getHeaders().set("X-Rate-Limit-Remaining", probe.remainingTokens.toString())
+        } else {
+            val waitForRefill = probe.nanosToWaitForRefill / 1000000000
+            exchange.getResponse().getHeaders().set("X-Rate-Limit-Retry-After-Seconds", waitForRefill.toString())
+            exchange.getResponse().setStatusCode(HttpStatus.TOO_MANY_REQUESTS)
+        }
+        return chain.filter(exchange)
+    }
 }
+
