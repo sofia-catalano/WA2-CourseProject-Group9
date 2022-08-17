@@ -164,6 +164,30 @@ curl GET -H "Authorization: {Bearer...}" -H "Content-Type: application/json" -v 
 curl GET -H "Authorization: {Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8082/orders/{orderId}
 ```
 
+- GET /admin/traveler/{ownerID}/travelcards/purchased → returns the travelcards owned by ownerID.
+```
+curl GET -v -i 'http://localhost:8081/admin/traveler/OWNER1/travelcards/purchased' -H "Authorization:{Bearer...}"
+```
+
+- GET /admin/traveler/{ownerID}/travelcards/purchased → returns the travelcards purchased by ownerID in the period selected.
+```
+curl GET -v -i 'http://localhost:8081/admin/traveler/OWNER1/travelcards/purchased?start=10/08/2022&end=30/08/2022' -H "Authorization:{Bearer...}"
+```
+
+- GET /admin/travelers/travelcards/purchased
+```
+curl GET -v -i 'http://localhost:8081/admin/travelers/travelcards/purchased' -H "Authorization:{Bearer...}"
+```
+The endpoint returns a JSON list of travelcards owned by any user.
+
+GET /admin/travelers/travelcards/purchased
+```
+curl GET -v -i 'http://localhost:8081/admin/travelers/travelcards/purchased?start=10/11/2022&end=10/11/2022' -H "Authorization:{Bearer...}"
+```
+The endpoint returns a JSON list of travelcards owned by any user in the period specified.
+
+
+
 
 
 
