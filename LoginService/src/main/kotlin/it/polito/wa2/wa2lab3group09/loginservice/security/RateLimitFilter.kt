@@ -46,7 +46,6 @@ class RateLimitFilter: WebFilter {
         .build()
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
-        println("RATE LIMIT FILTER ")
         val probe = tokenBucket.tryConsumeAndReturnRemaining(1)
          if (probe.isConsumed) {
             exchange.getResponse().getHeaders().set("X-Rate-Limit-Remaining", probe.remainingTokens.toString())
