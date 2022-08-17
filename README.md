@@ -82,15 +82,38 @@ curl GET -v -i 'http://localhost:8081/admin/travelers' -H "Authorization:{Bearer
 ```
 The endpoint returns a JSON list of usernames for which there exists any information (either in terms of user profile or issued tickets).
 
+- GET /admin/travelers/tickets/purchased
+```
+curl GET -v -i 'http://localhost:8081/admin/travelers/tickets/purchased?start=10/11/2022&end=10/11/2022' -H "Authorization:{Bearer...}"
+```
+The endpoint returns a JSON list of tickets purchased by any user in the period specified.
+
+- GET /admin/travelers/tickets/purchased
+```
+curl GET -v -i 'http://localhost:8081/admin/travelers/tickets/purchased' -H "Authorization:{Bearer...}"
+```
+The endpoint returns a JSON list of tickets purchased by any user.
+
 - GET /admin/traveler/{userID}/profile
 ```
 curl GET -v -i 'http://localhost:8081/admin/traveler/USER1/profile' -H "Authorization:{Bearer...}"
 ```
 The endpoint will return the profile corresponding to userID.
 
-- GET /admin/traveler/{userID}/tickets → returns the tickets owned by userID.
+- GET /admin/traveler/{userID}/tickets/purchased → returns the tickets purchased by userID.
 ```
-curl GET -v -i 'http://localhost:8081/admin/traveler/USER1/tickets' -H "Authorization:{Bearer...}"
+curl GET -v -i 'http://localhost:8081/admin/traveler/USER1/tickets/purchased' -H "Authorization:{Bearer...}"
+```
+
+- GET /admin/traveler/{userID}/tickets/purchased → returns the tickets purchased by userID in the period selected.
+```
+curl GET -v -i 'http://localhost:8081/admin/traveler/USER1/tickets/purchased?start=10/08/2022&end=30/08/2022' -H "Authorization:{Bearer...}"
+```
+
+
+- GET /admin/traveler/{userID}/tickets/validated → returns the tickets purchased by userID in the period selected.
+```
+curl GET -v -i 'http://localhost:8081/admin/traveler/USER1/tickets/validated?start=10/08/2022&end=30/08/2022' -H "Authorization:{Bearer...}"
 ```
 
 - POST /admin/tickets → Admin add to catalog new available tickets

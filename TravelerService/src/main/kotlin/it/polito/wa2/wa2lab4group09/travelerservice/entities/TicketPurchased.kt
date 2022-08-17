@@ -4,6 +4,7 @@ import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
+import java.util.Date
 import java.sql.Timestamp
 
 
@@ -32,10 +33,11 @@ data class TicketPurchased(
     @Id
     @Indexed
     var sub : ObjectId = ObjectId.get(),
-    var iat: Timestamp,
-    var exp: Timestamp,
+    var iat: Date,
+    var exp: Date,
     var zid: String,
     var jws: String,
     var typeId : Long,
-    var userDetails: UserDetails? = null
+    var userDetails: UserDetails? = null,
+    var validated:Date ? = null
 )
