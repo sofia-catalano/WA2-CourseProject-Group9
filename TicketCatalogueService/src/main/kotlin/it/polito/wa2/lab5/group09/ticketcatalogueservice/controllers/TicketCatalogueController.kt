@@ -1,6 +1,8 @@
 package it.polito.wa2.lab5.group09.ticketcatalogueservice.controllers
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Order
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Status
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.OrderRepository
@@ -33,7 +35,6 @@ import org.springframework.web.reactive.function.client.awaitBody
 import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 @RestController
 class TicketCatalogueController(
@@ -193,9 +194,10 @@ data class PurchasingInfo(val numberOfTickets: Int, val ticketId: ObjectId, val 
 
 data class TransactionInfo(
     @JsonProperty("orderId")
+    @JsonSerialize(using = ToStringSerializer::class)
     val orderId: ObjectId,
     @JsonProperty("amount")
-    val amount: Float,
+    val amount: Double,
     @JsonProperty("creditCardNumber")
     val creditCardNumber: String,
     @JsonProperty("expirationDate")

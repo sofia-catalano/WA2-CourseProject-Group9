@@ -120,7 +120,7 @@ class TicketCatalogueService(
 
     suspend fun addTicketToCatalogue(ticket: TicketCatalogue) {
          try {
-            ticketCatalogueRepository.save(ticket)
+            ticketCatalogueRepository.save(ticket).subscribe()
         } catch (t: Throwable) {
             throw IllegalArgumentException("Something weny wrong")
         }

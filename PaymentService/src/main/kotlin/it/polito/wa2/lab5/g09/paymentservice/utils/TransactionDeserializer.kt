@@ -2,10 +2,12 @@ package it.polito.wa2.lab5.g09.paymentservice.utils
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import org.apache.kafka.common.errors.SerializationException
+import org.slf4j.LoggerFactory
 import org.apache.kafka.common.serialization.Deserializer
 import org.bson.types.ObjectId
-import org.slf4j.LoggerFactory
 import kotlin.text.Charsets.UTF_8
 
 class TransactionDeserializer : Deserializer<TransactionInfo> {
@@ -26,9 +28,10 @@ class TransactionDeserializer : Deserializer<TransactionInfo> {
 
 data class TransactionInfo(
     @JsonProperty("orderId")
+    @JsonSerialize(using = ToStringSerializer::class)
     val orderId: ObjectId,
     @JsonProperty("amount")
-    val amount: Float,
+    val amount: Double,
     @JsonProperty("creditCardNumber")
     val creditCardNumber: String,
     @JsonProperty("expirationDate")

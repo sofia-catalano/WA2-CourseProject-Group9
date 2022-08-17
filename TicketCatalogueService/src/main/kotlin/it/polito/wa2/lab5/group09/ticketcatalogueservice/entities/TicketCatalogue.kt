@@ -12,7 +12,7 @@ data class TicketCatalogue (
     @Indexed
     val ticketId: ObjectId = ObjectId.get(),
     var type: String,
-    var price: Float,
+    var price: Double,
     var zones : String,
     val maxAge : Int? = null,
     val minAge : Int? = null,

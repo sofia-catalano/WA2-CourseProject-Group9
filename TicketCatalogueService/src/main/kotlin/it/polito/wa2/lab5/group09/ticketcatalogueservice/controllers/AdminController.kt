@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
+import kotlin.math.roundToInt
 
 @RestController
 class AdminController(
@@ -26,6 +27,7 @@ class AdminController(
             if(ticket.price<=0){
                 throw IllegalArgumentException("Price should be a positive number")
             }
+            ticket.price = ((ticket.price * 100.00).roundToInt() / 100.00)
             ticketCatalogueService.addTicketToCatalogue(ticket)
             ResponseEntity("Ticket added to catalogue", HttpStatus.CREATED)
         } catch (t: Throwable) {
