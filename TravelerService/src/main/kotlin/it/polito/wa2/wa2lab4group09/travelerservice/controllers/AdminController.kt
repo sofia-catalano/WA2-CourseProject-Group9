@@ -2,21 +2,13 @@ package it.polito.wa2.wa2lab4group09.travelerservice.controllers
 
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TicketPurchasedDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.toDTO
-import it.polito.wa2.wa2lab4group09.travelerservice.entities.TicketPurchased
 import it.polito.wa2.wa2lab4group09.travelerservice.services.AdminService
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.asFlow
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.*
-
 
 @RestController
 class AdminController(val adminService: AdminService) {
@@ -95,7 +87,9 @@ class AdminController(val adminService: AdminService) {
         return try {
             val body : Flow<TicketPurchasedDTO>
             if(startTime==null && endTime==null){
-                body =adminService.getTravelerTickets(userID)
+                body =adminService.getTravelerTickets(userID).map {
+                    t->t.toDTO()
+                }
             }
             else {
                 body = adminService.getTravelerTicketsPurchasedPeriodOfTime(userID, startTime, endTime)

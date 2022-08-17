@@ -38,6 +38,6 @@ data class TicketPurchased(
     var zid: String,
     var jws: String,
     var typeId : Long,
-    var userDetails: UserDetails? = null,
+    var userId : String,
     var validated:Date ? = null
 )

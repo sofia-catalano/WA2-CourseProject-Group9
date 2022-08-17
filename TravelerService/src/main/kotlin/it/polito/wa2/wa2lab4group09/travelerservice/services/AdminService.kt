@@ -70,14 +70,12 @@ class AdminService(val userDetailsRepository: UserDetailsRepository, val ticketP
         return userDetailsRepository.findById(userID).awaitFirstOrNull() ?:throw IllegalArgumentException("User doesn't exist!")
     }
 
-    suspend fun getTravelerTickets(userID:String): Flow<TicketPurchasedDTO> {
+    suspend fun getTravelerTickets(userID:String): Flow<TicketPurchased> {
         val userDetail = userDetailsRepository.findById(userID).awaitFirst()
         if (userDetail == null)
             throw IllegalArgumentException("User doesn't exist!")
         else{
-            return ticketPurchasedRepository.findAllByUserDetails(userDetail).map {
-                TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated)
-            }
+            return ticketPurchasedRepository.findAllByUserIdOrderByIat(userDetail.username).asFlow()
         }
     }
 
@@ -88,7 +86,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository, val ticketP
             throw IllegalArgumentException("User doesn't exist!")
         else{
             return ticketPurchasedRepository
-                .findByUserDetailsAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime),userDetail)
+                .findByUserDetailsAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime),userDetail.username)
                 .map {
                     TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated)
                 }
@@ -101,7 +99,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository, val ticketP
             throw IllegalArgumentException("User doesn't exist!")
         else{
             return ticketPurchasedRepository
-                .findAllValidatedByUserDetails(userDetail)
+                .findAllValidatedByUserDetails(userDetail.username)
                 .map {
                     TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated)
                 }
@@ -114,7 +112,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository, val ticketP
             throw IllegalArgumentException("User doesn't exist!")
         else{
             return ticketPurchasedRepository
-                .findAllValidatedByUserDetailsAndPeriodOfTime(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetail)
+                .findAllValidatedByUserDetailsAndPeriodOfTime(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetail.username)
                 .map {
                     TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated)
                 }

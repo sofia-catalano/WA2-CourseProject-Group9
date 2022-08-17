@@ -58,7 +58,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository, val t
 
     suspend fun getUserTickets(jwt:String): Flow<TicketPurchased> {
         val userDetails = getUserDetails(jwt)
-        return ticketPurchasedRepository.findAllByUserDetailsOrderByIat(userDetails)
+        return ticketPurchasedRepository.findAllByUserIdOrderByIat(userDetails.username).asFlow()
     }
 
     suspend fun buyTickets(jwt: String, actionTicket: ActionTicket): List<TicketPurchasedDTO> {
@@ -79,7 +79,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository, val t
                     zid = actionTicket.zones,
                     jws = token,
                     typeId = actionTicket.type,
-                    userDetails = userDetails
+                    userId = userDetails.username
                 )).awaitFirst().toDTO())
             }
         } else throw IllegalArgumentException("action is not supported")
