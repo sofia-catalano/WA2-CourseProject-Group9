@@ -13,10 +13,13 @@ import it.polito.wa2.wa2lab4group09.travelerservice.repositories.TicketPurchased
 import it.polito.wa2.wa2lab4group09.travelerservice.repositories.UserDetailsRepository
 import it.polito.wa2.wa2lab4group09.travelerservice.security.JwtUtils
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import reactor.kotlin.adapter.rxjava.toFlowable
+import reactor.kotlin.adapter.rxjava.toFlux
 import java.sql.Timestamp
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -53,7 +56,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository, val t
 
     suspend fun getUserTickets(jwt:String): Flow<TicketPurchased> {
         val userDetails = getUserDetails(jwt)
-        return ticketPurchasedRepository.findAllByUserDetails(userDetails)
+        return ticketPurchasedRepository.findAllByUserDetailsOrderByIat(userDetails).asFlow()
     }
 
     suspend fun buyTickets(jwt: String, actionTicket: ActionTicket): List<TicketPurchasedDTO> {

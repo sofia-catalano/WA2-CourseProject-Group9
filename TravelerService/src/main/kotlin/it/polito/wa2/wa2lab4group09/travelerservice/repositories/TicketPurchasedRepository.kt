@@ -12,6 +12,7 @@ import reactor.core.publisher.Flux
 import java.sql.Timestamp
 import java.util.*
 
+import reactor.core.publisher.Flux
 
 @Repository
 interface TicketPurchasedRepository: ReactiveMongoRepository<TicketPurchased, ObjectId> {
@@ -37,3 +38,4 @@ interface TicketPurchasedRepository: ReactiveMongoRepository<TicketPurchased, Ob
     @Query("{'validated' : {\$ne : null, \$gte: ?0, \$lte: ?1},'userDetails' : { \$eq: ?2}}")
     fun findAllValidatedByUserDetailsAndPeriodOfTime(start:Timestamp, end: Timestamp, userDetails: UserDetails): Flow<TicketPurchased>
 }
+

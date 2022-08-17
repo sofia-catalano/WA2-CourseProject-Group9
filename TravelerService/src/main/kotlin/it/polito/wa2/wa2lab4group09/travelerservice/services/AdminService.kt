@@ -109,7 +109,6 @@ class AdminService(val userDetailsRepository: UserDetailsRepository, val ticketP
     }
 
     suspend fun getTravelerTicketsValidatedPeriodOfTime(userID: String, startTime:String, endTime:String): Flow<TicketPurchasedDTO>  {
-        val tickets = mutableListOf<TicketPurchasedDTO>()
         val userDetail = userDetailsRepository.findById(userID).awaitFirst()
         if (userDetail == null)
             throw IllegalArgumentException("User doesn't exist!")
@@ -121,6 +120,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository, val ticketP
                 }
         }
     }
+
 
 }
 
