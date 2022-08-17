@@ -1,9 +1,12 @@
 package it.polito.wa2.wa2lab4group09.travelerservice.services
 
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TicketPurchasedDTO
+import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TravelcardPurchasedDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.entities.TicketPurchased
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.TravelcardPurchased
 import it.polito.wa2.wa2lab4group09.travelerservice.entities.UserDetails
 import it.polito.wa2.wa2lab4group09.travelerservice.repositories.TicketPurchasedRepository
+import it.polito.wa2.wa2lab4group09.travelerservice.repositories.TravelcardPurchasedRepository
 import it.polito.wa2.wa2lab4group09.travelerservice.repositories.UserDetailsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -21,7 +24,9 @@ import java.time.ZoneOffset
 
 
 @Service
-class AdminService(val userDetailsRepository: UserDetailsRepository, val ticketPurchasedRepository: TicketPurchasedRepository){
+class AdminService(val userDetailsRepository: UserDetailsRepository,
+                   val ticketPurchasedRepository: TicketPurchasedRepository,
+                   val travelcardPurchasedRepository: TravelcardPurchasedRepository ){
     @Value("\${application.jwt.jwtSecret}")
     lateinit var key: String
 
@@ -51,7 +56,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository, val ticketP
                 TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated)
             }
     }
-      suspend fun getTicketsValidated():Flow<TicketPurchasedDTO> {
+    suspend fun getTicketsValidated():Flow<TicketPurchasedDTO> {
         return ticketPurchasedRepository
             .findByValidate()
             .map {
@@ -80,7 +85,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository, val ticketP
     }
 
 
-   suspend fun getTravelerTicketsPurchasedPeriodOfTime(userID: String, startTime:String, endTime:String):Flow<TicketPurchasedDTO> {
+    suspend fun getTravelerTicketsPurchasedPeriodOfTime(userID: String, startTime:String, endTime:String):Flow<TicketPurchasedDTO> {
         val userDetail = userDetailsRepository.findById(userID).awaitFirst()
         if (userDetail == null)
             throw IllegalArgumentException("User doesn't exist!")
@@ -119,6 +124,43 @@ class AdminService(val userDetailsRepository: UserDetailsRepository, val ticketP
         }
     }
 
+    suspend fun getTravelcardsPurchased(): Flux<TravelcardPurchasedDTO> {
+        return travelcardPurchasedRepository
+            .findAll()
+            .map {
+                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws)
+            }
+    }
+
+    suspend fun getTravelcardsPurchasedPeriodOfTime(start: String, end:String): Flow<TravelcardPurchasedDTO> {
+        return travelcardPurchasedRepository
+            .findByIatBetween(convertDateToTimestamp(start),convertDateToTimestamp(end))
+            .map {
+                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws)
+            }
+    }
+
+    suspend fun getTravelerTravelcards(ownerID: String): Flow<TravelcardPurchased> {
+        val owner = userDetailsRepository.findById(ownerID).awaitFirst()
+        if (owner == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return travelcardPurchasedRepository.findAllByOwnerIdOrderByIat(owner.username).asFlow()
+        }
+    }
+
+    suspend fun getTravelerTravelcardsPurchasedPeriodOfTime(ownerID: String, startTime:String, endTime:String):Flow<TravelcardPurchasedDTO> {
+        val owner = userDetailsRepository.findById(ownerID).awaitFirst()
+        if (owner == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return travelcardPurchasedRepository
+                .findByOwnerAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), owner.username)
+                .map {
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws)
+                }
+        }
+    }
 
 }
 
