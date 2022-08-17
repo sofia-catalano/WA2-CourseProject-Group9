@@ -15,6 +15,7 @@ import org.springframework.kafka.support.KafkaHeaders
 import org.springframework.messaging.Message
 import org.springframework.messaging.support.MessageBuilder
 import org.springframework.stereotype.Service
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 @Service
@@ -47,7 +48,7 @@ class PaymentService(val transactionRepository: TransactionRepository,
         val newToken = token.replace("Bearer","")
         val isConfirmed = Random.nextBoolean()
         val transaction = Transaction(
-            amount = transactionInfo.amount,
+            amount = ((transactionInfo.amount * 100.00).roundToInt() / 100.00),
             customerUsername = JwtUtils.getDetailsFromJwtToken(newToken, key).username,
             orderId = transactionInfo.orderId,
             isConfirmed = isConfirmed
