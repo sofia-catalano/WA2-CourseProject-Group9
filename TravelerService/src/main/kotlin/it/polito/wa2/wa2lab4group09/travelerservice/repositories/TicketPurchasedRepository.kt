@@ -8,17 +8,16 @@ import org.springframework.data.mongodb.repository.Query
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import org.springframework.stereotype.Repository
-import reactor.core.publisher.Flux
 import java.sql.Timestamp
 import java.util.*
-
-import reactor.core.publisher.Flux
 
 @Repository
 interface TicketPurchasedRepository: ReactiveMongoRepository<TicketPurchased, ObjectId> {
     fun findAllByUserDetails(userDetails: UserDetails) : Flow<TicketPurchased>
 
     fun deleteAllByUserDetails(userDetails: UserDetails)
+
+    fun findAllByUserDetailsOrderByIat(userDetails: UserDetails) : Flow<TicketPurchased>
 
     @Query("{'validated' : { \$ne : null}}")
     fun findByValidate(): Flow<TicketPurchased>

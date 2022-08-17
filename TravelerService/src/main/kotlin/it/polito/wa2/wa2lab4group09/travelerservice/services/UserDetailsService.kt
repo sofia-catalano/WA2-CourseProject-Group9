@@ -45,6 +45,8 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository, val t
         ).awaitFirst()
     }
 
+
+
     suspend fun updateUserDetails(jwt:String, userDetailsUpdate: UserDetailsUpdate){
         val userDetails = getUserDetails(jwt)
         userDetailsRepository.save(userDetails.copy(name = userDetailsUpdate.name,
@@ -56,7 +58,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository, val t
 
     suspend fun getUserTickets(jwt:String): Flow<TicketPurchased> {
         val userDetails = getUserDetails(jwt)
-        return ticketPurchasedRepository.findAllByUserDetailsOrderByIat(userDetails).asFlow()
+        return ticketPurchasedRepository.findAllByUserDetailsOrderByIat(userDetails)
     }
 
     suspend fun buyTickets(jwt: String, actionTicket: ActionTicket): List<TicketPurchasedDTO> {
