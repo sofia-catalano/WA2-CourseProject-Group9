@@ -20,13 +20,11 @@ class JWTAuthorizationFilter(
         println("Authorization filter")
         return if(exchange.request.headers.getFirst("Authorization").isNullOrBlank()){
             //ReactiveSecurityContextHolder.withAuthentication(null)
-            println("Authorization filter1")
             //Mono.empty()
             chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(null))
         }else {
             val token = getAuthentication(exchange.request.headers.getFirst("Authorization")!!)
             //ReactiveSecurityContextHolder.withAuthentication(token)
-            println("Authorization filter2")
             //Mono.empty()
             chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(token))
         }
