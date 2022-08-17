@@ -19,14 +19,16 @@ class JWTAuthorizationFilter(
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         println("Authorization filter")
         return if(exchange.request.headers.getFirst("Authorization").isNullOrBlank()){
-            ReactiveSecurityContextHolder.withAuthentication(null)
-            Mono.empty()
-            //chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(null))
+            //ReactiveSecurityContextHolder.withAuthentication(null)
+            println("Authorization filter1")
+            //Mono.empty()
+            chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(null))
         }else {
             val token = getAuthentication(exchange.request.headers.getFirst("Authorization")!!)
-            ReactiveSecurityContextHolder.withAuthentication(token)
-            Mono.empty()
-            //chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(token))
+            //ReactiveSecurityContextHolder.withAuthentication(token)
+            println("Authorization filter2")
+            //Mono.empty()
+            chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(token))
         }
     }
 

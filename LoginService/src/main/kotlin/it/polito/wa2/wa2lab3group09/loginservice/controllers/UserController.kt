@@ -19,14 +19,10 @@ class UserController(val userService: UserService) {
     suspend fun registerUser(
         @RequestBody
         @Valid
-        userDTO: UserDTO,
-        br: BindingResult
+        userDTO: UserDTO
     ): ResponseEntity<Any> {
 
-        if (br.hasErrors()) {
-            val body = ErrorMessage("Username or password are invalid!")
-            return ResponseEntity(body, HttpStatus.BAD_REQUEST)
-        }
+
 
         return try {
             val uuid: String? = userService.createUser(userDTO)
