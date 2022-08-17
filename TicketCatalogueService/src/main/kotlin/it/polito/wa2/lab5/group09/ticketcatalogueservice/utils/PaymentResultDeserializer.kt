@@ -3,6 +3,8 @@ package it.polito.wa2.lab5.group09.ticketcatalogueservice.utils
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import org.apache.kafka.common.errors.SerializationException
 import org.slf4j.LoggerFactory
 import org.apache.kafka.common.serialization.Deserializer
@@ -27,6 +29,7 @@ class PaymentResultDeserializer : Deserializer<PaymentResult> {
 
 data class PaymentResult(
     @JsonProperty("orderId")
+    @JsonSerialize(using = ToStringSerializer::class)
     val orderId: ObjectId,
     @JsonProperty("confirmed")
     val confirmed: Boolean

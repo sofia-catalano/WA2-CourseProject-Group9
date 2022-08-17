@@ -1,6 +1,8 @@
 package it.polito.wa2.lab5.group09.ticketcatalogueservice.controllers
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Order
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Status
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.OrderRepository
@@ -192,6 +194,7 @@ data class PurchasingInfo(val numberOfTickets: Int, val ticketId: ObjectId, val 
 
 data class TransactionInfo(
     @JsonProperty("orderId")
+    @JsonSerialize(using = ToStringSerializer::class)
     val orderId: ObjectId,
     @JsonProperty("amount")
     val amount: Double,
