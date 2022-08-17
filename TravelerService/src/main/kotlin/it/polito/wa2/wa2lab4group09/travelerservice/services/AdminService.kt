@@ -33,7 +33,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository, val ticketP
         if (userDetail == null)
             throw IllegalArgumentException("User doesn't exist!")
         else{
-            ticketPurchasedRepository.findAllByUserDetails(userDetail).map {
+            ticketPurchasedRepository.findAllByUserDetailsOrderByIat(userDetail).asFlow().map {
                 tickets.add(TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws))
             }
             return tickets
