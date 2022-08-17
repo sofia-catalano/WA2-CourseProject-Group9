@@ -33,7 +33,6 @@ import org.springframework.web.reactive.function.client.awaitBody
 import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 @RestController
 class TicketCatalogueController(
@@ -195,7 +194,7 @@ data class TransactionInfo(
     @JsonProperty("orderId")
     val orderId: ObjectId,
     @JsonProperty("amount")
-    val amount: Float,
+    val amount: Double,
     @JsonProperty("creditCardNumber")
     val creditCardNumber: String,
     @JsonProperty("expirationDate")

@@ -30,7 +30,7 @@ data class TransactionInfo(
     @JsonProperty("orderId")
     val orderId: ObjectId,
     @JsonProperty("amount")
-    val amount: Float,
+    val amount: Double,
     @JsonProperty("creditCardNumber")
     val creditCardNumber: String,
     @JsonProperty("expirationDate")
