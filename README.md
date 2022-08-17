@@ -1,4 +1,4 @@
-# WA2-Lab4-Group09
+# WA2-Course Project-Group09
 
 ## Instructions for launching the application
 1. Configure the docker container
@@ -74,7 +74,18 @@ When the login is done, a JWT valid for the next hour is obtained in order to be
 ```
 BearereyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJVU0VSMSIsImlhdCI6MTY1MTkzNjg2OSwiZXhwIjoxNjUxOTQwNDY5LCJyb2xlIjoiQ1VTVE9NRVIifQ.KTZKau_A0FxDUNxj9Sk9UKtiE6Ir1N8b7t_js3I0GFloVOghVpAx2uUS-bX6-V6u
 ```
-Now use this token to perform actions in 8081 microservice:
+
+- POST admin/registerAdmin
+```
+curl -X POST -d '{"username":"ADMIN2","email":"admin2@user.com","password":"Passw0rd!"}' -v -i 'http://localhost:8080/admin/registerAdmin' -H "Content-Type: application/json" -H "Authorization:{Bearer...}"
+```
+The endpoint create another ADMIN if the current one has enroll capability
+
+- GET admin/enrollAdmin/{admin}
+```
+curl GET -v -i 'http://localhost:8080/admin/enrollAdmin/ADMIN2' -H "Authorization:{Bearer...}"
+```
+The endpoint give the enroll capability to the {admin}
 
 - GET /admin/travelers
 ```
