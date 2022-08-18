@@ -168,44 +168,44 @@ curl GET -H "Authorization: {Bearer...}" -H "Content-Type: application/json" -v 
 ```
 curl GET -v -i 'http://localhost:8081/admin/travelers/travelcards/purchased' -H "Authorization:{Bearer...}"
 ```
-The endpoint returns a JSON list of travelcards owned by any user.
+The endpoint returns a JSON list of travelcards purchased by any user.
 
 GET /admin/travelers/travelcards/purchased
 ```
 curl GET -v -i 'http://localhost:8081/admin/travelers/travelcards/purchased?start=10/11/2022&end=10/11/2022' -H "Authorization:{Bearer...}"
 ```
-The endpoint returns a JSON list of travelcards owned by any user in the period specified.
+The endpoint returns a JSON list of travelcards purchased by any user in the period specified.
 
-- GET /admin/traveler/{ownerID}/travelcards/purchased → returns the travelcards owned by ownerID.
+- GET /admin/traveler/{userID}/travelcards/purchased → returns the travelcards purchased by userID.
 ```
-curl GET -v -i 'http://localhost:8081/admin/traveler/OWNER1/travelcards/purchased' -H "Authorization:{Bearer...}"
+curl GET -v -i 'http://localhost:8081/admin/traveler/USER1/travelcards/purchased' -H "Authorization:{Bearer...}"
 ```
 
-- GET /admin/traveler/{ownerID}/travelcards/purchased → returns the travelcards owned by ownerID in the period selected.
+- GET /admin/traveler/{userID}/travelcards/purchased → returns the travelcards purchased by userID in the period selected.
 ```
-curl GET -v -i 'http://localhost:8081/admin/traveler/OWNER1/travelcards/purchased?start=10/08/2022&end=30/08/2022' -H "Authorization:{Bearer...}"
+curl GET -v -i 'http://localhost:8081/admin/traveler/USER1/travelcards/purchased?start=10/08/2022&end=30/08/2022' -H "Authorization:{Bearer...}"
 ```
 
 - GET /admin/travelers/travelcards/expired
 ```
 curl GET -v -i 'http://localhost:8081/admin/travelers/travelcards/expired' -H "Authorization:{Bearer...}"
 ```
-The endpoint returns a JSON list of expired travelcards owned by any user.
+The endpoint returns a JSON list of expired travelcards purchased by any user.
 
 - GET /admin/travelers/travelcards/expired
 ```
 curl GET -v -i 'http://localhost:8081/admin/travelers/travelcards/expired?start=10/11/2022&end=10/11/2022' -H "Authorization:{Bearer...}"
 ```
-The endpoint returns a JSON list of expired travelcards owned by any user in the period specified.
+The endpoint returns a JSON list of expired travelcards purchased by any user in the period specified.
 
-- GET /admin/traveler/{ownerID}/travelcards/expired → returns the expired travelcards owned by ownerID.
+- GET /admin/traveler/{userID}/travelcards/expired → returns the expired travelcards purchased by userID.
 ```
-curl GET -v -i 'http://localhost:8081/admin/traveler/OWNER1/travelcards/expired' -H "Authorization:{Bearer...}"
+curl GET -v -i 'http://localhost:8081/admin/traveler/USER1/travelcards/expired' -H "Authorization:{Bearer...}"
 ```
 
-- GET /admin/traveler/{ownerID}/travelcards/expired → returns the expired travelcards owned by ownerID in the period selected.
+- GET /admin/traveler/{userID}/travelcards/expired → returns the expired travelcards purchased by userID in the period selected.
 ```
-curl GET -v -i 'http://localhost:8081/admin/traveler/OWNER1/travelcards/expired?start=10/08/2022&end=30/08/2022' -H "Authorization:{Bearer...}"
+curl GET -v -i 'http://localhost:8081/admin/traveler/USER1/travelcards/expired?start=10/08/2022&end=30/08/2022' -H "Authorization:{Bearer...}"
 ```
 
 

@@ -14,21 +14,21 @@ import java.sql.Timestamp
 @Repository
 interface TravelcardPurchasedRepository: ReactiveMongoRepository<TravelcardPurchased, ObjectId> {
 
-    fun findAllByOwnerIdOrderByIat(userId: String) : Flux<TravelcardPurchased>
+    fun findAllByUserIdOrderByIat(userId: String) : Flux<TravelcardPurchased>
 
-    fun deleteAllByOwnerId(ownerId: String)
+    fun deleteAllByUserId(ownerId: String)
 
     @Query("{'iat' : { \$gte: ?0, \$lte: ?1}}")
     fun findByIatBetween(start: Timestamp, end: Timestamp): Flow<TravelcardPurchased>
 
-    @Query("{'iat' : { \$gte: ?0, \$lte: ?1 },'ownerId' : { \$eq: ?2}}")
-    fun findByOwnerAndIatBetween(start:Timestamp, end: Timestamp, ownerId : String): Flow<TravelcardPurchased>
+    @Query("{'iat' : { \$gte: ?0, \$lte: ?1 },'userId' : { \$eq: ?2}}")
+    fun findByUserAndIatBetween(start:Timestamp, end: Timestamp, userId : String): Flow<TravelcardPurchased>
 
-    @Query("{'exp' : { \$lt: ?0 },'ownerId' : { \$eq: ?1}}")
-    fun findByOwnerAndExp(end: Timestamp, ownerId : String): Flow<TravelcardPurchased>
+    @Query("{'exp' : { \$lt: ?0 },'userId' : { \$eq: ?1}}")
+    fun findByUserAndExp(end: Timestamp, userId : String): Flow<TravelcardPurchased>
 
-    @Query("{'exp' : { \$gte: ?0, \$lte: ?1 }, 'ownerId' : { \$eq: ?2}}")
-    fun findByOwnerAndExpBetween(start:Timestamp, end: Timestamp, ownerId : String): Flow<TravelcardPurchased>
+    @Query("{'exp' : { \$gte: ?0, \$lte: ?1 }, 'userId' : { \$eq: ?2}}")
+    fun findByUserAndExpBetween(start:Timestamp, end: Timestamp, userId : String): Flow<TravelcardPurchased>
 
     @Query("{'exp' : { \$lt : ?0 }}")
     fun findExpired(end: Timestamp): Flow<TravelcardPurchased>

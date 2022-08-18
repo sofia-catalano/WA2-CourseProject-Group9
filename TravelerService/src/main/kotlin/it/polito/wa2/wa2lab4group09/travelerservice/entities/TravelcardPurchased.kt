@@ -17,6 +17,6 @@ data class TravelcardPurchased(
     var zid: String,
     var jws: String,
     var typeId : Long,
-    var userId: String,
+    var userId: String, //travelcard buyer
     var ownerId: String //travelcard holder
 )

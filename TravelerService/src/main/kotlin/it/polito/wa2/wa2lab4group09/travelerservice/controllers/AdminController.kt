@@ -151,7 +151,7 @@ class AdminController(val adminService: AdminService) {
         return try {
             val body : Flow<TravelcardPurchasedDTO>
             if(startTime==null && endTime==null){
-                body =adminService.getTravelerTravelcards(ownerID).map {
+                body = adminService.getTravelerTravelcards(ownerID).map {
                         t->t.toDTO()
                 }
             }

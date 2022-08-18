@@ -159,51 +159,51 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
             }
     }
 
-    suspend fun getTravelerTravelcards(ownerID: String): Flow<TravelcardPurchased> {
-        val owner = userDetailsRepository.findById(ownerID).awaitFirst()
-        if (owner == null)
+    suspend fun getTravelerTravelcards(userID: String): Flow<TravelcardPurchased> {
+        val userDetails = userDetailsRepository.findById(userID).awaitFirst()
+        if (userDetails == null)
             throw IllegalArgumentException("User doesn't exist!")
         else{
-            return travelcardPurchasedRepository.findAllByOwnerIdOrderByIat(owner.username).asFlow()
+            return travelcardPurchasedRepository.findAllByUserIdOrderByIat(userDetails.username).asFlow()
         }
     }
 
-    suspend fun getTravelerTravelcardsPurchasedPeriodOfTime(ownerID: String, startTime:String, endTime:String):Flow<TravelcardPurchasedDTO> {
-        val owner = userDetailsRepository.findById(ownerID).awaitFirst()
-        if (owner == null)
+    suspend fun getTravelerTravelcardsPurchasedPeriodOfTime(userID: String, startTime:String, endTime:String):Flow<TravelcardPurchasedDTO> {
+        val userDetails = userDetailsRepository.findById(userID).awaitFirst()
+        if (userDetails == null)
             throw IllegalArgumentException("User doesn't exist!")
         else{
             return travelcardPurchasedRepository
-                .findByOwnerAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), owner.username)
+                .findByUserAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username)
                 .map {
                     TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws)
                 }
         }
     }
 
-    suspend fun getTravelerTravelcardsExpired(ownerID: String):Flow<TravelcardPurchasedDTO> {
-        val owner = userDetailsRepository.findById(ownerID).awaitFirst()
-        if (owner == null)
+    suspend fun getTravelerTravelcardsExpired(userID: String):Flow<TravelcardPurchasedDTO> {
+        val userDetails = userDetailsRepository.findById(userID).awaitFirst()
+        if (userDetails == null)
             throw IllegalArgumentException("User doesn't exist!")
         else{
             return travelcardPurchasedRepository
-                .findByOwnerAndExp(Timestamp.from(Instant.now()), owner.username)
+                .findByUserAndExp(Timestamp.from(Instant.now()), userDetails.username)
                 .map {
                     TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws)
                 }
         }
     }
 
-    suspend fun getTravelerTravelcardsExpiredPeriodOfTime(ownerID: String, startTime:String, endTime:String):Flow<TravelcardPurchasedDTO> {
+    suspend fun getTravelerTravelcardsExpiredPeriodOfTime(userID: String, startTime:String, endTime:String):Flow<TravelcardPurchasedDTO> {
         if (convertDateToTimestamp(startTime) > Timestamp.from(Instant.now()) || convertDateToTimestamp(endTime) > Timestamp.from(Instant.now()))
             throw IllegalArgumentException("Selected period of time should be less than today!")
 
-        val owner = userDetailsRepository.findById(ownerID).awaitFirst()
-        if (owner == null)
+        val userDetails = userDetailsRepository.findById(userID).awaitFirst()
+        if (userDetails == null)
             throw IllegalArgumentException("User doesn't exist!")
         else{
             return travelcardPurchasedRepository
-                .findByOwnerAndExpBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), owner.username)
+                .findByUserAndExpBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username)
                 .map {
                     TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws)
                 }

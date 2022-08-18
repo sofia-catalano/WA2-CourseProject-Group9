@@ -1,6 +1,8 @@
 package it.polito.wa2.wa2lab4group09.travelerservice.controllers
 
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.toDTO
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.TravelcardOwner
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.UserDetails
 import it.polito.wa2.wa2lab4group09.travelerservice.services.UserDetailsService
 import kotlinx.coroutines.flow.map
 import org.springframework.http.HttpStatus
@@ -65,9 +67,37 @@ class MyController(val userDetailsService: UserDetailsService) {
             ResponseEntity(error, HttpStatus.BAD_REQUEST)
         }
     }
+
+    @GetMapping("/my/travelcards")
+    suspend fun getUserTravelcards(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
+        val newToken = jwt.replace("Bearer", "")
+        return try {
+            val body = userDetailsService.getUserTravelcards(newToken).map {
+                    t-> t.toDTO()
+            }
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t : Throwable){
+            val error = ErrorMessage(t.message)
+            ResponseEntity(error, HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @PostMapping("/my/travelcards")
+    suspend fun buyTravelcard(@RequestHeader("Authorization") jwt:String, @RequestBody actionTravelcard: ActionTravelcard) : ResponseEntity<Any>{
+        val newToken = jwt.replace("Bearer", "")
+        return try {
+            val body = userDetailsService.buyTravelcards(newToken, actionTravelcard)
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t : Throwable){
+            val error = ErrorMessage(t.message)
+            ResponseEntity(error, HttpStatus.BAD_REQUEST)
+        }
+    }
 }
 
 data class ActionTicket(val cmd : String, val quantity : Int, val zones : String, val type : Long)
 //to return a JSON-shaped error
 data class ErrorMessage(val error: String?)
 data class UserDetailsUpdate(val name : String?, val surname : String?, val address : String?, val date_of_birth : String?, val telephone_number : String?)
+
+data class ActionTravelcard(val cmd : String, val zones : String, val type : Long, val owner: TravelcardOwner)

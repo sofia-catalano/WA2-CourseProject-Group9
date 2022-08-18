@@ -3,13 +3,15 @@ package it.polito.wa2.wa2lab4group09.travelerservice.services
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import it.polito.wa2.wa2lab4group09.travelerservice.controllers.ActionTicket
+import it.polito.wa2.wa2lab4group09.travelerservice.controllers.ActionTravelcard
 import it.polito.wa2.wa2lab4group09.travelerservice.controllers.UserDetailsUpdate
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TicketPurchasedDTO
+import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TravelcardPurchasedDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.toDTO
-import it.polito.wa2.wa2lab4group09.travelerservice.entities.Role
-import it.polito.wa2.wa2lab4group09.travelerservice.entities.TicketPurchased
-import it.polito.wa2.wa2lab4group09.travelerservice.entities.UserDetails
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.*
 import it.polito.wa2.wa2lab4group09.travelerservice.repositories.TicketPurchasedRepository
+import it.polito.wa2.wa2lab4group09.travelerservice.repositories.TravelcardOwnerRepository
+import it.polito.wa2.wa2lab4group09.travelerservice.repositories.TravelcardPurchasedRepository
 import it.polito.wa2.wa2lab4group09.travelerservice.repositories.UserDetailsRepository
 import it.polito.wa2.wa2lab4group09.travelerservice.security.JwtUtils
 import kotlinx.coroutines.flow.Flow
@@ -21,12 +23,16 @@ import org.springframework.stereotype.Service
 import reactor.kotlin.adapter.rxjava.toFlowable
 import reactor.kotlin.adapter.rxjava.toFlux
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
 
 @Service
-class UserDetailsService(val userDetailsRepository: UserDetailsRepository, val ticketPurchasedRepository: TicketPurchasedRepository) {
+class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
+                         val ticketPurchasedRepository: TicketPurchasedRepository,
+                         val travelcardPurchasedRepository: TravelcardPurchasedRepository,
+                         val travelcardOwnerRepository: TravelcardOwnerRepository ) {
 
     @Value("\${application.jwt.jwtSecret}")
     lateinit var key: String
@@ -66,16 +72,28 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository, val t
         val tickets = mutableListOf<TicketPurchasedDTO>()
         if (actionTicket.quantity <=0 ) throw IllegalArgumentException("Quantity must be greater than zero")
         if (actionTicket.cmd == "buy_tickets"){
+            //TODO: tutti i tickets hanno scadenza un'ora indipendentemente dal tipo, fix it!
+            val exp = when (actionTicket.type) {
+                1L -> Date.from(Instant.now().plus(1, ChronoUnit.HOURS)) //60 min
+                2L -> Date.from(Instant.now().plus(90, ChronoUnit.MINUTES)) //90 min
+                3L -> Date.from(Instant.now().plus(90, ChronoUnit.MINUTES)) //120 min
+                4L -> Date.from(Instant.now().plus(1, ChronoUnit.DAYS)) //daily
+                5L -> Date.from(Instant.now().plus(2, ChronoUnit.DAYS)) //multidaily 2
+                6L -> Date.from(Instant.now().plus(3, ChronoUnit.DAYS)) //multidaily 3
+                else -> { // Note the block
+                    throw IllegalArgumentException("Ticket type is not supported")
+                }
+            }
+
             for (i in 1..actionTicket.quantity){
                 val token = Jwts.builder()
                     .setSubject(userDetails.username)
                     .setIssuedAt(Date.from(Instant.now()))
-                    .setExpiration(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
+                    .setExpiration(exp)
                     .signWith(Keys.hmacShaKeyFor(keyTicket.toByteArray())).compact()
-                //TODO: tutti i tickets hanno scadenza un'ora indipendentemente dal tipo, fix it!
                 tickets.add(ticketPurchasedRepository.save(TicketPurchased(
                     iat = Timestamp(System.currentTimeMillis()),
-                    exp = Timestamp(System.currentTimeMillis() + 3600000),
+                    exp = Timestamp.from(exp.toInstant()),
                     zid = actionTicket.zones,
                     jws = token,
                     typeId = actionTicket.type,
@@ -85,4 +103,51 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository, val t
         } else throw IllegalArgumentException("action is not supported")
         return tickets
     }
+
+    suspend fun getUserTravelcards(jwt:String): Flow<TravelcardPurchased> {
+        val userDetails = getUserDetails(jwt)
+        return travelcardPurchasedRepository.findAllByUserIdOrderByIat(userDetails.username).asFlow()
+    }
+
+    suspend fun buyTravelcards(jwt: String, actionTravelcard: ActionTravelcard): TravelcardPurchasedDTO {
+        val userDetails = getUserDetails(jwt)
+        val owner = travelcardOwnerRepository.findById(actionTravelcard.owner.fiscalCode).awaitFirst()
+        if (owner == null)
+             travelcardOwnerRepository.save( TravelcardOwner(
+                fiscalCode = actionTravelcard.owner.fiscalCode,
+                name = actionTravelcard.owner.name,
+                surname = actionTravelcard.owner.surname,
+                address = actionTravelcard.owner.address,
+                date_of_birth = actionTravelcard.owner.date_of_birth,
+                telephone_number = actionTravelcard.owner.telephone_number,
+            ))
+
+        if (actionTravelcard.cmd == "buy_travelcard"){
+            val exp = when (actionTravelcard.type) {
+                7L -> Date.from(Instant.now().plus(7, ChronoUnit.DAYS)) //weekly
+                8L -> Date.from(Instant.now().plus(30, ChronoUnit.DAYS)) //monthly
+                9L -> Date.from(Instant.now().plus(365, ChronoUnit.DAYS)) //annual
+                else -> { // Note the block
+                    throw IllegalArgumentException("Travelcard type is not supported")
+                }
+            }
+
+            val token = Jwts.builder()
+                .setSubject(userDetails.username)
+                .setIssuedAt(Date.from(Instant.now()))
+                .setExpiration(exp)
+                .signWith(Keys.hmacShaKeyFor(keyTicket.toByteArray())).compact()
+
+            return travelcardPurchasedRepository.save(TravelcardPurchased(
+                iat = Timestamp(System.currentTimeMillis()),
+                exp = Timestamp.from(exp.toInstant()),
+                zid = actionTravelcard.zones,
+                jws = token,
+                typeId = actionTravelcard.type,
+                userId = userDetails.username,
+                ownerId = actionTravelcard.owner.fiscalCode
+            )).awaitFirst().toDTO()
+        } else throw IllegalArgumentException("action is not supported")
+    }
+
 }
