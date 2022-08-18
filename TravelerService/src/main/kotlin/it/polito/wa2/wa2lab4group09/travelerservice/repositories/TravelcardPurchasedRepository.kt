@@ -16,6 +16,8 @@ interface TravelcardPurchasedRepository: ReactiveMongoRepository<TravelcardPurch
 
     fun findAllByUserIdOrderByIat(userId: String) : Flux<TravelcardPurchased>
 
+    fun findAllByOwnerIdAndTypeId(ownerId: String, typeId: Long) : Flow<TravelcardPurchased>
+
     fun deleteAllByUserId(ownerId: String)
 
     @Query("{'iat' : { \$gte: ?0, \$lte: ?1}}")
