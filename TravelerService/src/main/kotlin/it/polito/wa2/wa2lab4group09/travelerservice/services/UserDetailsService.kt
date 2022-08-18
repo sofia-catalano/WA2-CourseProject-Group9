@@ -19,6 +19,9 @@ import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.kafka.support.KafkaHeaders
+import org.springframework.messaging.Message
+import org.springframework.messaging.support.MessageBuilder
 import org.springframework.stereotype.Service
 import reactor.kotlin.adapter.rxjava.toFlowable
 import reactor.kotlin.adapter.rxjava.toFlux
@@ -100,6 +103,17 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                     userId = userDetails.username
                 )).awaitFirst().toDTO())
             }
+            tickets.forEach {
+//                TODO: SEND KAFKA MESSAGE
+//                log.info("Sending message to Kafka {}", order)
+//                val message: Message<TransactionInfo> = MessageBuilder
+//                    .withPayload(transaction)
+//                    .setHeader(KafkaHeaders.TOPIC, topic)
+//                    .setHeader("Authorization", jwt)
+//                    .build()
+//                kafkaTemplate.send(message)
+            }
+
         } else throw IllegalArgumentException("action is not supported")
         return tickets
     }
@@ -149,5 +163,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
             )).awaitFirst().toDTO()
         } else throw IllegalArgumentException("action is not supported")
     }
+
+    //TODO: ADD TICKET VALIDATION SERVICE (update del campo validate)
 
 }

@@ -4,6 +4,7 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/LoginService" />
     <file type="web" url="file://$PROJECT_DIR$/PaymentService" />
+    <file type="web" url="file://$PROJECT_DIR$/QRCodeService" />
     <file type="web" url="file://$PROJECT_DIR$/TicketCatalogueService" />
     <file type="web" url="file://$PROJECT_DIR$/TravelerService" />
   </component>

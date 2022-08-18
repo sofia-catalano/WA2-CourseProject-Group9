@@ -8,7 +8,7 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/LoginService" />
-        <option name="gradleHome" value="$PROJECT_DIR$/../../../../../Program Files/gradle-7.4.1" />
+        <option name="gradleHome" value="$USER_HOME$/Program Files/gradle-7.4.1" />
         <option name="gradleJvm" value="17" />
         <option name="modules">
           <set>
@@ -21,7 +21,7 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/PaymentService" />
-        <option name="gradleHome" value="$PROJECT_DIR$/../../../../../Program Files/gradle-7.4.1" />
+        <option name="gradleHome" value="$USER_HOME$/Program Files/gradle-7.4.1" />
         <option name="gradleJvm" value="17" />
         <option name="modules">
           <set>
@@ -30,11 +30,22 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/QRCodeService" />
+        <option name="gradleHome" value="$PROJECT_DIR$/../../../../../../../Program Files/gradle-7.4.1" />
+        <option name="gradleJvm" value="17" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/QRCodeService" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
         <option name="delegatedBuild" value="true" />
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/TicketCatalogueService" />
-        <option name="gradleHome" value="$PROJECT_DIR$/../../../../../Program Files/gradle-7.4.1" />
+        <option name="gradleHome" value="$USER_HOME$/Program Files/gradle-7.4.1" />
         <option name="gradleJvm" value="17" />
         <option name="modules">
           <set>
@@ -47,7 +58,7 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/TravelerService" />
-        <option name="gradleHome" value="$PROJECT_DIR$/../../../../../Program Files/gradle-7.4.1" />
+        <option name="gradleHome" value="$USER_HOME$/Program Files/gradle-7.4.1" />
         <option name="gradleJvm" value="17" />
         <option name="modules">
           <set>
