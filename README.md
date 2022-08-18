@@ -58,6 +58,14 @@ curl --request GET -H "Authorization: {Bearer...}" -v -i  http://localhost:8081/
 ```
 curl --request POST -H "Authorization: {Bearer...}" -H "Accept: application/json" -H "Content-Type:application/json" -d '{"cmd":"buy_tickets","quantity":"3","zones":"ABC"}' -v -i  http://localhost:8081/my/tickets
 ```
+- GET "/my/travelcards"
+```
+curl --request GET -H "Authorization: {Bearer...}" -v -i  http://localhost:8081/my/travelcards
+```
+- POST "/my/travelcards"
+```
+curl --request POST -H "Authorization: {Bearer...}" -H "Accept: application/json" -H "Content-Type:application/json" -d '{"cmd":"buy_travelcards","zones":"ABC","type":"7L", "owner":{"fiscalCode":"DFGSGH89T56G2987D","name":"Mario","surname":"Rossi","address":"via dei test Torino","date_of_birth":"01/01/1990","telephone_number":"1231231231"} }' -v -i  http://localhost:8081/my/travelcards
+```
 - GET /transactions → get transactions of the current user
 ```
 curl GET -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8083/transactions

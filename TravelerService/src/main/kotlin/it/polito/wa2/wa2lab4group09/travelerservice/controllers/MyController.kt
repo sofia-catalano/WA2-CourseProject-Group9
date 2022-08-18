@@ -1,8 +1,7 @@
 package it.polito.wa2.wa2lab4group09.travelerservice.controllers
 
+import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TravelcardOwnerDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.toDTO
-import it.polito.wa2.wa2lab4group09.travelerservice.entities.TravelcardOwner
-import it.polito.wa2.wa2lab4group09.travelerservice.entities.UserDetails
 import it.polito.wa2.wa2lab4group09.travelerservice.services.UserDetailsService
 import kotlinx.coroutines.flow.map
 import org.springframework.http.HttpStatus
@@ -100,4 +99,4 @@ data class ActionTicket(val cmd : String, val quantity : Int, val zones : String
 data class ErrorMessage(val error: String?)
 data class UserDetailsUpdate(val name : String?, val surname : String?, val address : String?, val date_of_birth : String?, val telephone_number : String?)
 
-data class ActionTravelcard(val cmd : String, val zones : String, val type : Long, val owner: TravelcardOwner)
+data class ActionTravelcard(val cmd : String, val zones : String, val type : Long, val owner: TravelcardOwnerDTO)
