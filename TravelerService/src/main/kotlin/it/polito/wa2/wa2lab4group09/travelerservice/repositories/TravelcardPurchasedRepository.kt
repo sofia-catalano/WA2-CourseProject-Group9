@@ -1,5 +1,6 @@
 package it.polito.wa2.wa2lab4group09.travelerservice.repositories
 
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.TicketPurchased
 import it.polito.wa2.wa2lab4group09.travelerservice.entities.TravelcardPurchased
 import kotlinx.coroutines.flow.Flow
 import org.bson.types.ObjectId
@@ -22,5 +23,18 @@ interface TravelcardPurchasedRepository: ReactiveMongoRepository<TravelcardPurch
 
     @Query("{'iat' : { \$gte: ?0, \$lte: ?1 },'ownerId' : { \$eq: ?2}}")
     fun findByOwnerAndIatBetween(start:Timestamp, end: Timestamp, ownerId : String): Flow<TravelcardPurchased>
+
+    @Query("{'exp' : { \$lt: ?0 },'ownerId' : { \$eq: ?1}}")
+    fun findByOwnerAndExp(end: Timestamp, ownerId : String): Flow<TravelcardPurchased>
+
+    @Query("{'exp' : { \$gte: ?0, \$lte: ?1 }, 'ownerId' : { \$eq: ?2}}")
+    fun findByOwnerAndExpBetween(start:Timestamp, end: Timestamp, ownerId : String): Flow<TravelcardPurchased>
+
+    @Query("{'exp' : { \$lt : ?0 }}")
+    fun findExpired(end: Timestamp): Flow<TravelcardPurchased>
+
+    @Query("{'exp' : { \$gte: ?0, \$lte: ?1}}")
+    fun findByExpBetween(start: Timestamp, end: Timestamp): Flow<TravelcardPurchased>
+
 
 }

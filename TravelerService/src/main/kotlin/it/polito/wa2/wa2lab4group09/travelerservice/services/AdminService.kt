@@ -140,6 +140,25 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
             }
     }
 
+    suspend fun getTravelcardsExpired(): Flow<TravelcardPurchasedDTO> {
+        return travelcardPurchasedRepository
+            .findExpired(Timestamp.from(Instant.now()))
+            .map {
+                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws)
+            }
+    }
+
+    suspend fun getTravelcardsExpiredPeriodOfTime(start: String, end:String): Flow<TravelcardPurchasedDTO> {
+        if (convertDateToTimestamp(start) > Timestamp.from(Instant.now()) || convertDateToTimestamp(end) > Timestamp.from(Instant.now()))
+            throw IllegalArgumentException("Selected period of time should be less than today!")
+
+        return travelcardPurchasedRepository
+            .findByExpBetween(convertDateToTimestamp(start), convertDateToTimestamp(end))
+            .map {
+                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws)
+            }
+    }
+
     suspend fun getTravelerTravelcards(ownerID: String): Flow<TravelcardPurchased> {
         val owner = userDetailsRepository.findById(ownerID).awaitFirst()
         if (owner == null)
@@ -156,6 +175,35 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
         else{
             return travelcardPurchasedRepository
                 .findByOwnerAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), owner.username)
+                .map {
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws)
+                }
+        }
+    }
+
+    suspend fun getTravelerTravelcardsExpired(ownerID: String):Flow<TravelcardPurchasedDTO> {
+        val owner = userDetailsRepository.findById(ownerID).awaitFirst()
+        if (owner == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return travelcardPurchasedRepository
+                .findByOwnerAndExp(Timestamp.from(Instant.now()), owner.username)
+                .map {
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws)
+                }
+        }
+    }
+
+    suspend fun getTravelerTravelcardsExpiredPeriodOfTime(ownerID: String, startTime:String, endTime:String):Flow<TravelcardPurchasedDTO> {
+        if (convertDateToTimestamp(startTime) > Timestamp.from(Instant.now()) || convertDateToTimestamp(endTime) > Timestamp.from(Instant.now()))
+            throw IllegalArgumentException("Selected period of time should be less than today!")
+
+        val owner = userDetailsRepository.findById(ownerID).awaitFirst()
+        if (owner == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return travelcardPurchasedRepository
+                .findByOwnerAndExpBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), owner.username)
                 .map {
                     TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws)
                 }
