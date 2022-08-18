@@ -58,7 +58,7 @@ curl --request GET -H "Authorization: {Bearer...}" -v -i  http://localhost:8081/
 ```
 curl --request POST -H "Authorization: {Bearer...}" -H "Accept: application/json" -H "Content-Type:application/json" -d '{"cmd":"buy_tickets","quantity":"3","zones":"ABC"}' -v -i  http://localhost:8081/my/tickets
 ```
-- Get /transactions → get transactions of the current user
+- GET /transactions → get transactions of the current user
 ```
 curl GET -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8083/transactions
 ```
@@ -139,7 +139,7 @@ curl GET -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -v -
 ```
 curl GET -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8082/admin/orders/USER1
 ```
-- Get /admin/transactions → get transactions of all users
+- GET /admin/transactions → get transactions of all users
 ```
 curl GET -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -v -i http://localhost:8083/admin/transactions
 ```
@@ -147,7 +147,7 @@ Now use the token to perform actions in 8082 microservice (TicketCatalogue):
 
 Please add a new ticket catalogue in the db manually or with admin route.
 
-- Get /tickets → get all tickets available in the catalogue
+- GET /tickets → get all tickets available in the catalogue
 ```
 curl GET -v -i 'http://localhost:8082/tickets'
 ```
@@ -192,7 +192,7 @@ curl GET -v -i 'http://localhost:8081/admin/travelers/travelcards/expired' -H "A
 ```
 The endpoint returns a JSON list of expired travelcards owned by any user.
 
-GET /admin/travelers/travelcards/expired
+- GET /admin/travelers/travelcards/expired
 ```
 curl GET -v -i 'http://localhost:8081/admin/travelers/travelcards/expired?start=10/11/2022&end=10/11/2022' -H "Authorization:{Bearer...}"
 ```
