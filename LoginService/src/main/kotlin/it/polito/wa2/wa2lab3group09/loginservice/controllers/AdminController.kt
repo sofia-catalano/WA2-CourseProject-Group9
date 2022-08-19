@@ -16,7 +16,7 @@ class AdminController(val adminService: AdminService) {
     @Value("\${application.jwt.jwtSecret}")
     lateinit var key: String
 
-    @PostMapping("/admin/registerAdmin")
+    @PostMapping("/login/admin/registerAdmin")
     suspend fun registerAdmin(@RequestHeader("Authorization") jwt:String,
                               @RequestBody
                               userDTO: UserDTO)
@@ -43,7 +43,7 @@ class AdminController(val adminService: AdminService) {
         }
     }
 
-    @GetMapping("/admin/enrollAdmin/{admin}")
+    @GetMapping("/login/admin/enrollAdmin/{admin}")
     suspend fun enrollAdmin(@PathVariable admin:String, @RequestHeader("Authorization") jwt:String) :  ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
         val username=JwtUtils.getDetailsFromJwtToken(newToken, key).username
