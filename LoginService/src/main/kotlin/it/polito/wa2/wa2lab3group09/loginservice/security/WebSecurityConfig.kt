@@ -58,7 +58,7 @@ class WebSecurityConfig(val userDetailsService: UserDetailsService) {
                                 serverAuthenticationFailureHandler: ServerAuthenticationFailureHandler): AuthenticationWebFilter {
 
         val authenticationWebFilter = AuthenticationWebFilter(reactiveAuthenticationManager)
-        authenticationWebFilter.setRequiresAuthenticationMatcher { ServerWebExchangeMatchers.pathMatchers("/user/login").matches(it) }
+        authenticationWebFilter.setRequiresAuthenticationMatcher { ServerWebExchangeMatchers.pathMatchers("/login/user/login").matches(it) }
         authenticationWebFilter.setServerAuthenticationConverter(jwtConverter)
         authenticationWebFilter.setAuthenticationSuccessHandler(serverAuthenticationSuccessHandler)
         authenticationWebFilter.setAuthenticationFailureHandler(serverAuthenticationFailureHandler)
