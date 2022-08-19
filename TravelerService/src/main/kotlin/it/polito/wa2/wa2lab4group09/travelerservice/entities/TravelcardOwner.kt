@@ -14,6 +14,4 @@ data class TravelcardOwner(
     var address: String? = null,
     var date_of_birth: String? = null,
     var telephone_number: String? = null,
-){
-
-}
+)

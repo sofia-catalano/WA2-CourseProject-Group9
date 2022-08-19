@@ -72,7 +72,6 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
         val tickets = mutableListOf<TicketPurchasedDTO>()
         if (actionTicket.quantity <=0 ) throw IllegalArgumentException("Quantity must be greater than zero")
         if (actionTicket.cmd == "buy_tickets"){
-            //TODO: tutti i tickets hanno scadenza un'ora indipendentemente dal tipo, fix it!
             val exp = when (actionTicket.type) {
                 1L -> Date.from(Instant.now().plus(1, ChronoUnit.HOURS)) //60 min
                 2L -> Date.from(Instant.now().plus(90, ChronoUnit.MINUTES)) //90 min
@@ -80,6 +79,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                 4L -> Date.from(Instant.now().plus(1, ChronoUnit.DAYS)) //daily
                 5L -> Date.from(Instant.now().plus(2, ChronoUnit.DAYS)) //multidaily 2
                 6L -> Date.from(Instant.now().plus(3, ChronoUnit.DAYS)) //multidaily 3
+                7L -> Date.from(Instant.now().plus(7, ChronoUnit.DAYS)) //weekly
                 else -> { // Note the block
                     throw IllegalArgumentException("Ticket type is not supported")
                 }
@@ -110,21 +110,27 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
     }
 
     suspend fun buyTravelcards(jwt: String, actionTravelcard: ActionTravelcard): TravelcardPurchasedDTO {
-        val userDetails = getUserDetails(jwt)
-        val owner = travelcardOwnerRepository.findById(actionTravelcard.owner.fiscalCode).awaitFirst()
-        if (owner == null)
-             travelcardOwnerRepository.save( TravelcardOwner(
-                fiscalCode = actionTravelcard.owner.fiscalCode,
-                name = actionTravelcard.owner.name,
-                surname = actionTravelcard.owner.surname,
-                address = actionTravelcard.owner.address,
-                date_of_birth = actionTravelcard.owner.date_of_birth,
-                telephone_number = actionTravelcard.owner.telephone_number,
-            ))
-
         if (actionTravelcard.cmd == "buy_travelcard"){
+            val userDetails = getUserDetails(jwt)
+            var owner = travelcardOwnerRepository.findById(actionTravelcard.owner.fiscalCode).awaitFirstOrNull()
+            if (owner == null){
+                 owner = travelcardOwnerRepository.save( TravelcardOwner(
+                    fiscalCode = actionTravelcard.owner.fiscalCode,
+                    name = actionTravelcard.owner.name,
+                    surname = actionTravelcard.owner.surname,
+                    address = actionTravelcard.owner.address,
+                    date_of_birth = actionTravelcard.owner.date_of_birth,
+                    telephone_number = actionTravelcard.owner.telephone_number,
+                )).awaitFirst()
+            }else{
+                //verifico che non esiste già un abbonamento uguale per quell'owner
+                val travelcard = travelcardPurchasedRepository.findByOwnerIdAndTypeId(actionTravelcard.owner.fiscalCode, actionTravelcard.type, Timestamp.from(Instant.now())).awaitFirstOrNull()
+                if(travelcard != null) {
+                    throw IllegalArgumentException("Travelcard already exists for the provided owner")
+                }
+            }
+
             val exp = when (actionTravelcard.type) {
-                7L -> Date.from(Instant.now().plus(7, ChronoUnit.DAYS)) //weekly
                 8L -> Date.from(Instant.now().plus(30, ChronoUnit.DAYS)) //monthly
                 9L -> Date.from(Instant.now().plus(365, ChronoUnit.DAYS)) //annual
                 else -> { // Note the block
@@ -147,7 +153,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                 userId = userDetails.username,
                 ownerId = actionTravelcard.owner.fiscalCode
             )).awaitFirst().toDTO()
-        } else throw IllegalArgumentException("action is not supported")
+        } else throw IllegalArgumentException("Action is not supported")
     }
 
 }

@@ -9,12 +9,16 @@ import org.springframework.data.mongodb.repository.Query
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import java.sql.Timestamp
 
 @Repository
 interface TravelcardPurchasedRepository: ReactiveMongoRepository<TravelcardPurchased, ObjectId> {
 
     fun findAllByUserIdOrderByIat(userId: String) : Flux<TravelcardPurchased>
+
+    @Query("{'ownerId' : { \$eq: ?0}, 'typeId' : { \$eq: ?1 }, 'exp' : { \$gt: ?2 }}")
+    fun findByOwnerIdAndTypeId(ownerId: String, typeId: Long, end: Timestamp) : Mono<TravelcardPurchased?>
 
     fun deleteAllByUserId(ownerId: String)
 
