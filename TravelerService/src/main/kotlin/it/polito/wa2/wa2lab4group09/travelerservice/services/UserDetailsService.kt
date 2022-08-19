@@ -72,7 +72,6 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
         val tickets = mutableListOf<TicketPurchasedDTO>()
         if (actionTicket.quantity <=0 ) throw IllegalArgumentException("Quantity must be greater than zero")
         if (actionTicket.cmd == "buy_tickets"){
-            //TODO: tutti i tickets hanno scadenza un'ora indipendentemente dal tipo, fix it!
             val exp = when (actionTicket.type) {
                 1L -> Date.from(Instant.now().plus(1, ChronoUnit.HOURS)) //60 min
                 2L -> Date.from(Instant.now().plus(90, ChronoUnit.MINUTES)) //90 min
@@ -113,18 +112,22 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
     suspend fun buyTravelcards(jwt: String, actionTravelcard: ActionTravelcard): TravelcardPurchasedDTO {
         if (actionTravelcard.cmd == "buy_travelcard"){
             val userDetails = getUserDetails(jwt)
-            val owner = travelcardOwnerRepository.findById(actionTravelcard.owner.fiscalCode).awaitFirstOrNull()
+            var owner = travelcardOwnerRepository.findById(actionTravelcard.owner.fiscalCode).awaitFirstOrNull()
             if (owner == null){
-                travelcardOwnerRepository.save( TravelcardOwner(
+                 owner = travelcardOwnerRepository.save( TravelcardOwner(
                     fiscalCode = actionTravelcard.owner.fiscalCode,
                     name = actionTravelcard.owner.name,
                     surname = actionTravelcard.owner.surname,
                     address = actionTravelcard.owner.address,
                     date_of_birth = actionTravelcard.owner.date_of_birth,
                     telephone_number = actionTravelcard.owner.telephone_number,
-                ))
+                )).awaitFirst()
             }else{
-                //TODO check TODO aggiungere non lo stesso abbonamento per lo stesso intestatario
+                //verifico che non esiste già un abbonamento uguale per quell'owner
+                val travelcard = travelcardPurchasedRepository.findByOwnerIdAndTypeId(actionTravelcard.owner.fiscalCode, actionTravelcard.type, Timestamp.from(Instant.now())).awaitFirstOrNull()
+                if(travelcard != null) {
+                    throw IllegalArgumentException("Travelcard already exists for the provided owner")
+                }
             }
 
             val exp = when (actionTravelcard.type) {
@@ -150,7 +153,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                 userId = userDetails.username,
                 ownerId = actionTravelcard.owner.fiscalCode
             )).awaitFirst().toDTO()
-        } else throw IllegalArgumentException("action is not supported")
+        } else throw IllegalArgumentException("Action is not supported")
     }
 
 }

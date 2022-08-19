@@ -160,7 +160,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
     }
 
     suspend fun getTravelerTravelcards(userID: String): Flow<TravelcardPurchased> {
-        val userDetails = userDetailsRepository.findById(userID).awaitFirst()
+        val userDetails = userDetailsRepository.findById(userID).awaitFirstOrNull()
         if (userDetails == null)
             throw IllegalArgumentException("User doesn't exist!")
         else{
@@ -169,7 +169,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
     }
 
     suspend fun getTravelerTravelcardsPurchasedPeriodOfTime(userID: String, startTime:String, endTime:String):Flow<TravelcardPurchasedDTO> {
-        val userDetails = userDetailsRepository.findById(userID).awaitFirst()
+        val userDetails = userDetailsRepository.findById(userID).awaitFirstOrNull()
         if (userDetails == null)
             throw IllegalArgumentException("User doesn't exist!")
         else{
@@ -182,7 +182,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
     }
 
     suspend fun getTravelerTravelcardsExpired(userID: String):Flow<TravelcardPurchasedDTO> {
-        val userDetails = userDetailsRepository.findById(userID).awaitFirst()
+        val userDetails = userDetailsRepository.findById(userID).awaitFirstOrNull()
         if (userDetails == null)
             throw IllegalArgumentException("User doesn't exist!")
         else{
@@ -198,7 +198,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
         if (convertDateToTimestamp(startTime) > Timestamp.from(Instant.now()) || convertDateToTimestamp(endTime) > Timestamp.from(Instant.now()))
             throw IllegalArgumentException("Selected period of time should be less than today!")
 
-        val userDetails = userDetailsRepository.findById(userID).awaitFirst()
+        val userDetails = userDetailsRepository.findById(userID).awaitFirstOrNull()
         if (userDetails == null)
             throw IllegalArgumentException("User doesn't exist!")
         else{
