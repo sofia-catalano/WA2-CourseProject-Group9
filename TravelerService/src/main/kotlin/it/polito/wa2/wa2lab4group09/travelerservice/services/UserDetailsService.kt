@@ -18,15 +18,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.KafkaHeaders
 import org.springframework.messaging.Message
 import org.springframework.messaging.support.MessageBuilder
 import org.springframework.stereotype.Service
-import reactor.kotlin.adapter.rxjava.toFlowable
-import reactor.kotlin.adapter.rxjava.toFlux
 import java.sql.Timestamp
-import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -35,7 +35,12 @@ import java.util.*
 class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                          val ticketPurchasedRepository: TicketPurchasedRepository,
                          val travelcardPurchasedRepository: TravelcardPurchasedRepository,
-                         val travelcardOwnerRepository: TravelcardOwnerRepository ) {
+                         val travelcardOwnerRepository: TravelcardOwnerRepository,
+                         @Value("\${spring.kafka.producer.topics}") val topic: String,
+                         @Autowired
+                         private val kafkaTemplate: KafkaTemplate<String, Any>
+) {
+    private val log = LoggerFactory.getLogger(javaClass)
 
     @Value("\${application.jwt.jwtSecret}")
     lateinit var key: String
@@ -103,15 +108,16 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                     userId = userDetails.username
                 )).awaitFirst().toDTO())
             }
+
+            //send kafka message to QRCodeService for QRCode generation
             tickets.forEach {
-//                TODO: SEND KAFKA MESSAGE
-//                log.info("Sending message to Kafka {}", order)
-//                val message: Message<TransactionInfo> = MessageBuilder
-//                    .withPayload(transaction)
-//                    .setHeader(KafkaHeaders.TOPIC, topic)
-//                    .setHeader("Authorization", jwt)
-//                    .build()
-//                kafkaTemplate.send(message)
+                log.info("Sending message to Kafka {}", it)
+                val message: Message<TicketPurchasedDTO> = MessageBuilder
+                    .withPayload(it)
+                    .setHeader(KafkaHeaders.TOPIC, topic)
+                    .setHeader("Authorization", jwt)
+                    .build()
+                kafkaTemplate.send(message)
             }
 
         } else throw IllegalArgumentException("action is not supported")

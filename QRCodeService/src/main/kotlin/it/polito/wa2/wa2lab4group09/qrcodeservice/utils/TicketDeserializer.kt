@@ -11,24 +11,24 @@ import org.bson.types.ObjectId
 import java.util.*
 import kotlin.text.Charsets.UTF_8
 
-class TicketDeserializer : Deserializer<Ticket> {
+class TicketDeserializer : Deserializer<TicketPurchasedDTO> {
     private val objectMapper = ObjectMapper()
     private val log = LoggerFactory.getLogger(javaClass)
 
-    override fun deserialize(topic: String?, data: ByteArray?): Ticket? {
+    override fun deserialize(topic: String?, data: ByteArray?): TicketPurchasedDTO? {
         log.info("Deserializing...")
         return objectMapper.readValue(
             String(
                 data ?: throw SerializationException("Error when deserializing byte[] to Payment Result"), UTF_8
-            ), Ticket::class.java
+            ), TicketPurchasedDTO::class.java
         )
     }
 
     override fun close() {}
 }
 
-data class Ticket(
-    @JsonProperty("ticketId")
+data class TicketPurchasedDTO(
+    @JsonProperty("sub")
     @JsonSerialize(using = ToStringSerializer::class)
     var sub: ObjectId?,
     @JsonProperty("iat")

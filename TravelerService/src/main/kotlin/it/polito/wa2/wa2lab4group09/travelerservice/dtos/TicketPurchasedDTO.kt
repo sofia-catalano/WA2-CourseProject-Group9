@@ -8,7 +8,7 @@ import org.bson.types.ObjectId
 import java.util.Date
 
 data class TicketPurchasedDTO(
-    @JsonProperty("ticketId")
+    @JsonProperty("sub")
     @JsonSerialize(using = ToStringSerializer::class)
     var sub: ObjectId?,
     @JsonProperty("iat")
