@@ -51,7 +51,7 @@ class TicketCatalogueController(
     lateinit var key: String
 
 
-    @GetMapping("/orders")
+    @GetMapping("/catalogue/orders")
     suspend fun getOrders(@RequestHeader("Authorization") jwt: String): ResponseEntity<Any> {
         val newToken = jwt.replace("Bearer", "")
         return try {
@@ -63,7 +63,7 @@ class TicketCatalogueController(
         }
     }
 
-    @GetMapping("/orders/{orderId}")
+    @GetMapping("/catalogue/orders/{orderId}")
     suspend fun getOrdersByUUID(
         @PathVariable orderId: ObjectId,
         @RequestHeader("Authorization") jwt: String
@@ -78,7 +78,7 @@ class TicketCatalogueController(
         }
     }
 
-    @GetMapping("/tickets")
+    @GetMapping("/catalogue/tickets")
     suspend fun getTickets(): ResponseEntity<Any> {
         return try {
             val ticketCatalogue = ticketCatalogueService.getCatalogue()
@@ -90,7 +90,7 @@ class TicketCatalogueController(
 
     }
 
-    @PostMapping("/shop/{ticketType}")
+    @PostMapping("/catalogue/shop/{ticketType}")
     suspend fun buyTickets(
         @PathVariable ticketType: String,
         @RequestHeader("Authorization") jwt: String,

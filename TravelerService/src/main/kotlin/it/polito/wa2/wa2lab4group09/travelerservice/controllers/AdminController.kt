@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 class AdminController(val adminService: AdminService) {
 
 
-    @GetMapping("/admin/travelers")
+    @GetMapping("/traveler/admin/travelers")
     suspend fun getTravelers(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
         return try {
@@ -27,7 +27,7 @@ class AdminController(val adminService: AdminService) {
     }
 
 
-    @GetMapping("/admin/travelers/tickets/purchased")
+    @GetMapping("/traveler/admin/travelers/tickets/purchased")
     suspend fun getTravelersTicketsPurchasedTime(
         @RequestParam("start", required = false) startTime: String,
         @RequestParam("end", required = false) endTime: String,
@@ -46,7 +46,7 @@ class AdminController(val adminService: AdminService) {
         }
     }
 
-    @GetMapping("/admin/travelers/tickets/validated")
+    @GetMapping("/traveler/admin/travelers/tickets/validated")
     suspend fun getTravelersTicketsValidated(
         @RequestParam("start", required = false) startTime: String,
         @RequestParam("end", required = false) endTime: String,
@@ -67,7 +67,7 @@ class AdminController(val adminService: AdminService) {
 
 
 
-    @GetMapping("/admin/traveler/{userID}/profile")
+    @GetMapping("/traveler/admin/traveler/{userID}/profile")
     suspend fun getTravelerProfile(@PathVariable userID:String, @RequestHeader("Authorization") jwt:String) :  ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
         return try {
@@ -79,7 +79,7 @@ class AdminController(val adminService: AdminService) {
     }
 
 
-    @GetMapping("/admin/traveler/{userID}/tickets/purchased")
+    @GetMapping("/traveler/admin/traveler/{userID}/tickets/purchased")
     suspend fun getTravelerTicketsPurchasedTime(
         @PathVariable userID:String,
         @RequestParam("start", required=false) startTime: String,
@@ -102,7 +102,7 @@ class AdminController(val adminService: AdminService) {
     }
     
 
-    @GetMapping("/admin/traveler/{userID}/tickets/validated")
+    @GetMapping("/traveler/admin/traveler/{userID}/tickets/validated")
     suspend fun getTravelersTicketsValidatedTime(
         @PathVariable userID:String,
         @RequestParam("start", required = false) startTime: String,
@@ -122,7 +122,7 @@ class AdminController(val adminService: AdminService) {
         }
     }
 
-    @GetMapping("/admin/travelers/travelcards/purchased")
+    @GetMapping("/traveler/admin/travelers/travelcards/purchased")
     suspend fun getTravelersTravelcardsPurchasedTime(
         @RequestParam("start", required = false) startTime: String,
         @RequestParam("end", required = false) endTime: String,
@@ -142,7 +142,7 @@ class AdminController(val adminService: AdminService) {
     }
 
 
-    @GetMapping("/admin/traveler/{ownerID}/travelcards/purchased")
+    @GetMapping("/traveler/admin/traveler/{ownerID}/travelcards/purchased")
     suspend fun getTravelerTravelcardsPurchasedTime(
         @PathVariable ownerID:String,
         @RequestParam("start", required=false) startTime: String,
@@ -164,7 +164,7 @@ class AdminController(val adminService: AdminService) {
         }
     }
 
-    @GetMapping("/admin/travelers/travelcards/expired")
+    @GetMapping("/traveler/admin/travelers/travelcards/expired")
     suspend fun getTravelersTravelcardsExpiredTime(
         @RequestParam("start", required = false) startTime: String,
         @RequestParam("end", required = false) endTime: String,
@@ -184,7 +184,7 @@ class AdminController(val adminService: AdminService) {
     }
 
 
-    @GetMapping("/admin/traveler/{ownerID}/travelcards/expired")
+    @GetMapping("/traveler/admin/traveler/{ownerID}/travelcards/expired")
     suspend fun getTravelerTravelcardsExpiredTime(
         @PathVariable ownerID:String,
         @RequestParam("start", required=false) startTime: String,

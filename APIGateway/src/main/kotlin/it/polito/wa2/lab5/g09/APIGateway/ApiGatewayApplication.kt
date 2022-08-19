@@ -27,7 +27,35 @@ class GatewayConfig {
                     filter
                 )
             }.uri("http://localhost:8080/")
-        }.build()
+        }
+            .route(
+                "paymentService"
+            ) { r: PredicateSpec ->
+                r.path("/payment/**").filters { f: GatewayFilterSpec ->
+                    f.filter(
+                        filter
+                    )
+                }.uri("http://localhost:8083/")
+            }
+            .route(
+                "catalogueService"
+            ) { r: PredicateSpec ->
+                r.path("/catalogue/**").filters { f: GatewayFilterSpec ->
+                    f.filter(
+                        filter
+                    )
+                }.uri("http://localhost:8082/")
+            }
+            .route(
+                "travelerService"
+            ) { r: PredicateSpec ->
+                r.path("/traveler/**").filters { f: GatewayFilterSpec ->
+                    f.filter(
+                        filter
+                    )
+                }.uri("http://localhost:8081/")
+            }.build()
+        //TODO aggiungere routes del qrcodeService
     }
 }
 

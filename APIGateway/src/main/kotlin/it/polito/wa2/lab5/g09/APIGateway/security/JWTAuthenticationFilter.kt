@@ -19,7 +19,7 @@ class JwtAuthenticationFilter(
     override fun filter(exchange: ServerWebExchange, chain: GatewayFilterChain): Mono<Void> {
         val request: ServerHttpRequest = exchange.request
         //list of free routes
-        val apiEndpoints = listOf("/login/user")
+        val apiEndpoints = listOf("/login/user","/catalogue/tickets")
         val isApiSecured: Predicate<ServerHttpRequest> = Predicate<ServerHttpRequest> { r ->
             apiEndpoints.stream()
                 .noneMatch { uri: String? ->

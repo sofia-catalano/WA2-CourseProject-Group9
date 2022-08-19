@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class MyController(val userDetailsService: UserDetailsService) {
 
-    @GetMapping("/my/profile")
+    @GetMapping("/traveler/my/profile")
     suspend fun getUserDetails(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
         return try {
@@ -29,7 +29,7 @@ class MyController(val userDetailsService: UserDetailsService) {
         }
     }
 
-    @PutMapping("/my/profile")
+    @PutMapping("/traveler/my/profile")
     suspend fun updateUserDetails(@RequestHeader("Authorization") jwt:String, @RequestBody userDetailsUpdate: UserDetailsUpdate) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
         return try {
@@ -41,7 +41,7 @@ class MyController(val userDetailsService: UserDetailsService) {
         }
     }
 
-    @GetMapping("/my/tickets")
+    @GetMapping("/traveler/my/tickets")
     suspend fun getUserTickets(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
         return try {
@@ -55,7 +55,7 @@ class MyController(val userDetailsService: UserDetailsService) {
         }
     }
 
-    @PostMapping("/my/tickets")
+    @PostMapping("/traveler/my/tickets")
     suspend fun buyTickets(@RequestHeader("Authorization") jwt:String, @RequestBody actionTicket: ActionTicket) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
         return try {
@@ -67,7 +67,7 @@ class MyController(val userDetailsService: UserDetailsService) {
         }
     }
 
-    @GetMapping("/my/travelcards")
+    @GetMapping("/traveler/my/travelcards")
     suspend fun getUserTravelcards(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
         return try {
