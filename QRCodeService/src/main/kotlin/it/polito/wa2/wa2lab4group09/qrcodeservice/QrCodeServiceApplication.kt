@@ -3,8 +3,6 @@ package it.polito.wa2.wa2lab4group09.qrcodeservice
 import com.mongodb.reactivestreams.client.MongoClient
 import com.mongodb.reactivestreams.client.MongoClients
 import it.polito.wa2.wa2lab4group09.qrcodeservice.utils.TicketDeserializer
-import org.apache.kafka.clients.admin.AdminClientConfig
-import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.springframework.beans.factory.annotation.Value
@@ -19,7 +17,6 @@ import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
-import org.springframework.kafka.core.KafkaAdmin
 import org.springframework.kafka.listener.ContainerProperties
 
 @EnableReactiveMongoRepositories
@@ -35,27 +32,6 @@ class MongoReactiveApplication : AbstractReactiveMongoConfiguration() {
 
     override fun getDatabaseName(): String {
         return "qrcodeservice"
-    }
-}
-
-@Configuration
-class KafkaProducerConfig(
-    @Value("\${spring.kafka.producer.bootstrap-servers}")
-    private val servers: String,
-    @Value("\${spring.kafka.producer.topics}")
-    private val topic: String
-) {
-
-    @Bean
-    fun kafkaAdmin(): KafkaAdmin {
-        val configs: MutableMap<String, Any?> = java.util.HashMap()
-        configs[AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG] = servers
-        return KafkaAdmin(configs)
-    }
-
-    @Bean
-    fun porduto(): NewTopic {
-        return NewTopic(topic, 1, 1.toShort())
     }
 }
 
