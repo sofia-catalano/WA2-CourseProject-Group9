@@ -136,7 +136,7 @@ curl GET -v -i 'http://localhost:8100/traveler/admin/traveler/USER1/tickets/vali
 
 - POST /admin/tickets → Admin add to catalog new available tickets
 ```
-curl POST -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -H "Accept: application/json" -d '{"type":"seasonal","price":"2.30",  "zones":"ABC", "maxAge":"30", "minAge":"18"}' -v -i 'http://localhost:8100/catalogue/admin/tickets' 
+curl POST -H "Authorization:{Bearer...}" -H "Content-Type: application/json" -H "Accept: application/json" -d '{"type":"60 min","price":"2.30",  "zones":"ABC", "maxAge":"30", "minAge":"18"}' -v -i 'http://localhost:8100/catalogue/admin/tickets' 
 ```
 - GET /admin/orders → returns all the users orders.
 ```
@@ -160,7 +160,7 @@ curl GET -v -i 'http://localhost:8100/catalogue/tickets'
 ```
 - POST /shop/ticketId → to buy tickets of a ticket type (this route will return the orderId if the payment has success, BAD REQUEST otherwise)
 ```
-curl --request POST -H "Authorization: {Bearer...}" -H "Content-Type: application/json" -H "Accept: application/json" -d '{"numberOfTickets":"3","ticketId":"1", "paymentInfo":{"creditCardNumber":"1234568911111122","expirationDate":"10/22", "cvv":"123","cardHolder":"User" }}' -v -i 'http://localhost:8100/catalogue/shop/{ticketId}'
+curl --request POST -H "Authorization: {Bearer...}" -H "Content-Type: application/json" -H "Accept: application/json" -d '{"numberOfTickets":"3","ticketId":"6300dd325ef1cf365be57aee", "paymentInfo":{"creditCardNumber":"1234568911111122","expirationDate":"10/22", "cvv":"123","cardHolder":"User" }}' -v -i 'http://localhost:8100/catalogue/shop/{ticketId}'
 ```
 - GET /orders → return a list of all orders made by the customer
 ```

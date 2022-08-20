@@ -117,10 +117,13 @@ class TicketCatalogueController(
                 throw IllegalArgumentException("Invalid expiration date format!")
             }
 
-            if((ticketCatalogue.type == "1 month" || ticketCatalogue.type == "1 year") && purchasingInfo.travelcardOwner == null){
+            if((ticketCatalogue.type == "1 month" || ticketCatalogue.type == "1 year") && purchasingInfo.owner == null){
                 throw IllegalArgumentException("Travelcard owner cannot be null!")
             }
 
+            if(ticketCatalogue.type != "1 month" && ticketCatalogue.type != "1 year" && purchasingInfo.owner != null){
+                throw IllegalArgumentException("Travelcard owner should be null!")
+            }
 
             if (ticketCatalogue.maxAge != null || ticketCatalogue.minAge != null) {
 
@@ -154,7 +157,7 @@ class TicketCatalogueController(
                         ticketCatalogueId = purchasingInfo.ticketId,
                         quantity = purchasingInfo.numberOfTickets,
                         customerUsername = username,
-                        travelcardOwner = purchasingInfo.travelcardOwner
+                        owner = purchasingInfo.owner
                     )
                 ).awaitSingle()
 
@@ -195,7 +198,7 @@ data class PaymentInfo(
     val cardHolder: String
 )
 
-data class PurchasingInfo(val numberOfTickets: Int, val ticketId: ObjectId, val paymentInfo: PaymentInfo, val travelcardOwner: TravelcardOwnerDTO? = null)
+data class PurchasingInfo(val numberOfTickets: Int, val ticketId: ObjectId, val paymentInfo: PaymentInfo, val owner: TravelcardOwnerDTO? = null)
 
 data class TransactionInfo(
     @JsonProperty("orderId")
