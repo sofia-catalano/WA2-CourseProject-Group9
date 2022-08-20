@@ -8,9 +8,14 @@ import Container from "@mui/material/Container";
 import RegistrationPage from "./components/Registration/RegistrationPage";
 import LoginPage from "./components/Login/LoginPage";
 
+import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import UserTicketsList from "./components/user/TicketsList";
+
 function App() {
 
-    const [userRole, setUserRole] = useState('admin');
+    const [userRole, setUserRole] = useState('user');
     const navigate = useNavigate();
     const [toggled, setToggled] = useState(true);
     const [collapsed, setCollapsed] = useState(false);
@@ -29,17 +34,26 @@ function App() {
         handleToggle,
         handleCollapse,
     }
-  return (
-     <>
-          <Navbar/>
-          <Sidebar {...AsideProps} />
-              <Routes>
-                  <Route exact path="/" element={<Homepage/>}/>
-                  <Route exact path="/user/login" element={<LoginPage/>}/>
-                  <Route exact path="/user/register" element={<RegistrationPage/>}/>
-              </Routes>
-      </>
-  );
+
+    return (
+        <Container maxWidth='xxl' sx={{p:0, m:0}}>
+            <Navbar/>
+            <Grid container spacing={2}>
+                <Grid item xs={2}>
+                    <Sidebar {...AsideProps} />
+                </Grid>
+                <Grid item xs={10}>
+                    <Routes>
+                        <Route exact path="/" element={<Homepage/>}/>
+                        <Route exact path="/user/register" element={<RegistrationPage/>}/>
+                        <Route exact path="/user/login" element={<LoginPage/>}/>
+                        <Route exact path="/my/tickets" element={<UserTicketsList/>}/>
+                        {/*<Route exact path="/my/tickets" element={<TicketsList/>}/>*/}
+                    </Routes>
+                </Grid>
+            </Grid>
+        </Container>
+    );
 }
 
 export default App;
