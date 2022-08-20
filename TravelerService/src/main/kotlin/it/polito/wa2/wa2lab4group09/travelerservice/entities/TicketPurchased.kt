@@ -37,7 +37,7 @@ data class TicketPurchased(
     var exp: Date,
     var zid: String,
     var jws: String,
-    var typeId : Long,
+    var typeId : ObjectId,
     var userId : String,
     var validated:Date ? = null
 )

@@ -64,7 +64,7 @@ curl --request GET -H "Authorization: {Bearer...}" -v -i  http://localhost:8100/
 ```
 - POST "/my/travelcards"
 ```
-curl --request POST -H "Authorization: {Bearer...}" -H "Accept: application/json" -H "Content-Type:application/json" -d '{"cmd":"buy_travelcard","zones":"ABC","type":"8", "owner":{"fiscalCode":"DFGSGH89T56G2987D","name":"Mario","surname":"Rossi","address":"via dei test Torino","date_of_birth":"01/01/1990","telephone_number":"1231231231"} }' -v -i  http://localhost:8100/traveler/my/travelcards
+curl --request POST -H "Authorization: {Bearer...}" -H "Accept: application/json" -H "Content-Type:application/json" -d '{"cmd":"buy_travelcard","zones":"ABC","type":"8", "owner":{"fiscal_code":"DFGSGH89T56G2987D","name":"Mario","surname":"Rossi","address":"via dei test Torino","date_of_birth":"01/01/1990","telephone_number":"1231231231"} }' -v -i  http://localhost:8100/traveler/my/travelcards
 ```
 - GET /transactions → get transactions of the current user
 ```
