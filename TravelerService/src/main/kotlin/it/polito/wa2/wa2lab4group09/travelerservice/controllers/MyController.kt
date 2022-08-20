@@ -81,7 +81,7 @@ class MyController(val userDetailsService: UserDetailsService) {
         }
     }
 
-    @PostMapping("/my/travelcards")
+    @PostMapping("/traveler/my/travelcards")
     suspend fun buyTravelcard(@RequestHeader("Authorization") jwt:String, @RequestBody actionTravelcard: ActionTravelcard) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
         return try {

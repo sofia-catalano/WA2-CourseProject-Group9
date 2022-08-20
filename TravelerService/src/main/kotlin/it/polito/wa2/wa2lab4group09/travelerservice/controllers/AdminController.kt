@@ -142,21 +142,21 @@ class AdminController(val adminService: AdminService) {
     }
 
 
-    @GetMapping("/traveler/admin/traveler/{ownerID}/travelcards/purchased")
+    @GetMapping("/traveler/admin/traveler/{userID}/travelcards/purchased")
     suspend fun getTravelerTravelcardsPurchasedTime(
-        @PathVariable ownerID:String,
+        @PathVariable userID:String,
         @RequestParam("start", required=false) startTime: String,
         @RequestParam("end", required=false) endTime: String,
         @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
         return try {
             val body : Flow<TravelcardPurchasedDTO>
             if(startTime==null && endTime==null){
-                body = adminService.getTravelerTravelcards(ownerID).map {
+                body = adminService.getTravelerTravelcards(userID).map {
                         t->t.toDTO()
                 }
             }
             else {
-                body = adminService.getTravelerTravelcardsPurchasedPeriodOfTime(ownerID, startTime, endTime)
+                body = adminService.getTravelerTravelcardsPurchasedPeriodOfTime(userID, startTime, endTime)
             }
             ResponseEntity(body, HttpStatus.OK)
         } catch (t : Throwable){
@@ -184,19 +184,19 @@ class AdminController(val adminService: AdminService) {
     }
 
 
-    @GetMapping("/traveler/admin/traveler/{ownerID}/travelcards/expired")
+    @GetMapping("/traveler/admin/traveler/{userID}/travelcards/expired")
     suspend fun getTravelerTravelcardsExpiredTime(
-        @PathVariable ownerID:String,
+        @PathVariable userID:String,
         @RequestParam("start", required=false) startTime: String,
         @RequestParam("end", required=false) endTime: String,
         @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
         return try {
             val body : Flow<TravelcardPurchasedDTO>
             if(startTime==null && endTime==null){
-                body = adminService.getTravelerTravelcardsExpired(ownerID)
+                body = adminService.getTravelerTravelcardsExpired(userID)
             }
             else {
-                body = adminService.getTravelerTravelcardsExpiredPeriodOfTime(ownerID, startTime, endTime)
+                body = adminService.getTravelerTravelcardsExpiredPeriodOfTime(userID, startTime, endTime)
             }
             ResponseEntity(body, HttpStatus.OK)
         } catch (t : Throwable){
