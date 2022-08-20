@@ -117,13 +117,17 @@ class TicketCatalogueController(
                 throw IllegalArgumentException("Invalid expiration date format!")
             }
 
+            if((ticketCatalogue.type == "1 month" || ticketCatalogue.type == "1 year") && purchasingInfo.travelcardOwner == null){
+                throw IllegalArgumentException("Travelcard owner cannot be null!")
+            }
+
 
             if (ticketCatalogue.maxAge != null || ticketCatalogue.minAge != null) {
 
                 val traveler = async {
                     travelerClient
                         .get()
-                        .uri("/my/profile")
+                        .uri("/traveler/my/profile")
                         .header("Authorization", jwt)
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
@@ -150,6 +154,7 @@ class TicketCatalogueController(
                         ticketCatalogueId = purchasingInfo.ticketId,
                         quantity = purchasingInfo.numberOfTickets,
                         customerUsername = username,
+                        travelcardOwner = purchasingInfo.travelcardOwner
                     )
                 ).awaitSingle()
 
@@ -190,7 +195,7 @@ data class PaymentInfo(
     val cardHolder: String
 )
 
-data class PurchasingInfo(val numberOfTickets: Int, val ticketId: ObjectId, val paymentInfo: PaymentInfo)
+data class PurchasingInfo(val numberOfTickets: Int, val ticketId: ObjectId, val paymentInfo: PaymentInfo, val travelcardOwner: TravelcardOwnerDTO? = null)
 
 data class TransactionInfo(
     @JsonProperty("orderId")
@@ -216,6 +221,15 @@ data class UserDetailDTO(
     val date_of_birth: String?,
     val telephone_number: String?,
     val role: Role
+)
+
+data class TravelcardOwnerDTO(
+    val fiscal_code: String,
+    val name: String,
+    val surname: String,
+    val address: String,
+    val date_of_birth: String,
+    val telephone_number: String? = null,
 )
 
 

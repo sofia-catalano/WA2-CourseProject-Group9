@@ -73,13 +73,13 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
         if (actionTicket.quantity <=0 ) throw IllegalArgumentException("Quantity must be greater than zero")
         if (actionTicket.cmd == "buy_tickets"){
             val exp = when (actionTicket.type) {
-                1L -> Date.from(Instant.now().plus(1, ChronoUnit.HOURS)) //60 min
-                2L -> Date.from(Instant.now().plus(90, ChronoUnit.MINUTES)) //90 min
-                3L -> Date.from(Instant.now().plus(90, ChronoUnit.MINUTES)) //120 min
-                4L -> Date.from(Instant.now().plus(1, ChronoUnit.DAYS)) //daily
-                5L -> Date.from(Instant.now().plus(2, ChronoUnit.DAYS)) //multidaily 2
-                6L -> Date.from(Instant.now().plus(3, ChronoUnit.DAYS)) //multidaily 3
-                7L -> Date.from(Instant.now().plus(7, ChronoUnit.DAYS)) //weekly
+                "60 min" -> Date.from(Instant.now().plus(1, ChronoUnit.HOURS)) //60 min
+                "90 min" -> Date.from(Instant.now().plus(90, ChronoUnit.MINUTES)) //90 min
+                "120 min" -> Date.from(Instant.now().plus(90, ChronoUnit.MINUTES)) //120 min
+                "1 day" -> Date.from(Instant.now().plus(1, ChronoUnit.DAYS)) //daily
+                "2 day" -> Date.from(Instant.now().plus(2, ChronoUnit.DAYS)) //multidaily 2
+                "3 day" -> Date.from(Instant.now().plus(3, ChronoUnit.DAYS)) //multidaily 3
+                "1 week" -> Date.from(Instant.now().plus(7, ChronoUnit.DAYS)) //weekly
                 else -> { // Note the block
                     throw IllegalArgumentException("Ticket type is not supported")
                 }
@@ -96,7 +96,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                     exp = Timestamp.from(exp.toInstant()),
                     zid = actionTicket.zones,
                     jws = token,
-                    typeId = actionTicket.type,
+                    typeId = actionTicket.typeId,
                     userId = userDetails.username
                 )).awaitFirst().toDTO())
             }
@@ -112,10 +112,10 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
     suspend fun buyTravelcards(jwt: String, actionTravelcard: ActionTravelcard): TravelcardPurchasedDTO {
         if (actionTravelcard.cmd == "buy_travelcard"){
             val userDetails = getUserDetails(jwt)
-            var owner = travelcardOwnerRepository.findById(actionTravelcard.owner.fiscalCode).awaitFirstOrNull()
+            var owner = travelcardOwnerRepository.findById(actionTravelcard.owner.fiscal_code).awaitFirstOrNull()
             if (owner == null){
                  owner = travelcardOwnerRepository.save( TravelcardOwner(
-                    fiscalCode = actionTravelcard.owner.fiscalCode,
+                    fiscal_code = actionTravelcard.owner.fiscal_code,
                     name = actionTravelcard.owner.name,
                     surname = actionTravelcard.owner.surname,
                     address = actionTravelcard.owner.address,
@@ -124,15 +124,15 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                 )).awaitFirst()
             }else{
                 //verifico che non esiste già un abbonamento uguale per quell'owner
-                val travelcard = travelcardPurchasedRepository.findByOwnerIdAndTypeId(actionTravelcard.owner.fiscalCode, actionTravelcard.type, Timestamp.from(Instant.now())).awaitFirstOrNull()
+                val travelcard = travelcardPurchasedRepository.findByOwnerIdAndTypeId(actionTravelcard.owner.fiscal_code, actionTravelcard.typeId, Timestamp.from(Instant.now())).awaitFirstOrNull()
                 if(travelcard != null) {
                     throw IllegalArgumentException("Travelcard already exists for the provided owner")
                 }
             }
 
             val exp = when (actionTravelcard.type) {
-                8L -> Date.from(Instant.now().plus(30, ChronoUnit.DAYS)) //monthly
-                9L -> Date.from(Instant.now().plus(365, ChronoUnit.DAYS)) //annual
+                "1 month" -> Date.from(Instant.now().plus(30, ChronoUnit.DAYS)) //monthly
+                "1 year" -> Date.from(Instant.now().plus(365, ChronoUnit.DAYS)) //annual
                 else -> { // Note the block
                     throw IllegalArgumentException("Travelcard type is not supported")
                 }
@@ -149,9 +149,9 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                 exp = Timestamp.from(exp.toInstant()),
                 zid = actionTravelcard.zones,
                 jws = token,
-                typeId = actionTravelcard.type,
+                typeId = actionTravelcard.typeId,
                 userId = userDetails.username,
-                ownerId = actionTravelcard.owner.fiscalCode
+                ownerId = actionTravelcard.owner.fiscal_code
             )).awaitFirst().toDTO()
         } else throw IllegalArgumentException("Action is not supported")
     }

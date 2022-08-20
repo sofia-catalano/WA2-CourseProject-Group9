@@ -15,7 +15,7 @@ data class TravelcardPurchased(
     var exp: Timestamp, //expiration time
     var zid: String,
     var jws: String,
-    var typeId : Long,
+    var typeId : ObjectId,
     var userId: String, //travelcard buyer
     var ownerId: String //travelcard holder
 )

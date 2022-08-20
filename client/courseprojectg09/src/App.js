@@ -5,6 +5,7 @@ import Homepage from "./components/Homepage/Homepage";
 import {useState, useEffect} from 'react';
 import Sidebar from "./components/Sidebar/Sidebar";
 import Container from "@mui/material/Container";
+import RegistrationPage from "./components/Registration/RegistrationPage";
 
 function App() {
 
@@ -31,9 +32,10 @@ function App() {
      <>
           <Navbar/>
           <Sidebar {...AsideProps} />
-          {/*<Routes>
-                 <Route exact path="/" element={<Homepage/>}/>
-          </Routes>*/}
+              <Routes>
+                  <Route exact path="/" element={<Homepage/>}/>
+                  <Route exact path="/user/register" element={<RegistrationPage/>}/>
+              </Routes>
       </>
   );
 }
