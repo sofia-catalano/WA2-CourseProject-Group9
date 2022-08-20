@@ -17,7 +17,7 @@ data class Order(
     val ticketCatalogueId: ObjectId,
     val quantity: Int,
     val customerUsername: String,
-    val travelcardOwner: TravelcardOwnerDTO? = null
+    val owner: TravelcardOwnerDTO? = null
 )
 
 enum class Status {

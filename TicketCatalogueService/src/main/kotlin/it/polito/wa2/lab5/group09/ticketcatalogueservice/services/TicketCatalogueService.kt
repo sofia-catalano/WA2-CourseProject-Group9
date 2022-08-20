@@ -133,7 +133,7 @@ class TicketCatalogueService(
                                 .uri("/traveler/my/travelcards")
                                 .header("Authorization", token)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .bodyValue(ActionTravelcard("buy_travelcard", zones, type, order.ticketCatalogueId, order.travelcardOwner!!))
+                                .bodyValue(ActionTravelcard("buy_travelcard", zones, type, order.ticketCatalogueId, order.owner!!))
                                 .accept(MediaType.APPLICATION_JSON)
                                 .retrieve()
                                 .awaitBody<Unit>()
