@@ -30,9 +30,9 @@ const card = (
             </Typography>
         </CardContent>
         <CardActions style={{justifyContent: "space-around", marginBottom: "0.5rem"}}>
-            <Button size="big" variant="contained" style={{minWidth: "10vw"}}>Sing in</Button>
+            <Button size="big" variant="contained" style={{minWidth: "10vw"}}>Log in</Button>
             <Button size="big" variant="outlined" style={{minWidth: "10vw"}} href="/user/register">
-                Sing Up
+                Register
             </Button>
         </CardActions>
     </React.Fragment>
