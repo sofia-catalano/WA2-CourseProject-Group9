@@ -12,6 +12,7 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import UserTicketsList from "./components/user/TicketsList";
+import UsersList from "./components/admin/UsersList";
 
 function App() {
 
@@ -48,6 +49,7 @@ function App() {
                         <Route exact path="/user/register" element={<RegistrationPage/>}/>
                         <Route exact path="/user/login" element={<LoginPage/>}/>
                         <Route exact path="/my/tickets" element={<UserTicketsList/>}/>
+                        <Route exact path="/admin/travelers" element={<UsersList/>}/>
                         {/*<Route exact path="/my/tickets" element={<TicketsList/>}/>*/}
                     </Routes>
                 </Grid>

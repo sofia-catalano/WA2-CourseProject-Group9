@@ -173,7 +173,7 @@ export default function GenericTable(props) {
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
     return (
-        <Box sx={{ width: '80%', mt:2 , mr:5, ml:5 }}>
+        <Box sx={{ width: '90%', mt:2 , mr:5, ml:5 }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
                 <EnhancedTableToolbar nameTable={nameTable} FilterMenu={FilterMenu}/>
                 <TableContainer>
@@ -202,12 +202,10 @@ export default function GenericTable(props) {
                                             tabIndex={-1}
                                             key={row.id}
                                         >
-                                            <TableCell align="center">{row.id}</TableCell>
-                                            <TableCell align="center">{row.type}</TableCell>
-                                            <TableCell align="center">{row.zones}</TableCell>
-                                            <TableCell align="center">{row.acquired}</TableCell>
-                                            <TableCell align="center">{row.validated}</TableCell>
-                                            <TableCell align="center">{row.expired}</TableCell>
+                                            {Object.keys(row).map(function(key) {
+                                                return <TableCell key={key} align="center">{row[key]}</TableCell>
+                                            })
+                                            })}
                                         </TableRow>
                                     );
                                 })}
