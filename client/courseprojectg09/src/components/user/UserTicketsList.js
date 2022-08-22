@@ -18,7 +18,7 @@ function UserTicketsList(props) {
             <GenericTable
                 headCells={headCells}
                 rows={rows}
-                nameTable={"My tickets"}
+                nameTable={"My Tickets"}
                 FilterMenu={FilterMenu}
             ></GenericTable>
         }

@@ -75,7 +75,7 @@ export default function UserProfile() {
                     component="div"
                     align="center"
                 >
-                    {values.edit ? "Edit profile" : "My profile"}
+                    {values.edit ? "Edit Profile" : "My Profile"}
                 </Typography>
 
             </Toolbar>
