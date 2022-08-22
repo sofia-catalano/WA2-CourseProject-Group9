@@ -9,14 +9,14 @@ import RegistrationPage from "./components/Registration/RegistrationPage";
 import LoginPage from "./components/Login/LoginPage";
 
 import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 import UserTicketsList from "./components/user/UserTicketsList";
 import UserProfile from "./components/user/Profile";
 import UsersList from "./components/admin/UsersList";
 import AdminTicketsList from "./components/admin/AdminTicketsList";
 import UserOrdersList from "./components/user/UserOrdersList";
 import ValidationPage from "./components/Registration/ValidationPage";
+import UserTransactionsList from "./components/user/UserTransactionsList";
+import AdminTransactionsList from "./components/admin/AdminTransactionsList";
 
 function App() {
 
@@ -56,8 +56,10 @@ function App() {
                         <Route exact path="/my/tickets" element={<UserTicketsList/>}/>
                         <Route exact path="/my/orders" element={<UserOrdersList/>}/>
                         <Route exact path="/my/profile" element={<UserProfile/>}/>
+                        <Route exact path="/my/transactions" element={<UserTransactionsList/>}/>
                         <Route exact path="/admin/travelers" element={<UsersList/>}/>
                         <Route exact path="/admin/tickets" element={<AdminTicketsList/>}/>
+                        <Route exact path="/admin/transactions" element={<AdminTransactionsList/>}/>
                         {/*<Route exact path="/my/tickets" element={<TicketsList/>}/>*/}
                     </Routes>
                 </Grid>
