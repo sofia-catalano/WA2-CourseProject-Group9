@@ -16,6 +16,7 @@ import UserProfile from "./components/user/Profile";
 import UsersList from "./components/admin/UsersList";
 import AdminTicketsList from "./components/admin/AdminTicketsList";
 import UserOrdersList from "./components/user/UserOrdersList";
+import ValidationPage from "./components/Registration/ValidationPage";
 
 function App() {
 
@@ -50,6 +51,7 @@ function App() {
                     <Routes>
                         <Route exact path="/" element={<Homepage/>}/>
                         <Route exact path="/user/register" element={<RegistrationPage/>}/>
+                        <Route exact path="/user/validate" element={<ValidationPage/>}/>
                         <Route exact path="/user/login" element={<LoginPage/>}/>
                         <Route exact path="/my/tickets" element={<UserTicketsList/>}/>
                         <Route exact path="/my/orders" element={<UserOrdersList/>}/>
