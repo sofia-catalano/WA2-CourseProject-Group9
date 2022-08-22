@@ -205,7 +205,7 @@ export default function GenericTable(props) {
                                             {Object.keys(row).map(function(key) {
                                                 return <TableCell key={key} align="center">{row[key]}</TableCell>
                                             })
-                                            })}
+                                            }
                                         </TableRow>
                                     );
                                 })}
