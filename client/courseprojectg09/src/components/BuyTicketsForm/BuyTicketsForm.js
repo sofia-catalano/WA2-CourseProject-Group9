@@ -1,10 +1,8 @@
-import {CircularProgress, Typography} from "@mui/material";
 import Box from "@mui/material/Box";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Avatar from "@mui/material/Avatar";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {useState} from "react";
@@ -17,8 +15,7 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 500,
-    bgcolor: 'background.paper',
-    boxShadow: 24,
+    bgcolor: 'transparent',
     pb: 3,
 };
 const theme = createTheme();
@@ -107,7 +104,6 @@ function BuyTicketsForm(props) {
                                 onChange={(event)=>setNumberOfTickets(parseInt(event.target.value))}
                             />
                             <TextField
-                                required
                                 id="creditCardNumber"
                                 label="Credit card number"
                                 autoFocus
@@ -119,7 +115,6 @@ function BuyTicketsForm(props) {
                                 onChange={(event)=>setCreditCardNumber(event.target.value)}
                             />
                             <TextField
-                                required
                                 id="expirationDate"
                                 label="Expiration date"
                                 autoFocus
@@ -134,7 +129,6 @@ function BuyTicketsForm(props) {
                                 onChange={(event)=>setExpirationDate(event.target.value)}
                             />
                             <TextField
-                                required
                                 id="cvv"
                                 label="Cvv"
                                 autoFocus
@@ -152,7 +146,6 @@ function BuyTicketsForm(props) {
                                 label="Card Holder"
                                 autoFocus
                                 margin="normal"
-                                required
                                 fullWidth
                                 value={cardHolder}
                                 onChange={(event)=>setCardHolder(event.target.value)}
