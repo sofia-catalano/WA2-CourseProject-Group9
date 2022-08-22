@@ -40,10 +40,10 @@ function FilterMenu (props){
         }}
         anchorEl={anchorEl}
     >
-        <MenuItem onClick={handleClose}>Tickets' purchased (All) </MenuItem>
-        <MenuItem onClick={handleClose}>Tickets' valid</MenuItem>
-        <MenuItem onClick={handleClose}>Tickets' validated</MenuItem>
-        <MenuItem onClick={handleClose}>Tickets' expired</MenuItem>
+        <MenuItem onClick={handleClose}>Purchased tickets(All) </MenuItem>
+        <MenuItem onClick={handleClose}>Valid tickets </MenuItem>
+        <MenuItem onClick={handleClose}>Validated tickets</MenuItem>
+        <MenuItem onClick={handleClose}>Expired Tickets</MenuItem>
     </Menu>
     );
 }
