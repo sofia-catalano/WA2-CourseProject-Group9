@@ -1,0 +1,75 @@
+import './RegistrationPage.css';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import HowToRegOutlinedIcon from '@mui/icons-material/HowToRegOutlined';
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import * as React from 'react';
+import {useState, useEffect} from 'react';
+import { useNavigate } from "react-router-dom";
+
+const theme = createTheme();
+
+export default function ValidationPage(){
+
+    const navigate = useNavigate();
+    const [showError, setShowError] = useState(false);
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        if(data.get('validation').length !== 6){
+            setShowError(true)
+        }else{
+            setShowError(false)
+            console.log({
+                validation: data.get('validation')
+            });
+            //redirect to login page
+            navigate("/user/login");
+        }
+    };
+
+    return (
+        <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <Box id="registrationForm">
+                    <Avatar id="registrationIcon" sx={{ width: 60, height: 60, mb: 1, bgcolor: '#1976d2' }}>
+                        <HowToRegOutlinedIcon fontSize="large" sx={{color: '#ffeb3b' }}/>
+                    </Avatar>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{p: 2}}>
+                        <TextField
+                            type="number"
+                            error={showError}
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="validation"
+                            label="Validation Code"
+                            name="validation"
+                            autoFocus
+                            helperText={"Validation code should be 6 digit long"}
+                            aria-valuemax={6}
+                            inputProps={{
+                                inputMode: 'tel',
+                                pattern: '[0-9]*'
+                            }}
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2}}
+                        >
+                            Validate
+                        </Button>
+                    </Box>
+                </Box>
+            </Container>
+        </ThemeProvider>
+    );
+}
