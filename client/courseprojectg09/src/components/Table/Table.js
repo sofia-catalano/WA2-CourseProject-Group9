@@ -146,7 +146,7 @@ const EnhancedTableToolbar = (props) => {
 
 
 export default function GenericTable(props) {
-    const {headCells, rows, nameTable, FilterMenu} = props
+    const {headCells, rows, nameTable, FilterMenu, onClickElement} = props
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
     const [page, setPage] = React.useState(0);
@@ -198,7 +198,7 @@ export default function GenericTable(props) {
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={(event) => console.log(event, row.name)}
+                                            onClick={onClickElement}
                                             tabIndex={-1}
                                             key={row.id}
                                         >

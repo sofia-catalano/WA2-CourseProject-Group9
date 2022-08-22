@@ -134,12 +134,12 @@ function UserMenu({ collapsed }) {
         <Menu iconShape="circle">
             <MenuItem icon={<BsFillPersonPlusFill />}>
                 <CollapsableLink collapsed={collapsed} className="text-light" to="my/profile">
-                    My profile
+                    My Profile
                 </CollapsableLink>
             </MenuItem>
             <MenuItem icon={<IoTicketOutline />}>
                 <CollapsableLink collapsed={collapsed} className="text-light" to="/my/tickets">
-                    My tickets
+                    My Tickets
                 </CollapsableLink>
             </MenuItem>
             <MenuItem icon={<IoCardOutline />}>
@@ -149,12 +149,12 @@ function UserMenu({ collapsed }) {
             </MenuItem>
             <MenuItem icon={<IoIosListBox />}>
                 <CollapsableLink collapsed={collapsed} className="text-light" to="/my/orders">
-                    My orders
+                    My Orders
                 </CollapsableLink>
             </MenuItem>
             <MenuItem icon={<GrTransaction />}>
                 <CollapsableLink collapsed={collapsed} className="text-light" to="/my/transactions">
-                    My transactions
+                    My Transactions
                 </CollapsableLink>
             </MenuItem>
         </Menu>

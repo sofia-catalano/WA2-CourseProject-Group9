@@ -17,7 +17,7 @@ import {Modal} from "@mui/material";
 import BuyTicketsForm from "../BuyTicketsForm/BuyTicketsForm";
 
 const pages = ['Ticket Catalogue', 'About Us', 'Buy Tickets'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Logout'];
 
 function Navbar(){
 
