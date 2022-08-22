@@ -28,6 +28,7 @@ function RegistrationPage() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         console.log({
+            username: data.get('username'),
             email: data.get('email'),
             password: data.get('password'),
         });
@@ -60,7 +61,6 @@ function RegistrationPage() {
                             label="Email Address"
                             name="email"
                             autoComplete="email"
-                            autoFocus
                         />
                         <TextField
                             margin="normal"
