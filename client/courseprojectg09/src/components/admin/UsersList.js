@@ -1,102 +1,55 @@
 import { useState} from 'react';
 import * as React from 'react';
-import GenericTable from "../Table/Table.js";
-import {CircularProgress} from "@mui/material";
+import {CircularProgress, Divider, List, ListItem, Stack} from "@mui/material";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
 
 function UsersList(props) {
     const [loading, setLoading] = useState(false);
+    const data = ["user1", "user2", "user3", "user4"]
+    const style = {
+        width: '100%',
+        maxWidth: 700,
+        bgcolor: 'background.paper',
+        marginTop: 5,
+        marginLeft: 10
+    };
+
     return (
         <>{loading
             ?
             <CircularProgress />
             :
-            <GenericTable
-                headCells={headCells}
-                rows={rows}
-                nameTable={"Customers list"}
-            />
-        }
+            <List sx={style} component="nav" aria-label="user-list">
+                {data.map( user => {
+                return(
+                    <Box key={user}>
+                        <ListItem>
+                            <Stack spacing={4} direction="row">
+                                <Typography sx={{mr: 5}} variant="subtitle1" gutterBottom>
+                                    {user}
+                                </Typography>
+                                <Link href={{pathname: `/admin/traveler/${user}/profile`}}>
+                                    <Button variant="outlined">Profile</Button>
+                                </Link>
 
+
+                                <Button variant="outlined">Orders</Button>
+                                <Button variant="outlined">Tickets</Button>
+                                <Button variant="outlined">Travelcards</Button>
+                            </Stack>
+                        </ListItem>
+                        <Divider/>
+                    </Box>
+                )}
+                )}
+            </List>
+        }
         </>
     );
 }
-
-function createData(id, username, name, surname, address, birthday, telephone, email, password, isActive) {
-    return {
-        id,
-        username,
-        name,
-        surname,
-        address,
-        birthday,
-        telephone,
-        email,
-        password,
-        isActive
-    };
-}
-
-const headCells = [
-    {
-        id: 'id',
-        numeric: true,
-        label: 'ID',
-    },
-    {
-        id: 'username',
-        numeric: true,
-        label: 'Username',
-    },
-    {
-        id: 'name',
-        numeric: false,
-        label: 'Name',
-    },
-    {
-        id: 'surname',
-        numeric: false,
-        label: 'Surname',
-    },
-    {
-        id: 'address',
-        numeric: false,
-        label: 'Address',
-    },
-    {
-        id: 'birthday',
-        numeric: true,
-        label: 'Birthday',
-    },
-    {
-        id: 'telephone',
-        numeric: false,
-        label: 'Telephone number',
-    },
-    {
-        id: 'email',
-        numeric: false,
-        label: 'Email',
-    },
-    {
-        id: 'password',
-        numeric: false,
-        label: 'Password',
-    },
-    {
-        id: 'isActive',
-        numeric: false,
-        label: 'Active',
-    },
-];
-const rows=[
-    createData(1, 'provaUsername', 'provaName', 'provaSurname', 'provaAddress', 'birth', '3396438473892', 'email', 'password', 'true'),
-    createData(2, 'provaUsername', 'provaName', 'provaSurname', 'provaAddress', 'birth', '3396438473892', 'email', 'password', 'true'),
-    createData(3, 'provaUsername', 'provaName', 'provaSurname', 'provaAddress', 'birth', '3396438473892', 'email', 'password', 'true'),
-    createData(4, 'provaUsername', 'provaName', 'provaSurname', 'provaAddress', 'birth', '3396438473892', 'email', 'password', 'true'),
-    createData(5, 'provaUsername', 'provaName', 'provaSurname', 'provaAddress', 'birth', '3396438473892', 'email', 'password', 'true'),
-    createData(6, 'provaUsername', 'provaName', 'provaSurname', 'provaAddress', 'birth', '3396438473892', 'email', 'password', 'true'),
-    createData(7, 'provaUsername', 'provaName', 'provaSurname', 'provaAddress', 'birth', '3396438473892', 'email', 'password', 'true')
-]
 
 export default UsersList
 
