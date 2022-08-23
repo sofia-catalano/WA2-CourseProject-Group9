@@ -113,10 +113,10 @@ export default function UserProfile(props) {
                         readOnly: !values.edit,
                     }}
                     variant="standard"
-                    required
+                    required={values.edit}
                     onChange={handleChange("name")}
                     error={values.name === ""}
-                    helperText="Required"
+                    helperText={values.edit ? "Required" : ""}
                 />
                 <TextField
                     id="surname"
@@ -126,10 +126,10 @@ export default function UserProfile(props) {
                         readOnly: !values.edit,
                     }}
                     variant="standard"
-                    required
+                    required={values.edit}
                     onChange={handleChange("surname")}
                     error={values.surname === ""}
-                    helperText="Required"
+                    helperText={values.edit ? "Required" : ""}
                 />
                 <TextField
                     id="address"
@@ -172,10 +172,10 @@ export default function UserProfile(props) {
                     }}
                     type="email"
                     variant="standard"
-                    required
+                    required={values.edit}
                     onChange={handleChange("email")}
                     error={values.email === ""}
-                    helperText="Required"
+                    helperText={values.edit ? "Required" : ""}
                 />
                 <TextField
                     id="password"
@@ -198,10 +198,10 @@ export default function UserProfile(props) {
                     }}
                     type={values.showPassword ? 'text' : 'password'}
                     variant="standard"
-                    required
+                    required={values.edit}
                     onChange={handleChange("password")}
                     error={values.password === ""}
-                    helperText="Required"
+                    helperText={values.edit ? "Required" : ""}
                 />
             </Box>
             {props.userRole==="user" &&
