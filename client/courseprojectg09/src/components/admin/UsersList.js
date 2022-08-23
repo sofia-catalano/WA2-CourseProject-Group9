@@ -23,30 +23,41 @@ function UsersList(props) {
             ?
             <CircularProgress />
             :
-            <List sx={style} component="nav" aria-label="user-list">
-                {data.map( user => {
-                return(
-                    <Box key={user}>
-                        <ListItem>
-                            <Stack spacing={4} direction="row">
-                                <Typography sx={{mr: 5}} variant="subtitle1" gutterBottom>
-                                    {user}
-                                </Typography>
-                                <Link component={RouterLink} to={{pathname: `/admin/traveler/${user}/profile`}}>
-                                    <Button variant="outlined">Profile</Button>
-                                </Link>
+            <Box>
+                <Typography
+                    sx={{ color:'#1976d2'}}
+                    variant="h4"
+                    id="title"
+                    component="div"
+                    align="center"
+                >
+                    Users list
+                </Typography>
+                <List sx={style} component="nav" aria-label="user-list">
+                    {data.map( user => {
+                        return(
+                            <Box key={user}>
+                                <ListItem>
+                                    <Stack spacing={4} direction="row">
+                                        <Typography sx={{mr: 5}} variant="subtitle1" gutterBottom>
+                                            {user}
+                                        </Typography>
+                                        <Link component={RouterLink} to={{pathname: `/admin/traveler/${user}/profile`}}>
+                                            <Button variant="outlined">Profile</Button>
+                                        </Link>
 
 
-                                <Button variant="outlined">Orders</Button>
-                                <Button variant="outlined">Tickets</Button>
-                                <Button variant="outlined">Travelcards</Button>
-                            </Stack>
-                        </ListItem>
-                        <Divider/>
-                    </Box>
-                )}
-                )}
-            </List>
+                                        <Button variant="outlined">Orders</Button>
+                                        <Button variant="outlined">Tickets</Button>
+                                        <Button variant="outlined">Travelcards</Button>
+                                    </Stack>
+                                </ListItem>
+                                <Divider/>
+                            </Box>
+                        )}
+                    )}
+                </List>
+            </Box>
         }
         </>
     );
