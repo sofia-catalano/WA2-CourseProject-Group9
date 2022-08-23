@@ -6,7 +6,9 @@ import it.polito.wa2.wa2lab4group09.qrcodeservice.repositories.QRCodeRepository
 import it.polito.wa2.wa2lab4group09.qrcodeservice.utils.QRCodeGenerator
 import it.polito.wa2.wa2lab4group09.qrcodeservice.utils.TicketPurchasedDTO
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.withContext
+import org.bson.types.ObjectId
 import org.springframework.cache.annotation.*
 import org.springframework.stereotype.Service
 import java.awt.image.BufferedImage
@@ -20,7 +22,7 @@ import javax.imageio.ImageIO
 class QRCodeService(val qrCodeRepository: QRCodeRepository) {
 
     @Cacheable(cacheNames = ["qr-code-cache"], sync = true)
-    suspend fun generateQRCode( ticket : TicketPurchasedDTO): ByteArray {
+    suspend fun generateQRCode( ticket : TicketPurchasedDTO){
         val token = ticket.jws
 //        token.replace("[\n\r\t]", "_")
         try {
@@ -32,13 +34,16 @@ class QRCodeService(val qrCodeRepository: QRCodeRepository) {
             }
             val qrCodeByteArray: ByteArray = baos.toByteArray()
             //save the qrCode just created in DB
-            val qrCodeEntity = QRCode(qrCodeImage = qrCodeByteArray, ticketOrCardId = ticket.sub!!)
+            val qrCodeEntity = QRCode(qrCodeImage = qrCodeByteArray, ticketId = ticket.sub!!)
             qrCodeRepository.save(qrCodeEntity).subscribe()
-
-            return qrCodeByteArray
         }catch(ex : IOException) {
             throw IllegalArgumentException(ex)
         }
+    }
+
+    @Cacheable(cacheNames = ["qr-code-cache"], sync = true)
+    suspend fun getQRCodeByteArray(ticketId : ObjectId) : ByteArray{
+        return qrCodeRepository.findByTicketId(ticketId).awaitSingle().qrCodeImage
     }
 
 }

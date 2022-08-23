@@ -11,7 +11,8 @@ data class QRCode(
     @Indexed
     val qrCodeId : ObjectId = ObjectId.get(),
     val qrCodeImage : ByteArray,
-    val ticketOrCardId : ObjectId
+    @Indexed
+    val ticketId : ObjectId
 
 ) {
     override fun equals(other: Any?): Boolean {

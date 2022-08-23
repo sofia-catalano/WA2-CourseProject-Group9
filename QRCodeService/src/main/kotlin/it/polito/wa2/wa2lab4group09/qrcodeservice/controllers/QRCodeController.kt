@@ -1,7 +1,7 @@
 package it.polito.wa2.wa2lab4group09.qrcodeservice.controllers
 
 import it.polito.wa2.wa2lab4group09.qrcodeservice.services.QRCodeService
-import it.polito.wa2.wa2lab4group09.qrcodeservice.utils.TicketPurchasedDTO
+import org.bson.types.ObjectId
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.ContentDisposition
 import org.springframework.http.HttpHeaders
@@ -9,13 +9,14 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 
 @Controller
 class QRCodeController(val qrCodeService: QRCodeService) {
 
-    @GetMapping("/generateQRCode", produces = [MediaType.IMAGE_PNG_VALUE])
-    suspend fun createQRCode(ticket: TicketPurchasedDTO) : ResponseEntity<Any>{
-        val qrCode = qrCodeService.generateQRCode(ticket)
+    @GetMapping("/QRCode/generateQRCode/{ticketId}", produces = [MediaType.IMAGE_PNG_VALUE])
+    suspend fun downloadQRCode(@PathVariable ticketId: ObjectId) : ResponseEntity<Any>{
+        val qrCode = qrCodeService.getQRCodeByteArray(ticketId)
         val resource = ByteArrayResource(qrCode)
         return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
@@ -23,10 +24,12 @@ class QRCodeController(val qrCodeService: QRCodeService) {
             .header(
                 HttpHeaders.CONTENT_DISPOSITION,
                 ContentDisposition.attachment()
-                    .filename("ticket_${ticket.iat.time}")
+                    .filename("ticket.png")
                     .build().toString())
             .body(resource)
     }
+
+    //TODO: validate qrCode
 
 
 
