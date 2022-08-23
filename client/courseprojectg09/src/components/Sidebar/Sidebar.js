@@ -2,13 +2,14 @@ import { Link } from 'react-router-dom';
 import { ProSidebar, Menu, MenuItem, SidebarHeader, SidebarContent } from 'react-pro-sidebar';
 import {
     BsFillPersonPlusFill,
-    BsList,
+    BsFillPersonFill,
+    BsPersonCheckFill
 } from 'react-icons/bs';
 import { IoIosArrowBack, IoIosArrowForward, IoIosListBox  } from 'react-icons/io';
-import {GrTransaction } from 'react-icons/gr';
 import {FiUsers} from 'react-icons/fi'
 import { IoTicketOutline, IoCardOutline } from "react-icons/io5";
 import './Sidebar.css'
+import {BiTransfer} from "react-icons/bi";
 
 /**
  * Sidebar component.
@@ -20,7 +21,7 @@ import './Sidebar.css'
  * @param {object}  props  - Component props.
  * @param {boolean} props.collapsed - If true the sidebar is in a tiny version.
  * @param {boolean} props.toggled - If true the sidebar is hidden and a button appears.
- * @param {funciton} props.handleToggle - Handle the action on toggle button.
+ * @param {function} props.handleToggle - Handle the action on toggle button.
  * @param {function} props.handleCollapse - Handle the action on collapse button.
  * @param {string} props.userRole - Role of the user, defined on login.
  */
@@ -95,12 +96,17 @@ function CollapsableLink(props) {
 function AdminMenu({ collapsed }) {
     return (
         <Menu iconShape="circle">
+            <MenuItem icon={<BsFillPersonFill fontSize={"small"} />}>
+                <CollapsableLink collapsed={collapsed} className="text-light" to="my/profile">
+                    My Profile
+                </CollapsableLink>
+            </MenuItem>
             <MenuItem icon={<BsFillPersonPlusFill />}>
                 <CollapsableLink collapsed={collapsed} className="text-light" to="/admin/registerAdmin">
                     Register a new admin
                 </CollapsableLink>
             </MenuItem>
-            <MenuItem icon={<BsFillPersonPlusFill />}>
+            <MenuItem icon={<BsPersonCheckFill />}>
                 <CollapsableLink collapsed={collapsed} className="text-light" to="/admin/enrollAdmin/">
                     Enroll an admin
                 </CollapsableLink>
@@ -111,18 +117,18 @@ function AdminMenu({ collapsed }) {
                 </CollapsableLink>
             </MenuItem>
             <MenuItem icon={<IoTicketOutline />}>
-                <CollapsableLink collapsed={collapsed} className="text-light" to="/admin/travelers/tickets">
-                    Tickets' travelers
+                <CollapsableLink collapsed={collapsed} className="text-light" to="/admin/tickets">
+                    Travelers Tickets
                 </CollapsableLink>
             </MenuItem>
             <MenuItem icon={<IoCardOutline />}>
-                <CollapsableLink collapsed={collapsed} className="text-light" to="/admin/travelers/travelcards">
-                    Travelercards' travelers
+                <CollapsableLink collapsed={collapsed} className="text-light" to="/admin/travelcards">
+                    Travelers TravelCards
                 </CollapsableLink>
             </MenuItem>
-            <MenuItem icon={<GrTransaction />}>
-                <CollapsableLink collapsed={collapsed} className="text-light" to="/admin/orders">
-                    Transactions' travelers
+            <MenuItem icon={<BiTransfer />}>
+                <CollapsableLink collapsed={collapsed} className="text-light" to="/admin/transactions">
+                    Travelers Transactions
                 </CollapsableLink>
             </MenuItem>
         </Menu>
@@ -132,7 +138,7 @@ function AdminMenu({ collapsed }) {
 function UserMenu({ collapsed }) {
     return (
         <Menu iconShape="circle">
-            <MenuItem icon={<BsFillPersonPlusFill />}>
+            <MenuItem icon={<BsFillPersonFill fontSize={"small"} />}>
                 <CollapsableLink collapsed={collapsed} className="text-light" to="my/profile">
                     My Profile
                 </CollapsableLink>
@@ -152,7 +158,7 @@ function UserMenu({ collapsed }) {
                     My Orders
                 </CollapsableLink>
             </MenuItem>
-            <MenuItem icon={<GrTransaction />}>
+            <MenuItem icon={<BiTransfer />}>
                 <CollapsableLink collapsed={collapsed} className="text-light" to="/my/transactions">
                     My Transactions
                 </CollapsableLink>
