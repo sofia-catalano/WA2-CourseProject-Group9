@@ -10,6 +10,7 @@ import {FiUsers} from 'react-icons/fi'
 import { IoTicketOutline, IoCardOutline } from "react-icons/io5";
 import './Sidebar.css'
 import {BiTransfer} from "react-icons/bi";
+import {RiUserStarFill} from "react-icons/ri";
 
 /**
  * Sidebar component.
@@ -101,14 +102,9 @@ function AdminMenu({ collapsed }) {
                     My Profile
                 </CollapsableLink>
             </MenuItem>
-            <MenuItem icon={<BsFillPersonPlusFill />}>
-                <CollapsableLink collapsed={collapsed} className="text-light" to="/admin/registerAdmin">
-                    Register a new admin
-                </CollapsableLink>
-            </MenuItem>
-            <MenuItem icon={<BsPersonCheckFill />}>
-                <CollapsableLink collapsed={collapsed} className="text-light" to="/admin/enrollAdmin/">
-                    Enroll an admin
+            <MenuItem icon={<RiUserStarFill />}>
+                <CollapsableLink collapsed={collapsed} className="text-light" to="/admin/admins">
+                    Admins
                 </CollapsableLink>
             </MenuItem>
             <MenuItem icon={<FiUsers/>}>

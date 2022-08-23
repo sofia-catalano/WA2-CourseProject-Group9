@@ -2,12 +2,10 @@ package it.polito.wa2.wa2lab3group09.loginservice.controllers
 
 import it.polito.wa2.wa2lab3group09.loginservice.dtos.UserDTO
 import it.polito.wa2.wa2lab3group09.loginservice.security.JwtUtils
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.validation.BindingResult
-import javax.validation.Valid
 import it.polito.wa2.wa2lab3group09.loginservice.services.AdminService
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -50,6 +48,18 @@ class AdminController(val adminService: AdminService) {
         return try {
             adminService.enrollAdmin(username, admin)
             ResponseEntity(HttpStatus.OK)
+        } catch (t : Throwable){
+            ResponseEntity("${t.message}", HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @GetMapping("/login/admin/admins")
+    suspend fun getAllAdmins(@RequestHeader("Authorization") jwt:String) :  ResponseEntity<Any>{
+        val newToken = jwt.replace("Bearer", "")
+        val username=JwtUtils.getDetailsFromJwtToken(newToken, key).username
+        return try {
+            val body = adminService.getAllAdmins(username)
+            ResponseEntity(body, HttpStatus.OK)
         } catch (t : Throwable){
             ResponseEntity("${t.message}", HttpStatus.BAD_REQUEST)
         }
