@@ -18,7 +18,7 @@ import AdminTicketsList from "./components/admin/AdminTicketsList";
 
 function App() {
 
-    const [userRole, setUserRole] = useState('user');
+    const [userRole, setUserRole] = useState('admin');
     const navigate = useNavigate();
     const [toggled, setToggled] = useState(true);
     const [collapsed, setCollapsed] = useState(false);
@@ -48,12 +48,14 @@ function App() {
                 <Grid item xs={10}>
                     <Routes>
                         <Route exact path="/" element={<Homepage/>}/>
+                        <Route exact path="/admin/traveler/:user/profile" element={<UserProfile userRole={userRole}/>}/>
                         <Route exact path="/user/register" element={<RegistrationPage/>}/>
                         <Route exact path="/user/login" element={<LoginPage/>}/>
                         <Route exact path="/my/tickets" element={<UserTicketsList/>}/>
-                        <Route exact path="/my/profile" element={<UserProfile/>}/>
+                        <Route exact path="/my/profile" element={<UserProfile  userRole={userRole}/>}/>
                         <Route exact path="/admin/travelers" element={<UsersList/>}/>
                         <Route exact path="/admin/tickets" element={<AdminTicketsList/>}/>
+
                         {/*<Route exact path="/my/tickets" element={<TicketsList/>}/>*/}
                     </Routes>
                 </Grid>

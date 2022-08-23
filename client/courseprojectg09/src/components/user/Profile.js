@@ -8,12 +8,15 @@ import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
+import {useParams} from "react-router-dom";
 
-export default function UserProfile() {
+export default function UserProfile(props) {
+    let { user } = useParams();
+
     const [values, setValues] = React.useState({
         name: 'Mario',
         surname: 'Rossi',
-        username: 'mariorossi',
+        username: user,
         address: 'Via Torino',
         birthday: '04/08/2020',
         telephone: '43274392487',
@@ -75,7 +78,7 @@ export default function UserProfile() {
                     component="div"
                     align="center"
                 >
-                    {values.edit ? "Edit profile" : "My profile"}
+                    {values.edit ? "Edit profile" : props.userRole==="user" ? "My profile" : `User profile`}
                 </Typography>
 
             </Toolbar>
@@ -201,7 +204,8 @@ export default function UserProfile() {
                     helperText="Required"
                 />
             </Box>
-            <Box
+            {props.userRole==="user" &&
+                <Box
                 sx={{display: 'flex', flexDirection: 'row-reverse', mr: 25, mt: 10}}>
                 <Button
                     size="big"
@@ -211,7 +215,7 @@ export default function UserProfile() {
                 >
                     {values.edit ? "Submit" : "Edit profile"}
                 </Button>
-            </Box>
+            </Box>}
         </Box>
     );
 }

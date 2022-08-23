@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+import { Link as RouterLink} from 'react-router-dom';
 
 function UsersList(props) {
     const [loading, setLoading] = useState(false);
@@ -31,7 +32,7 @@ function UsersList(props) {
                                 <Typography sx={{mr: 5}} variant="subtitle1" gutterBottom>
                                     {user}
                                 </Typography>
-                                <Link href={{pathname: `/admin/traveler/${user}/profile`}}>
+                                <Link component={RouterLink} to={{pathname: `/admin/traveler/${user}/profile`}}>
                                     <Button variant="outlined">Profile</Button>
                                 </Link>
 
