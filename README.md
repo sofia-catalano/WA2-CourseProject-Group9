@@ -95,6 +95,12 @@ curl GET -v -i 'http://localhost:8100/login/admin/enrollAdmin/ADMIN2' -H "Author
 ```
 The endpoint give the enroll capability to the {admin}
 
+- GET admin/admins
+```
+curl -v -i 'http://localhost:8100/login/admin/admins' -H "Authorization:{Bearer...}"
+```
+The endpoints returns a JSON list of all Admins (except the one who is making the request)
+
 - GET /admin/travelers
 ```
 curl GET -v -i 'http://localhost:8100/traveler/admin/travelers' -H "Authorization:{Bearer...}"
