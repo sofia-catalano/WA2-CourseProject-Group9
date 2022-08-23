@@ -22,15 +22,20 @@ const card = (
                 Welcome to Turin Transport
             </Typography>
             <Typography color="text.secondary" component="div">
-                Your best way to reach every part of Turin.
+                Your best way to reach every area in Turin.
             </Typography>
             <Typography style={{marginTop :"10vh"}} variant="body2">
                 See prices and season pass in Ticket Catalogue Section!
                 <br />
             </Typography>
         </CardContent>
-        <CardActions style={{justifyContent: "center"}}>
-            <Button size="big" style={{minWidth: "10vw"}}>Login</Button>
+        <CardActions style={{justifyContent: "space-around", marginBottom: "0.5rem"}}>
+            <Button size="big" variant="contained" style={{minWidth: "10vw"}}  href="/user/login">
+                Log in
+            </Button>
+            <Button size="big" variant="outlined" style={{minWidth: "10vw"}} href="/user/register">
+                Register
+            </Button>
         </CardActions>
     </React.Fragment>
 );

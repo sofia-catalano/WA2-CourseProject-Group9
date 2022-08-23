@@ -21,6 +21,7 @@ class JWTAuthorizationFilter(
         return if(exchange.request.headers.getFirst("Authorization").isNullOrBlank()){
             //ReactiveSecurityContextHolder.withAuthentication(null)
             //Mono.empty()
+            println("no authorization")
             chain.filter(exchange).subscriberContext(ReactiveSecurityContextHolder.withAuthentication(null))
         }else {
             val token = getAuthentication(exchange.request.headers.getFirst("Authorization")!!)

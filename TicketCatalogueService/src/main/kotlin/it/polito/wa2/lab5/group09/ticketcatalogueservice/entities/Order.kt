@@ -1,5 +1,6 @@
 package it.polito.wa2.lab5.group09.ticketcatalogueservice.entities
 
+import it.polito.wa2.lab5.group09.ticketcatalogueservice.controllers.TravelcardOwnerDTO
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
@@ -16,6 +17,7 @@ data class Order(
     val ticketCatalogueId: ObjectId,
     val quantity: Int,
     val customerUsername: String,
+    val owner: TravelcardOwnerDTO? = null
 )
 
 enum class Status {

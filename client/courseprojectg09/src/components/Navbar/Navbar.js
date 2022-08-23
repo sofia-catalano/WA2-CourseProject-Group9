@@ -13,15 +13,29 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SubwayIcon from '@mui/icons-material/Subway';
+import {Modal} from "@mui/material";
+import BuyTicketsForm from "../BuyTicketsForm/BuyTicketsForm";
 
-const pages = ['Ticket Catalogue', 'About Us'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['Ticket Catalogue', 'About Us', 'Buy Tickets'];
+const settings = ['Logout'];
 
 function Navbar(){
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+    const [buyTicketsModal, setBuyTicketsModal] = React.useState(false);
+    const handleBuyTicketsModal = (value) => setBuyTicketsModal(value);
+    const buyTicketModalStyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -29,7 +43,11 @@ function Navbar(){
         setAnchorElUser(event.currentTarget);
     };
 
-    const handleCloseNavMenu = () => {
+    const handleCloseNavMenu = (event) => {
+        console.log(event)
+        if(event.target.textContent==="Buy Tickets"){
+            handleBuyTicketsModal(true)
+        }
         setAnchorElNav(null);
     };
 
@@ -89,7 +107,7 @@ function Navbar(){
                             }}
                         >
                             {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                                <MenuItem key={page} id={page} onClick={handleCloseNavMenu}>
                                     <Typography textAlign="center">{page}</Typography>
                                 </MenuItem>
                             ))}
@@ -157,6 +175,14 @@ function Navbar(){
                     </Box>
                 </Toolbar>
             </Container>
+            <Modal
+                open={buyTicketsModal}
+                onClose={()=>setBuyTicketsModal((false))}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+              <BuyTicketsForm/>
+            </Modal>
         </AppBar>
     );
 }

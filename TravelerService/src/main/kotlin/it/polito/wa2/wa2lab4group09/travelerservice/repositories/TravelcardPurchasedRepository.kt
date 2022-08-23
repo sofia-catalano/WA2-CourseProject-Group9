@@ -1,6 +1,5 @@
 package it.polito.wa2.wa2lab4group09.travelerservice.repositories
 
-import it.polito.wa2.wa2lab4group09.travelerservice.entities.TicketPurchased
 import it.polito.wa2.wa2lab4group09.travelerservice.entities.TravelcardPurchased
 import kotlinx.coroutines.flow.Flow
 import org.bson.types.ObjectId
@@ -9,12 +8,16 @@ import org.springframework.data.mongodb.repository.Query
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import java.sql.Timestamp
 
 @Repository
 interface TravelcardPurchasedRepository: ReactiveMongoRepository<TravelcardPurchased, ObjectId> {
 
     fun findAllByUserIdOrderByIat(userId: String) : Flux<TravelcardPurchased>
+
+    @Query("{'ownerId' : { \$eq: ?0}, 'typeId' : { \$eq: ?1 }, 'exp' : { \$gt: ?2 }}")
+    fun findByOwnerIdAndTypeId(ownerId: String, typeId: ObjectId, end: Timestamp) : Mono<TravelcardPurchased?>
 
     fun deleteAllByUserId(ownerId: String)
 

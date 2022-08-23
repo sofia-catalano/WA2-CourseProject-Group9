@@ -13,10 +13,9 @@ data class TravelcardPurchased(
     var sub : ObjectId = ObjectId.get(),
     var iat: Timestamp, //creation time
     var exp: Timestamp, //expiration time
-    // TODO calcolare exp durante la creazione dell'abbonamento in base al type
     var zid: String,
     var jws: String,
-    var typeId : Long,
+    var typeId : ObjectId,
     var userId: String, //travelcard buyer
     var ownerId: String //travelcard holder
 )

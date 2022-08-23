@@ -15,7 +15,7 @@ class AdminController(
 
 
 
-    @PostMapping("/admin/tickets")
+    @PostMapping("/catalogue/admin/tickets")
     suspend fun addTicketToCatalogue(
         @RequestHeader("Authorization") jwt:String,
         @RequestBody ticket : TicketCatalogue
@@ -37,7 +37,7 @@ class AdminController(
 
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/admin/orders")
+    @GetMapping("/catalogue/admin/orders")
     suspend fun getAllUsersOrders(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
         return try {
             val orders = ticketCatalogueService.getAllUsersOrders()
@@ -49,7 +49,7 @@ class AdminController(
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/admin/orders/{userId}")
+    @GetMapping("/catalogue/admin/orders/{userId}")
     suspend fun getUserOrders(@PathVariable userId:String, @RequestHeader("Authorization") jwt:String ) : ResponseEntity<Any>{
         return try {
             val orders = ticketCatalogueService.getUserOrders(userId)

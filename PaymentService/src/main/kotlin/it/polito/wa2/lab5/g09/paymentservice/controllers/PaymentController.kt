@@ -16,7 +16,7 @@ class PaymentController(val paymentService: PaymentService) {
     lateinit var key: String
 
 
-    @GetMapping("/admin/transactions")
+    @GetMapping("/payment/admin/transactions")
     suspend fun getAllUsersTransactions(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
         return try {
             val orders = paymentService.getAllUsersTransactions()
@@ -27,7 +27,7 @@ class PaymentController(val paymentService: PaymentService) {
 
     }
 
-    @GetMapping("/transactions")
+    @GetMapping("/payment/transactions")
     suspend fun getAllTransactions(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
         val newToken = jwt.replace("Bearer", "")
         return try {

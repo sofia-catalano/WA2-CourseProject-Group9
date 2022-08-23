@@ -2,17 +2,68 @@ import { Routes, BrowserRouter, Route, useNavigate } from 'react-router-dom';
 import './App.css';
 import Navbar from "./components/Navbar/Navbar";
 import Homepage from "./components/Homepage/Homepage";
+import {useState, useEffect} from 'react';
+import Sidebar from "./components/Sidebar/Sidebar";
+import Container from "@mui/material/Container";
+import RegistrationPage from "./components/Registration/RegistrationPage";
+import LoginPage from "./components/Login/LoginPage";
+
+import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import UserTicketsList from "./components/user/UserTicketsList";
+import UserProfile from "./components/user/Profile";
+import UsersList from "./components/admin/UsersList";
+import AdminTicketsList from "./components/admin/AdminTicketsList";
+import UserOrdersList from "./components/user/UserOrdersList";
+import ValidationPage from "./components/Registration/ValidationPage";
 
 function App() {
-  const navigate = useNavigate();
-  return (
-      <>
-              <Navbar/>
-              <Routes>
-                  <Route exact path="/" element={<Homepage/>}/>
-              </Routes>
-      </>
-  );
+
+    const [userRole, setUserRole] = useState('user');
+    const navigate = useNavigate();
+    const [toggled, setToggled] = useState(true);
+    const [collapsed, setCollapsed] = useState(false);
+
+    const handleCollapse = (value) => {
+        setCollapsed(value);
+    };
+
+    const handleToggle = () => {
+        setToggled(!toggled);
+    };
+    const AsideProps = {
+        toggled,
+        collapsed,
+        userRole,
+        handleToggle,
+        handleCollapse,
+    }
+
+    return (
+        <Container maxWidth='xxl' sx={{p:0, m:0}}>
+            <Navbar/>
+            <Grid container spacing={2}>
+                <Grid item xs={2}>
+                    <Sidebar {...AsideProps} />
+                </Grid>
+                <Grid item xs={10}>
+                    <Routes>
+                        <Route exact path="/" element={<Homepage/>}/>
+                        <Route exact path="/user/register" element={<RegistrationPage/>}/>
+                        <Route exact path="/user/validate" element={<ValidationPage/>}/>
+                        <Route exact path="/user/login" element={<LoginPage/>}/>
+                        <Route exact path="/my/tickets" element={<UserTicketsList/>}/>
+                        <Route exact path="/my/orders" element={<UserOrdersList/>}/>
+                        <Route exact path="/my/profile" element={<UserProfile/>}/>
+                        <Route exact path="/admin/travelers" element={<UsersList/>}/>
+                        <Route exact path="/admin/tickets" element={<AdminTicketsList/>}/>
+                        {/*<Route exact path="/my/tickets" element={<TicketsList/>}/>*/}
+                    </Routes>
+                </Grid>
+            </Grid>
+        </Container>
+    );
 }
 
 export default App;

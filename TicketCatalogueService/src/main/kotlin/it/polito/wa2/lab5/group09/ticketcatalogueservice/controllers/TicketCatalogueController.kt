@@ -51,7 +51,7 @@ class TicketCatalogueController(
     lateinit var key: String
 
 
-    @GetMapping("/orders")
+    @GetMapping("/catalogue/orders")
     suspend fun getOrders(@RequestHeader("Authorization") jwt: String): ResponseEntity<Any> {
         val newToken = jwt.replace("Bearer", "")
         return try {
@@ -63,7 +63,7 @@ class TicketCatalogueController(
         }
     }
 
-    @GetMapping("/orders/{orderId}")
+    @GetMapping("/catalogue/orders/{orderId}")
     suspend fun getOrdersByUUID(
         @PathVariable orderId: ObjectId,
         @RequestHeader("Authorization") jwt: String
@@ -78,7 +78,7 @@ class TicketCatalogueController(
         }
     }
 
-    @GetMapping("/tickets")
+    @GetMapping("/catalogue/tickets")
     suspend fun getTickets(): ResponseEntity<Any> {
         return try {
             val ticketCatalogue = ticketCatalogueService.getCatalogue()
@@ -90,7 +90,7 @@ class TicketCatalogueController(
 
     }
 
-    @PostMapping("/shop/{ticketType}")
+    @PostMapping("/catalogue/shop/{ticketType}")
     suspend fun buyTickets(
         @PathVariable ticketType: String,
         @RequestHeader("Authorization") jwt: String,
@@ -117,13 +117,20 @@ class TicketCatalogueController(
                 throw IllegalArgumentException("Invalid expiration date format!")
             }
 
+            if((ticketCatalogue.type == "1 month" || ticketCatalogue.type == "1 year") && purchasingInfo.owner == null){
+                throw IllegalArgumentException("Travelcard owner cannot be null!")
+            }
+
+            if(ticketCatalogue.type != "1 month" && ticketCatalogue.type != "1 year" && purchasingInfo.owner != null){
+                throw IllegalArgumentException("Travelcard owner should be null!")
+            }
 
             if (ticketCatalogue.maxAge != null || ticketCatalogue.minAge != null) {
 
                 val traveler = async {
                     travelerClient
                         .get()
-                        .uri("/my/profile")
+                        .uri("/traveler/my/profile")
                         .header("Authorization", jwt)
                         .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
@@ -150,6 +157,7 @@ class TicketCatalogueController(
                         ticketCatalogueId = purchasingInfo.ticketId,
                         quantity = purchasingInfo.numberOfTickets,
                         customerUsername = username,
+                        owner = purchasingInfo.owner
                     )
                 ).awaitSingle()
 
@@ -190,7 +198,7 @@ data class PaymentInfo(
     val cardHolder: String
 )
 
-data class PurchasingInfo(val numberOfTickets: Int, val ticketId: ObjectId, val paymentInfo: PaymentInfo)
+data class PurchasingInfo(val numberOfTickets: Int, val ticketId: ObjectId, val paymentInfo: PaymentInfo, val owner: TravelcardOwnerDTO? = null)
 
 data class TransactionInfo(
     @JsonProperty("orderId")
@@ -216,6 +224,15 @@ data class UserDetailDTO(
     val date_of_birth: String?,
     val telephone_number: String?,
     val role: Role
+)
+
+data class TravelcardOwnerDTO(
+    val fiscal_code: String,
+    val name: String,
+    val surname: String,
+    val address: String,
+    val date_of_birth: String,
+    val telephone_number: String? = null,
 )
 
 

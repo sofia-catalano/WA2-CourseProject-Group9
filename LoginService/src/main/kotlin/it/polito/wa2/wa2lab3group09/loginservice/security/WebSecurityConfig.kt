@@ -58,7 +58,7 @@ class WebSecurityConfig(val userDetailsService: UserDetailsService) {
                                 serverAuthenticationFailureHandler: ServerAuthenticationFailureHandler): AuthenticationWebFilter {
 
         val authenticationWebFilter = AuthenticationWebFilter(reactiveAuthenticationManager)
-        authenticationWebFilter.setRequiresAuthenticationMatcher { ServerWebExchangeMatchers.pathMatchers("/user/login").matches(it) }
+        authenticationWebFilter.setRequiresAuthenticationMatcher { ServerWebExchangeMatchers.pathMatchers("/login/user/login").matches(it) }
         authenticationWebFilter.setServerAuthenticationConverter(jwtConverter)
         authenticationWebFilter.setAuthenticationSuccessHandler(serverAuthenticationSuccessHandler)
         authenticationWebFilter.setAuthenticationFailureHandler(serverAuthenticationFailureHandler)
@@ -73,11 +73,11 @@ class WebSecurityConfig(val userDetailsService: UserDetailsService) {
             .and()
             .csrf().disable()
             .authorizeExchange()
-            .pathMatchers("/user/**")
+            .pathMatchers("/login/user/**")
             .permitAll()
             .and()
             .authorizeExchange()
-            .pathMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+            .pathMatchers("/login/admin/**").hasAuthority("ROLE_ADMIN")
             .and()
             .addFilterAt(RateLimitFilter(), SecurityWebFiltersOrder.FIRST)
             .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)

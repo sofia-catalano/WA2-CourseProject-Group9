@@ -15,7 +15,7 @@ import javax.validation.Valid
 
 @RestController
 class UserController(val userService: UserService) {
-    @PostMapping("/user/register")
+    @PostMapping("/login/user/register")
     suspend fun registerUser(
         @RequestBody
         @Valid
@@ -36,7 +36,7 @@ class UserController(val userService: UserService) {
 
 
 
-    @PostMapping("/user/validate")
+    @PostMapping("/login/user/validate")
     suspend fun validateUser(@RequestBody verificationInfo: VerificationInfo): ResponseEntity<Any> {
 
         return try {

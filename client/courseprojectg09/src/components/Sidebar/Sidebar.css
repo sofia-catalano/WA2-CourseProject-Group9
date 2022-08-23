@@ -1,0 +1,61 @@
+@import "react-pro-sidebar/dist/css/styles.css";
+.pro-sidebar,
+.pro-sidebar-footer {
+    color: #fff;
+    background-color: #1976d2;
+}
+
+
+/* Sidebar css */
+
+.aside-toggle {
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    display: none;
+}
+
+
+@media (max-width: 768px) {
+    .aside-toggle {
+        display: flex;
+    }
+
+    .pro-sidebar {
+        height: 100% !important;
+    }
+}
+
+.sidebar-btn-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 40px;
+
+}
+
+.sidebar-btn {
+    transition: width 0.3s;
+    width: 150px;
+    padding: 1px 15px;
+    border-radius: 40px;
+    background: #fff;
+    color: #1976d2;
+    text-decoration: none;
+    margin: 0 auto;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.collapse-arrow {
+    margin-right: 22px;
+    margin-bottom: 1px;
+}
+
+.collapse-arrow:hover {
+    cursor: pointer;
+}
