@@ -214,6 +214,12 @@ curl GET -v -i 'http://localhost:8100/traveler/admin/traveler/USER1/travelcards/
 ```
 curl GET -v -i 'http://localhost:8100/traveler/admin/traveler/USER1/travelcards/expired?start=10/06/2022&end=19/08/2022' -H "Authorization:{Bearer...}"
 ```
+In order to download a QRCode Ticket 
+
+- GET /QRCode/generateQRCode/{ticketId}
+```
+curl --remote-name --remote-header-name --write-out "Downloaded %{filename_effective} file" -H "Authorization: Bearer..." --silent http://localhost:8100/QRCode/generateQRCode/{ticketId}
+```
 
 
 
