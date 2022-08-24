@@ -119,6 +119,11 @@ function AdminMenu({ collapsed }) {
                     Travelers TravelCards
                 </CollapsableLink>
             </MenuItem>
+            <MenuItem icon={<BsCardList />}>
+                <CollapsableLink collapsed={collapsed} className="text-light" to="/admin/orders">
+                    Travelers Orders
+                </CollapsableLink>
+            </MenuItem>
             <MenuItem icon={<BiTransfer />}>
                 <CollapsableLink collapsed={collapsed} className="text-light" to="/admin/transactions">
                     Travelers Transactions
