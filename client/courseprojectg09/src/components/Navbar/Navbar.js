@@ -15,7 +15,8 @@ import MenuItem from '@mui/material/MenuItem';
 import SubwayIcon from '@mui/icons-material/Subway';
 import { Link as RouterLink} from 'react-router-dom';
 
-const pages = ['Ticket Catalogue', 'About Us'];
+const pages = ['Ticket Catalogue', 'Validate Tickets', 'About Us'];
+const url = ['/catalogue', '/validateTicket', '/aboutUs'];
 const settings = ['Logout'];
 
 function Navbar(){
@@ -30,7 +31,7 @@ function Navbar(){
         setAnchorElUser(event.currentTarget);
     };
 
-    const handleCloseNavMenu = (event) => {
+    const handleCloseNavMenu = () => {
         setAnchorElNav(null);
     };
 
@@ -119,10 +120,10 @@ function Navbar(){
                         {pages.map((page) => (
                             <Button
                                 component={RouterLink}
-                                to={page==="Ticket Catalogue" ? "/catalogue" : "aboutUs"}
+                                to={url[pages.indexOf(page)]}
                                 key={page}
                                 onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
+                                sx={{ m: 2, color: 'white', display: 'block' }}
                             >
                                 {page}
                             </Button>
