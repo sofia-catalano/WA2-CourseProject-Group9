@@ -1,6 +1,6 @@
 import {useEffect, useState, Spinner} from 'react';
 import * as React from 'react';
-import GenericTable from "../Table/Table.js";
+import GenericTable from "../generic/Table/Table.js";
 import Typography from "@mui/material/Typography";
 import {CircularProgress, Menu, Modal, Tooltip} from "@mui/material";
 import TextField from "@mui/material/TextField";
@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import PaymentForm from "../PaymentForm/PaymentForm";
 
-function TicketsCatalogue(props) {
+function BuyTickets(props) {
     const [loading, setLoading] = useState(false);
     const [selectedValue, setSelectedValue] = React.useState(rows[0].id);
     const [numberOfTickets, setNumberOfTickets]=useState(1)
@@ -169,7 +169,7 @@ const rows=[
     createData('7', 237, 9.0, 'AB', 3, 8),
 ]
 
-export default TicketsCatalogue
+export default BuyTickets
 
 
 
