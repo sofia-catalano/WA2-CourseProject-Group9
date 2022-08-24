@@ -1,5 +1,6 @@
 import {useEffect, useState, Spinner} from 'react';
 import * as React from 'react';
+import GenericTable from "../generic/Table/Table.js";
 import Typography from "@mui/material/Typography";
 import {CircularProgress, Menu, Modal, Tooltip} from "@mui/material";
 import TextField from "@mui/material/TextField";
@@ -8,33 +9,44 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import PaymentForm from "../PaymentForm/PaymentForm";
-import GenericTable from "../generic/Table/Table";
 
 function BuyTravelcard(props) {
     const [loading, setLoading] = useState(false);
     const [selectedValue, setSelectedValue] = React.useState(rows[0].id);
-    const [numberOfTickets, setNumberOfTickets]=useState(1)
-    const [buyTicketsModal, setBuyTicketsModal] = React.useState(false);
-    const [total,setTotal]=useState(rows[0].price*numberOfTickets)
+    const [buyTravelcardModal, setBuyTravelcardModal] = React.useState(false);
+    const [holder, setHolder] = React.useState({
+        name: 'Mario',
+        surname: 'Rossi',
+        address: '',
+        birthday: '04/08/2020',
+        telephone: ''
+    });
+
+    const handleChange = (prop) => (event) => {
+        setHolder({ ...holder, [prop]: event.target.value });
+    };
 
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        setBuyTicketsModal(true)
         console.log(selectedValue)
+        let valid = true
+    
+        if(holder.name === "" || holder.surname === ""){
+            valid = false
+        }
+
+
+        if(valid){
+            setBuyTravelcardModal(true)
+            //TODO salvare i campi
+        }
 
     };
-    const handleNumberOfTicketsChange=(event)=>{
-        setNumberOfTickets(parseInt(event.target.value))
-        const currentElement=rows.find(element => element.id==selectedValue)
-        if(currentElement!=undefined) setTotal(event.target.value*currentElement.price)
-    }
+
     const handleTypeTicketsChange=(id)=>{
         console.log(id)
         setSelectedValue(id)
-        const currentElement=rows.find(element => element.id==id)
-        if(currentElement!=undefined) setTotal(numberOfTickets*currentElement.price)
     }
     return (
         <>{loading
@@ -45,34 +57,78 @@ function BuyTravelcard(props) {
                 <GenericTable
                     headCells={headCells}
                     rows={rows}
-                    nameTable={"Buy tickets"}
+                    nameTable={"Buy travelcard"}
                     selectedValue={selectedValue}
                     handleTypeTicketsChange={handleTypeTicketsChange}
                 ></GenericTable>
                 <Box sx={{ width: '90%' , mr:5, ml:5 }}>
                     <Paper sx={{ width: '100%', mb: 2 }}>
+                        <Typography
+                            sx={{color: '#1976d2'}}
+                            variant="h6"
+                            id="holder"
+                            component="div"
+                            align="center"
+                        >
+                            Travelcard holder
+                        </Typography>
                         <Grid container
                               spacing={1}
-                              direction="row"
-                              justifyContent="space-between">
-                            <Grid item xs={4} sx={{ ml: 4 }} >
+                              direction="row" sx={{ml:4}}
+                              >
+                            <Grid item xs={4} >
                                 <TextField
-                                    id="numberOfTickets"
-                                    label="Number of tickets"
-                                    type="number"
-                                    autoFocus
-                                    margin="normal"
+                                    id="name"
+                                    label="Name"
+                                    defaultValue={holder.name}
+                                    variant="standard"
                                     required
-                                    fullWidth
-                                    InputProps={{ inputProps: { min: 1, max: 10 } }}
-                                    value={numberOfTickets}
-                                    onChange={(event)=>handleNumberOfTicketsChange(event)}
+                                    onChange={handleChange("name")}
+                                    error={holder.name === ""}
+                                    //helperText="Required"
                                 />
                             </Grid>
-                            <Grid item xs={3}  sx={{ mt: 3 }}>
-                                <Typography variant="h4" gutterBottom>
-                                    Total: {parseFloat(total).toFixed(2)} €
-                                </Typography>
+                            <Grid item xs={4}>
+                                <TextField
+                                    id="surname"
+                                    label="Surname"
+                                    defaultValue={holder.surname}
+                                    variant="standard"
+                                    required
+                                    onChange={handleChange("surname")}
+                                    error={holder.surname === ""}
+                                    //helperText="Required"
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextField
+                                    id="address"
+                                    label="Address"
+                                    defaultValue={holder.address}
+                                    variant="standard"
+                                    onChange={handleChange("address")}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextField
+                                    id="birthday"
+                                    label="Birthday"
+                                    defaultValue={holder.birthday}
+                                    variant="standard"
+                                    required
+                                    error={holder.birthday === ""}
+                                    onChange={handleChange("birthday")}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextField
+                                    id="telephone"
+                                    label="Telephone"
+                                    defaultValue={holder.telephone}
+                                    type="tel"
+                                    variant="standard"
+                                    onChange={handleChange("telephone")}
+                                />
                             </Grid>
                         </Grid>
                         <Grid container
@@ -86,19 +142,19 @@ function BuyTravelcard(props) {
                                     variant="contained"
                                     sx={{p:1}}
                                 >
-                                    Buy tickets
+                                    Buy travelcard
                                 </Button>
                             </Grid>
                         </Grid>
                     </Paper>
                 </Box>
                 <Modal
-                    open={buyTicketsModal}
-                    onClose={()=>setBuyTicketsModal((false))}
+                    open={buyTravelcardModal}
+                    onClose={()=>setBuyTravelcardModal((false))}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <PaymentForm total={total}/>
+                    <PaymentForm total={rows.find(element => element.id==selectedValue).price}/>
                 </Modal>
             </Box>
 
@@ -162,20 +218,6 @@ const headCells = [
 const rows=[
     createData('1', 305, 3.7, 'AB', 2, 2),
     createData('2', 452, 25.0, 'A', 3, 3),
-    createData('3', 262, 16.0, 'C', 4,4),
-    createData('4', 159, 6.0, 'AB', 2, 5),
-    createData('5', 356, 16.0, 'AB', 5, 6),
-    createData('6', 408, 3.2, 'AB', 2, 7),
-    createData('7', 237, 9.0, 'AB', 3, 8),
 ]
 
 export default BuyTravelcard
-
-
-
-
-
-
-
-
-
