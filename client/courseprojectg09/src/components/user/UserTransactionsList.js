@@ -1,6 +1,6 @@
 import {useEffect, useState, Spinner} from 'react';
 import * as React from 'react';
-import GenericTable from "../Table/Table.js";
+import GenericTable from "../generic/Table/Table.js";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import {CircularProgress, Menu, Tooltip} from "@mui/material";
