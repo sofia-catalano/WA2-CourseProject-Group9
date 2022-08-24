@@ -20,26 +20,13 @@ function UserTravelCardsList(props) {
                 headCells={headCells}
                 rows={rows}
                 nameTable={"My TravelCards"}
-                FilterMenu={TicketsFilterMenu}
+                //FilterMenu={TravelerCardFilterMenu}
             ></GenericTable>
         }
 
         </>
     );
 }
-/*ù@Document(collection = "travelcardPurchased")
-data class TravelcardPurchased(
-    @Id
-    @Indexed
-    var sub : ObjectId = ObjectId.get(),
-    var iat: Timestamp, //creation time
-    var exp: Timestamp, //expiration time
-    var zid: String,
-    var jws: String,
-    var typeId : ObjectId,
-    var userId: String, //travelcard buyer
-    var ownerId: String //travelcard holder
-)*/
 
 function createData(id, purchase_date, expiration_date, status, allowed_zone, owner) {
     return {
