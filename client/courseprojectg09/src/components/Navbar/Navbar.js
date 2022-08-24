@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SubwayIcon from '@mui/icons-material/Subway';
-
+import { Link as RouterLink} from 'react-router-dom';
 
 const pages = ['Ticket Catalogue', 'About Us'];
 const settings = ['Logout'];
@@ -118,6 +118,8 @@ function Navbar(){
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map((page) => (
                             <Button
+                                component={RouterLink}
+                                to={page==="Ticket Catalogue" ? "/catalogue" : "aboutUs"}
                                 key={page}
                                 onClick={handleCloseNavMenu}
                                 sx={{ my: 2, color: 'white', display: 'block' }}
