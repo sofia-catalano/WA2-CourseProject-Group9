@@ -27,7 +27,8 @@ import AdminUserTravelcardsList from "./components/admin/AdminUserTravelcardsLis
 import TicketsCatalogue from './components/TicketsCatalogue/TicketsCatalogue';
 import ValidateTicketPage from "./components/ValidateTicketPage/ValidateTicketPage";
 import AdminOrdersList from "./components/admin/AdminOrdersList";
-import UserTravelerCardsList from "./components/user/UserTravelCardsList";
+import UserTravelCardsList from "./components/user/UserTravelcardsList";
+
 
 function App() {
 
@@ -68,7 +69,7 @@ function App() {
                         <Route exact path="/user/validate" element={<ValidationPage/>}/>
                         <Route exact path="/user/login" element={<LoginPage/>}/>
                         <Route exact path="/my/tickets" element={<UserTicketsList/>}/>
-                        <Route exact path="/my/travelcards" element={<UserTravelcardsList/>}/>
+                        <Route exact path="/my/travelcards" element={<UserTravelCardsList/>}/>
                         <Route exact path="/my/profile" element={<UserProfile  userRole={userRole}/>}/>
                         <Route exact path="/my/orders" element={<UserOrdersList/>}/>
                         <Route exact path="/catalogue/shop/tickets" element={<BuyTickets/>}/>
