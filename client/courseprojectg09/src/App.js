@@ -24,7 +24,7 @@ import AdminsList from "./components/admin/AdminsList";
 import AdminUserTicketsList from "./components/admin/AdminUserTicketsList";
 import TicketsCatalogue from './components/TicketsCatalogue/TicketsCatalogue';
 import AdminOrdersList from "./components/admin/AdminOrdersList";
-import UserTravelerCardsList from "./components/user/UserTravelerCardsList";
+import UserTravelerCardsList from "./components/user/UserTravelCardsList";
 
 function App() {
 

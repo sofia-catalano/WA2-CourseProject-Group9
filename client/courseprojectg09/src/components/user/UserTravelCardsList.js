@@ -9,7 +9,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import MenuItem from "@mui/material/MenuItem";
 import TicketsFilterMenu from "../generic/FilterMenu/TicketsFilterMenu";
 
-function UserTravelerCardsList(props) {
+function UserTravelCardsList(props) {
     const [loading, setLoading] = useState(false);
     return (
         <>{loading
@@ -19,7 +19,7 @@ function UserTravelerCardsList(props) {
             <GenericTable
                 headCells={headCells}
                 rows={rows}
-                nameTable={"My TravelerCards"}
+                nameTable={"My TravelCards"}
                 FilterMenu={TicketsFilterMenu}
             ></GenericTable>
         }
@@ -92,7 +92,7 @@ const rows=[
 
 ]
 
-export default UserTravelerCardsList
+export default UserTravelCardsList
 
 
 
