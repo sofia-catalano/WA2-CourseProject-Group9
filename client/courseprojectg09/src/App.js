@@ -13,17 +13,20 @@ import UserTicketsList from "./components/user/UserTicketsList";
 import UserProfile from "./components/user/Profile";
 import UsersList from "./components/admin/UsersList";
 import AdminTicketsList from "./components/admin/AdminTicketsList";
+import AdminTravelcardsList from "./components/admin/AdminTravelcardsList";
 import UserOrdersList from "./components/user/UserOrdersList";
 import ValidationPage from "./components/Registration/ValidationPage";
 import UserTransactionsList from "./components/user/UserTransactionsList";
 import AdminTransactionsList from "./components/admin/AdminTransactionsList";
-import TicketsCatalogue from "./components/BuyTickets/BuyTickets";
+import BuyTickets from "./components/TicketsCatalogue/BuyTickets";
+import BuyTravelcard from "./components/TicketsCatalogue/BuyTravelcard";
 import AdminsList from "./components/admin/AdminsList";
 import AdminUserTicketsList from "./components/admin/AdminUserTicketsList";
+import TicketsCatalogue from './components/TicketsCatalogue/TicketsCatalogue';
 
 function App() {
 
-    const [userRole, setUserRole] = useState('admin');
+    const [userRole, setUserRole] = useState('user');
     const navigate = useNavigate();
     const [toggled, setToggled] = useState(true);
     const [collapsed, setCollapsed] = useState(false);
@@ -61,13 +64,15 @@ function App() {
                         <Route exact path="/my/tickets" element={<UserTicketsList/>}/>
                         <Route exact path="/my/profile" element={<UserProfile  userRole={userRole}/>}/>
                         <Route exact path="/my/orders" element={<UserOrdersList/>}/>
-                        <Route exact path="/buy/tickets" element={<TicketsCatalogue/>}/>
+                        <Route exact path="/catalogue/shop/tickets" element={<BuyTickets/>}/>
+                        <Route exact path="/catalogue/shop/travelcard" element={<BuyTravelcard/>}/>
                         <Route exact path="/my/transactions" element={<UserTransactionsList/>}/>
                         <Route exact path="/admin/admins" element={<AdminsList/>}/>
                         <Route exact path="/admin/travelers" element={<UsersList/>}/>
                         <Route exact path="/admin/tickets" element={<AdminTicketsList/>}/>
+                        <Route exact path="/admin/travelcards" element={<AdminTravelcardsList/>}/>
                         <Route exact path="/admin/transactions" element={<AdminTransactionsList/>}/>
-
+                        <Route exact path="/catalogue" element={<TicketsCatalogue/>}/>
                         {/*<Route exact path="/my/tickets" element={<TicketsList/>}/>*/}
                     </Routes>
                 </Grid>
