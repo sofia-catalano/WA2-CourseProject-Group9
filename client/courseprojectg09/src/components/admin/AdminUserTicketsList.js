@@ -3,7 +3,7 @@ import MenuItem from "@mui/material/MenuItem";
 import {useState} from "react";
 import GenericTable from "../generic/Table/Table";
 import {useParams} from "react-router-dom";
-import TicketsFilterMenu from "../generic/FilterMenu/TicketsFilterMenu";
+import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 
 function AdminTicketsList(props) {
 

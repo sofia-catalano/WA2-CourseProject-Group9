@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography'; 
+import Button from '@mui/material/Button'; 
 
 const Item = styled(Paper)(({ theme }) => ({
 
@@ -17,36 +18,38 @@ const catalogueTypes = ["Tickets", "Travelcard"]
 
 export default function TicketsCatalogue() {
     return (
-        <Box
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            mr: 20,
-            '& > :not(style)': {
-              m: 5,
-              width: 250,
-              height: 250,
-            },
-          }}
+        <Box sx={{  display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'center', 
+                    mt: 15}}
         >
-        {catalogueTypes.map(type => {
-            return(
-                <Paper component={RouterLink} elevation={3} to={type==="Tickets" ? "/catalogue/shop/tickets" : "/catalogue/shop/travelcard"}>
+            <Stack direction="row" spacing={5}>
+                {catalogueTypes.map(type => {
+                return(
+                    <Button style={{
+                            maxWidth: '250px', 
+                            maxHeight: '250px', 
+                            minWidth: '250px', 
+                            minHeight: '250px',
+                            border: '4px solid #1976d2',
+                            borderRadius: '15px 15px 15px 15px'
+                            }}
+                            component={RouterLink}
+                            to={type==="Tickets" ? "/catalogue/shop/tickets" : "/catalogue/shop/travelcard"}
+
+                    >
                         <Typography
-                            sx={{ color:'#1976d2', display:'flex', justifyContent:'center'}}
-                            variant="h4"
-                            id="tickets"
-                            component="div"
+                                sx={{ color:'#1976d2', display:'flex', justifyContent:'center'}}
+                                variant="h5"
+                                id="tickets"
+                                component="div"
                         >
                             {type}
                         </Typography>
-                    
-                    
-                </Paper>
-            )
-        })}
+                    </Button>
+                )
+            })}
+            </Stack>
         </Box>
-
-  );
+    );
 }

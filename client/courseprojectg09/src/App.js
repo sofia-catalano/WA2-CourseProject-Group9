@@ -10,6 +10,7 @@ import LoginPage from "./components/Login/LoginPage";
 
 import Grid from '@mui/material/Grid';
 import UserTicketsList from "./components/user/UserTicketsList";
+import UserTravelcardsList from "./components/user/UserTravelcardsList";
 import UserProfile from "./components/user/Profile";
 import UsersList from "./components/admin/UsersList";
 import AdminTicketsList from "./components/admin/AdminTicketsList";
@@ -22,8 +23,11 @@ import BuyTickets from "./components/TicketsCatalogue/BuyTickets";
 import BuyTravelcard from "./components/TicketsCatalogue/BuyTravelcard";
 import AdminsList from "./components/admin/AdminsList";
 import AdminUserTicketsList from "./components/admin/AdminUserTicketsList";
+import AdminUserTravelcardsList from "./components/admin/AdminUserTravelcardsList";
 import TicketsCatalogue from './components/TicketsCatalogue/TicketsCatalogue';
 import ValidateTicketPage from "./components/ValidateTicketPage/ValidateTicketPage";
+import AdminOrdersList from "./components/admin/AdminOrdersList";
+import UserTravelerCardsList from "./components/user/UserTravelCardsList";
 
 function App() {
 
@@ -59,10 +63,12 @@ function App() {
                         <Route exact path="/" element={<Homepage/>}/>
                         <Route exact path="/admin/traveler/:user/profile" element={<UserProfile userRole={userRole}/>}/>
                         <Route exact path="/admin/traveler/:user/tickets" element={<AdminUserTicketsList userRole={userRole}/>}/>
+                        <Route exact path="/admin/traveler/:user/travelcards" element={<AdminUserTravelcardsList userRole={userRole}/>}/>
                         <Route exact path="/user/register" element={<RegistrationPage/>}/>
                         <Route exact path="/user/validate" element={<ValidationPage/>}/>
                         <Route exact path="/user/login" element={<LoginPage/>}/>
                         <Route exact path="/my/tickets" element={<UserTicketsList/>}/>
+                        <Route exact path="/my/travelcards" element={<UserTravelcardsList/>}/>
                         <Route exact path="/my/profile" element={<UserProfile  userRole={userRole}/>}/>
                         <Route exact path="/my/orders" element={<UserOrdersList/>}/>
                         <Route exact path="/catalogue/shop/tickets" element={<BuyTickets/>}/>
@@ -72,6 +78,7 @@ function App() {
                         <Route exact path="/admin/travelers" element={<UsersList/>}/>
                         <Route exact path="/admin/tickets" element={<AdminTicketsList/>}/>
                         <Route exact path="/admin/travelcards" element={<AdminTravelcardsList/>}/>
+                        <Route exact path="/admin/orders" element={<AdminOrdersList/>}/>
                         <Route exact path="/admin/transactions" element={<AdminTransactionsList/>}/>
                         <Route exact path="/catalogue" element={<TicketsCatalogue/>}/>
                         <Route exact path="/validateTicket" element={<ValidateTicketPage/>}/>

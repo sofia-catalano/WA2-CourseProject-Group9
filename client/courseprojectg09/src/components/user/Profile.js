@@ -78,7 +78,7 @@ export default function UserProfile(props) {
                     component="div"
                     align="center"
                 >
-                    {values.edit ? "Edit profile" : props.userRole==="user" ? "My profile" : `User profile`}
+                    {values.edit ? "Edit profile" : user!= undefined ? `${user}'s tickets` : "My profile"}
                 </Typography>
 
             </Toolbar>
