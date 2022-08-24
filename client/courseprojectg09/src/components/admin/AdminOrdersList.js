@@ -1,11 +1,10 @@
 import {useState} from "react";
-import {CircularProgress, Menu, Modal} from "@mui/material";
-import GenericTable from "../generic/Table/Table";
-import * as React from "react";
-import MenuItem from "@mui/material/MenuItem";
-import Typography from "@mui/material/Typography";
+import {CircularProgress, Modal} from "@mui/material";
 import Grid from "@mui/material/Grid";
+import GenericTable from "../generic/Table/Table";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
 
 const style = {
     position: 'absolute',
@@ -19,7 +18,7 @@ const style = {
     p: 4,
 };
 
-function UserOrdersList(props) {
+function AdminOrdersList(props){
     const [loading, setLoading] = useState(false);
     const [openTicketsModal, setOpenTicketsModal] = useState(false);
     const [openTravelerCardsModal, setOpenTravelerCardsModal] = useState(false);
@@ -37,7 +36,7 @@ function UserOrdersList(props) {
                     <GenericTable
                         headCells={headCellsTickets}
                         rows={rowsTickets}
-                        nameTable={"My Orders (Tickets)"}
+                        nameTable={"All Orders (Tickets)"}
                         onClickElement={handleOpenTicketsDetailsModal}
                     ></GenericTable>
                     <Modal
@@ -60,7 +59,7 @@ function UserOrdersList(props) {
                     <GenericTable
                         headCells={headCellsTravelerCards}
                         rows={rowsTravelerCards}
-                        nameTable={"My Orders (Traveler Cards)"}
+                        nameTable={"All Orders (Traveler Cards)"}
                         onClickElement={handleOpenTravelerCardsDetailsModal}
                     ></GenericTable>
                     <Modal
@@ -110,19 +109,21 @@ function UserOrdersList(props) {
         </Menu>
     );
 }*/
-function createDataTickets(id, status, type_of_purchase, quantity) {
+function createDataTickets(id, status, type_of_purchase, quantity, username) {
     return {
         id,
         status,
         type_of_purchase,
-        quantity
+        quantity,
+        username
     };
 }
-function createDataTravelerCards(id, status, owner) {
+function createDataTravelerCards(id, status, owner, username) {
     return {
         id,
         status,
-        owner
+        owner,
+        username
     };
 }
 const headCellsTickets = [
@@ -139,12 +140,17 @@ const headCellsTickets = [
     {
         id: 'type_of_purchase',
         numeric: false,
-        label: 'Type of Purchase', //if tickets specify the type of ticket(1h,2h...), else specify Traveler Card
+        label: 'Type of Purchase', //if tickets specify the type of ticket(1h,2h...)
     },
     {
         id: 'quantity',
         numeric: true,
         label: 'Quantity',
+    },
+    {
+        id: 'username',
+        numeric: true,
+        label: 'Username',
     }
 
 ];
@@ -165,21 +171,35 @@ const headCellsTravelerCards = [
         numeric: false,
         label: 'Owner',
     },
+    {
+        id: 'username',
+        numeric: false,
+        label: 'Username',
+    }
 ]
 
 const rowsTickets=[
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
+    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
+    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
+    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
+    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
+    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
+    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
+    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
+    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
+    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
+    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
+    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
+
 
 ];
 const rowsTravelerCards=[
-    createDataTravelerCards('1','CANCELLED','Isabella Verdi')
+    createDataTravelerCards('1','CANCELLED','Isabella Verdi',"USER1"),
+    createDataTravelerCards('1','CANCELLED','Isabella Verdi',"USER1"),
+    createDataTravelerCards('1','CANCELLED','Isabella Verdi',"USER1"),
+    createDataTravelerCards('1','CANCELLED','Isabella Verdi',"USER1"),
+    createDataTravelerCards('1','CANCELLED','Isabella Verdi',"USER1"),
+    createDataTravelerCards('1','CANCELLED','Isabella Verdi',"USER1"),
 ];
 
-export default UserOrdersList
+export default AdminOrdersList;

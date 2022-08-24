@@ -25,6 +25,8 @@ import AdminsList from "./components/admin/AdminsList";
 import AdminUserTicketsList from "./components/admin/AdminUserTicketsList";
 import AdminUserTravelcardsList from "./components/admin/AdminUserTravelcardsList";
 import TicketsCatalogue from './components/TicketsCatalogue/TicketsCatalogue';
+import AdminOrdersList from "./components/admin/AdminOrdersList";
+import UserTravelerCardsList from "./components/user/UserTravelCardsList";
 
 function App() {
 
@@ -75,6 +77,7 @@ function App() {
                         <Route exact path="/admin/travelers" element={<UsersList/>}/>
                         <Route exact path="/admin/tickets" element={<AdminTicketsList/>}/>
                         <Route exact path="/admin/travelcards" element={<AdminTravelcardsList/>}/>
+                        <Route exact path="/admin/orders" element={<AdminOrdersList/>}/>
                         <Route exact path="/admin/transactions" element={<AdminTransactionsList/>}/>
                         <Route exact path="/catalogue" element={<TicketsCatalogue/>}/>
                         {/*<Route exact path="/my/tickets" element={<TicketsList/>}/>*/}

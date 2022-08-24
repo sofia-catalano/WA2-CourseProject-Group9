@@ -18,7 +18,7 @@ function AdminTransactionsList(props) {
             <GenericTable
                 headCells={headCells}
                 rows={rows}
-                nameTable={"My Transactions"}
+                nameTable={"All Transactions"}
                 FilterMenu={FilterMenu}
             />
         }
