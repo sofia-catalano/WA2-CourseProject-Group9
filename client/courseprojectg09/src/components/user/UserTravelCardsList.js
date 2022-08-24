@@ -9,7 +9,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import MenuItem from "@mui/material/MenuItem";
 import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 
-function UserTravelcardsList(props) {
+function UserTravelCardsList(props) {
     const [loading, setLoading] = useState(false);
     return (
         <>{loading
@@ -84,7 +84,7 @@ const rows=[
     createData('3',"1 month", "20-01-2022","20-02-2022","EXPIRED","A","Giuseppe Neri"),
 ]
 
-export default UserTravelcardsList
+export default UserTravelCardsList
 
 
 
