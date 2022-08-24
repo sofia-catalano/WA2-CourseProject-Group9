@@ -1,13 +1,8 @@
-import {useEffect, useState, Spinner} from 'react';
+import { useState} from 'react';
 import * as React from 'react';
 import GenericTable from "../generic/Table/Table.js";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import {CircularProgress, Menu, Tooltip} from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import FilterListIcon from '@mui/icons-material/FilterList';
-import MenuItem from "@mui/material/MenuItem";
-import TicketsFilterMenu from "../generic/FilterMenu/TicketsFilterMenu";
+import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 
 function UserTravelCardsList(props) {
     const [loading, setLoading] = useState(false);
@@ -20,7 +15,7 @@ function UserTravelCardsList(props) {
                 headCells={headCells}
                 rows={rows}
                 nameTable={"My TravelCards"}
-                //FilterMenu={TravelerCardFilterMenu}
+                FilterMenu={TravelcardsFilterMenu}
             ></GenericTable>
         }
 
@@ -72,6 +67,7 @@ const headCells = [
     }
 
 ];
+
 const rows=[
     createData('1',"20-01-2022","20-01-2023","VALID","AB","Giuseppe Neri"),
     createData('2',"20-01-2022","20-01-2023","VALID","AB","Giuseppe Neri"),

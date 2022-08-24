@@ -10,7 +10,6 @@ import LoginPage from "./components/Login/LoginPage";
 
 import Grid from '@mui/material/Grid';
 import UserTicketsList from "./components/user/UserTicketsList";
-import UserTravelcardsList from "./components/user/UserTravelcardsList";
 import UserProfile from "./components/user/Profile";
 import UsersList from "./components/admin/UsersList";
 import AdminTicketsList from "./components/admin/AdminTicketsList";
@@ -27,7 +26,7 @@ import AdminUserTravelcardsList from "./components/admin/AdminUserTravelcardsLis
 import TicketsCatalogue from './components/TicketsCatalogue/TicketsCatalogue';
 import ValidateTicketPage from "./components/ValidateTicketPage/ValidateTicketPage";
 import AdminOrdersList from "./components/admin/AdminOrdersList";
-import UserTravelCardsList from "./components/user/UserTravelcardsList";
+import UserTravelCardsList from "./components/user/UserTravelCardsList";
 
 
 function App() {
