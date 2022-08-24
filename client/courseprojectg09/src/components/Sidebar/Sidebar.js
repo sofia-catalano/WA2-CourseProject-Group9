@@ -1,16 +1,12 @@
 import { Link } from 'react-router-dom';
 import { ProSidebar, Menu, MenuItem, SidebarHeader, SidebarContent } from 'react-pro-sidebar';
-import {
-    BsFillPersonPlusFill,
-    BsFillPersonFill,
-    BsPersonCheckFill
-} from 'react-icons/bs';
-import { IoIosArrowBack, IoIosArrowForward, IoIosListBox  } from 'react-icons/io';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import {FiUsers} from 'react-icons/fi'
 import { IoTicketOutline, IoCardOutline } from "react-icons/io5";
 import './Sidebar.css'
-import {BiTransfer} from "react-icons/bi";
-import {RiUserStarFill} from "react-icons/ri";
+import {BiTransfer, BiUser} from "react-icons/bi";
+import {RiUserStarLine} from "react-icons/ri";
+import {BsCardList} from "react-icons/bs";
 
 /**
  * Sidebar component.
@@ -66,9 +62,10 @@ function Sidebar({
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
-                    }}
+                        display:"flex",
+                        alignItems:"center"}}
                     className="pro-sidebar">
-                    <CollapseArrow collapsed={collapsed} handleCollapse={handleCollapse} />
+                    <CollapseArrow collapsed={collapsed} handleCollapse={handleCollapse}/>
 
                     {collapsed ? null : userRole.replace('_', ' ')}
                 </div>
@@ -97,12 +94,12 @@ function CollapsableLink(props) {
 function AdminMenu({ collapsed }) {
     return (
         <Menu iconShape="circle">
-            <MenuItem icon={<BsFillPersonFill fontSize={"small"} />}>
+            <MenuItem icon={<BiUser fontSize={"small"} />}>
                 <CollapsableLink collapsed={collapsed} className="text-light" to="my/profile">
                     My Profile
                 </CollapsableLink>
             </MenuItem>
-            <MenuItem icon={<RiUserStarFill />}>
+            <MenuItem icon={<RiUserStarLine />}>
                 <CollapsableLink collapsed={collapsed} className="text-light" to="/admin/admins">
                     Admins
                 </CollapsableLink>
@@ -134,7 +131,7 @@ function AdminMenu({ collapsed }) {
 function UserMenu({ collapsed }) {
     return (
         <Menu iconShape="circle">
-            <MenuItem icon={<BsFillPersonFill fontSize={"small"} />}>
+            <MenuItem icon={<BiUser fontSize={"small"} />}>
                 <CollapsableLink collapsed={collapsed} className="text-light" to="my/profile">
                     My Profile
                 </CollapsableLink>
@@ -149,7 +146,7 @@ function UserMenu({ collapsed }) {
                     My TravelCards
                 </CollapsableLink>
             </MenuItem>
-            <MenuItem icon={<IoIosListBox />}>
+            <MenuItem icon={<BsCardList />}>
                 <CollapsableLink collapsed={collapsed} className="text-light" to="/my/orders">
                     My Orders
                 </CollapsableLink>
