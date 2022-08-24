@@ -2,6 +2,7 @@ import {CircularProgress, Menu} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import {useState} from "react";
 import GenericTable from "../generic/Table/Table";
+import TicketsFilterMenu from "../generic/FilterMenu/TicketsFilterMenu";
 
 
 
@@ -16,7 +17,7 @@ function AdminTicketsList(props) {
                 headCells={headCells}
                 rows={rows}
                 nameTable={"Tickets"}
-                FilterMenu={FilterMenu}
+                FilterMenu={TicketsFilterMenu}
             ></GenericTable>
         }
 
@@ -24,26 +25,6 @@ function AdminTicketsList(props) {
     );
 }
 
-function FilterMenu (props){
-    const {open, anchorEl, handleClose}=props
-
-    return (
-        <Menu
-            id="basic-menu"
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-                'aria-labelledby': 'basic-button',
-            }}
-            anchorEl={anchorEl}
-        >
-            <MenuItem onClick={handleClose}>Purchased tickets(All) </MenuItem>
-            <MenuItem onClick={handleClose}>Valid tickets </MenuItem>
-            <MenuItem onClick={handleClose}>Validated tickets</MenuItem>
-            <MenuItem onClick={handleClose}>Expired Tickets</MenuItem>
-        </Menu>
-    );
-}
 function createData(id, type, zones, acquired, validated, expired, username) {
     return {
         id,
