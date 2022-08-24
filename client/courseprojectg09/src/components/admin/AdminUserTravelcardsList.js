@@ -30,15 +30,15 @@ function AdminUserTravelcardsList(props) {
 }
 
 
-function createData(id, type, zones, acquired, expired, username, holder) {
+function createData(id, type, purchase_date, expiration_date, status, allowed_zone, holder) {
     return {
         id,
         type,
-        zones,
-        acquired,
-        expired,
-        username,
-        holder
+        purchase_date,
+        expiration_date,
+        status, //if now < expiration date then valid otherwise status = EXPIRED
+        allowed_zone,
+        holder,
     };
 }
 
@@ -54,19 +54,24 @@ const headCells = [
         label: 'Type',
     },
     {
-        id: 'zones',
+        id: 'purchase_date',
+        numeric: false,
+        label: 'Purchase Date',
+    },
+    {
+        id: 'expiration_date',
+        numeric: false,
+        label: 'Expiration Date',
+    },
+    {
+        id: 'status',
+        numeric: false,
+        label: 'Status',
+    },
+    {
+        id: 'allowed_zones',
         numeric: false,
         label: 'Zones allowed',
-    },
-    {
-        id: 'acquired',
-        numeric: true,
-        label: 'Acquired',
-    },
-    {
-        id: 'expired',
-        numeric: true,
-        label: 'Expired',
     },
     {
         id: 'holder',
@@ -76,18 +81,8 @@ const headCells = [
 
 ];
 const rows=[
-    createData('Cupcake', 305, 3.7, 67, 4.3, "Mario Rossi"),
-    createData('Donut', 452, 25.0, 51, 4.9, "Mario Rossi"),
-    createData('Eclair', 262, 16.0, 24, 6.0, "Mario Rossi"),
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0, "Mario Rossi"),
-    createData('Gingerbread', 356, 16.0, 49, 3.9, "Mario Rossi" ),
-    createData('Honeycomb', 408, 3.2, 87, 6.5, "Mario Rossi"),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3, "Mario Rossi"),
-    createData('Jelly Bean', 375, 0.0, 94, 0.0, "Mario Rossi" ),
-    createData('KitKat', 518, 26.0, 65, 7.0, "Mario Rossi" ),
-    createData('Lollipop', 392, 0.2, 98, 0.0, "Mario Rossi"),
-    createData('Marshmallow', 318, 0, 81, 2.0,"Mario Rossi"),
-    createData('Nougat', 360, 19.0, 9, 37.0, "Mario Rossi"),
-    createData('Oreo', 437, 18.0, 63, 4.0, "Mario Rossi")
+    createData('1',"1 year", "20-01-2022","20-01-2023","VALID","AB","Giuseppe Neri"),
+    createData('2',"1 year", "20-01-2022","20-01-2023","VALID","AB","Giuseppe Neri"),
+    createData('3',"1 month", "20-01-2022","20-02-2022","EXPIRED","A","Giuseppe Neri"),
 ]
 export default AdminUserTravelcardsList;

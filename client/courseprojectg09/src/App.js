@@ -26,11 +26,11 @@ import AdminUserTicketsList from "./components/admin/AdminUserTicketsList";
 import AdminUserTravelcardsList from "./components/admin/AdminUserTravelcardsList";
 import TicketsCatalogue from './components/TicketsCatalogue/TicketsCatalogue';
 import AdminOrdersList from "./components/admin/AdminOrdersList";
-import UserTravelerCardsList from "./components/user/UserTravelCardsList";
+import UserTravelerCardsList from "./components/user/UserTravelcardsList";
 
 function App() {
 
-    const [userRole, setUserRole] = useState('user');
+    const [userRole, setUserRole] = useState('admin');
     const navigate = useNavigate();
     const [toggled, setToggled] = useState(true);
     const [collapsed, setCollapsed] = useState(false);
