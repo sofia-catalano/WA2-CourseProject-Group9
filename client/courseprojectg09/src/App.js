@@ -19,6 +19,7 @@ import UserTransactionsList from "./components/user/UserTransactionsList";
 import AdminTransactionsList from "./components/admin/AdminTransactionsList";
 import TicketsCatalogue from "./components/BuyTickets/BuyTickets";
 import AdminsList from "./components/admin/AdminsList";
+import AdminUserTicketsList from "./components/admin/AdminUserTicketsList";
 
 function App() {
 
@@ -53,6 +54,7 @@ function App() {
                     <Routes>
                         <Route exact path="/" element={<Homepage/>}/>
                         <Route exact path="/admin/traveler/:user/profile" element={<UserProfile userRole={userRole}/>}/>
+                        <Route exact path="/admin/traveler/:user/tickets" element={<AdminUserTicketsList userRole={userRole}/>}/>
                         <Route exact path="/user/register" element={<RegistrationPage/>}/>
                         <Route exact path="/user/validate" element={<ValidationPage/>}/>
                         <Route exact path="/user/login" element={<LoginPage/>}/>
