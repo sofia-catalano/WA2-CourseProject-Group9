@@ -25,8 +25,10 @@ import AdminsList from "./components/admin/AdminsList";
 import AdminUserTicketsList from "./components/admin/AdminUserTicketsList";
 import AdminUserTravelcardsList from "./components/admin/AdminUserTravelcardsList";
 import TicketsCatalogue from './components/TicketsCatalogue/TicketsCatalogue';
+import ValidateTicketPage from "./components/ValidateTicketPage/ValidateTicketPage";
 import AdminOrdersList from "./components/admin/AdminOrdersList";
-import UserTravelerCardsList from "./components/user/UserTravelcardsList";
+import UserTravelcardsList from "./components/user/UserTravelcardsList";
+
 
 function App() {
 
@@ -80,6 +82,7 @@ function App() {
                         <Route exact path="/admin/orders" element={<AdminOrdersList/>}/>
                         <Route exact path="/admin/transactions" element={<AdminTransactionsList/>}/>
                         <Route exact path="/catalogue" element={<TicketsCatalogue/>}/>
+                        <Route exact path="/validateTicket" element={<ValidateTicketPage/>}/>
                         {/*<Route exact path="/my/tickets" element={<TicketsList/>}/>*/}
                     </Routes>
                 </Grid>
