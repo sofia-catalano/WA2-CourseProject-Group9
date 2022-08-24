@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import * as React from 'react';
-import {CircularProgress, TableCell} from "@mui/material";
+import {CircularProgress, Modal, TableCell} from "@mui/material";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -12,6 +12,7 @@ import Paper from "@mui/material/Paper";
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import {RiUserStarFill} from "react-icons/ri";
+import AdminRegistrationForm from "../AdminRegistrationForm/AdminRegistrationForm";
 
 function AdminsList(props) {
     const [loading, setLoading] = useState(false);
@@ -31,13 +32,9 @@ function AdminsList(props) {
             isEnrolled: false
         }]
 
-    const style = {
-        width: '100%',
-        maxWidth: 700,
-        bgcolor: 'background.paper',
-        marginTop: 5,
-        marginLeft: 10
-    };
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     const handleClick = (userName) => {
         // data.find(userName === username).isEnrolled = !data.find(userName === username).isEnrolled
@@ -105,11 +102,18 @@ function AdminsList(props) {
                         </Table>
                     </Paper>
                 </Box>
-                <Box textAlign="center" /*sx={{ display: "flex", justifyItems:"space-around"}}*/>
-                    {/*TODO: OPEN MODAL TO CREATE NEW ADMIN*/}
-                    <Button variant="contained" sx={{mx:5}} startIcon={<RiUserStarFill/>}>
-                        Add New Admin
+                <Box textAlign="center">
+                    <Button variant="contained" sx={{mx:5}} startIcon={<RiUserStarFill/>} onClick={handleOpen}>
+                        Register New Admin
                     </Button>
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <AdminRegistrationForm handleClose={handleClose}/>
+                    </Modal>
                 </Box>
 
             </Box>
