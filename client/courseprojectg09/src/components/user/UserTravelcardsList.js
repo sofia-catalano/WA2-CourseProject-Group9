@@ -4,7 +4,7 @@ import GenericTable from "../generic/Table/Table.js";
 import {CircularProgress, Menu, Tooltip} from "@mui/material";
 import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 
-function UserTravelcardsList(props) {
+function UserTravelCardsList(props) {
     const [loading, setLoading] = useState(false);
     return (
         <>{loading
@@ -86,7 +86,7 @@ const rows=[
     createData('Oreo', 437, 18.0, 63, 4.0, "Mario Rossi")
 ]
 
-export default UserTravelcardsList
+export default UserTravelCardsList
 
 
 
