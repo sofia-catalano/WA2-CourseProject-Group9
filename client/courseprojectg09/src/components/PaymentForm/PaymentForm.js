@@ -8,7 +8,9 @@ import Button from "@mui/material/Button";
 import {useState} from "react";
 import MenuItem from "@mui/material/MenuItem";
 import ShoppingCartSharpIcon from '@mui/icons-material/ShoppingCartSharp';
-import './BuyTicketsForm.css'
+import './PaymentForm.css'
+import Typography from "@mui/material/Typography";
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -19,46 +21,42 @@ const style = {
     pb: 3,
 };
 const theme = createTheme();
-
-function BuyTicketsForm(props) {
-    const typeTickets=[
-        {
-            value: '60 min',
-            label: '1 hour',
-        },
-        {
-            value: '90 min',
-            label: '1 hour 30 minutes',
-        },
-        {
-            value: '120 min',
-            label: '2 hours',
-        },
-        {
-            value: '1 day',
-            label: '1 day',
-        },
-        {
-            value: '2 day',
-            label: '2 days',
-        },
-        {
-            value: '3 day',
-            label: '3 days',
-        },
-        {
-            value: '1 week',
-            label: '1 week',
-        },
-    ];
-    const [ticketsType, setTicketsType] = useState('60 min');
-    const [numberOfTickets, setNumberOfTickets]=useState(1)
+const typeTickets=[
+    {
+        value: '60 min',
+        label: '1 hour',
+    },
+    {
+        value: '90 min',
+        label: '1 hour 30 minutes',
+    },
+    {
+        value: '120 min',
+        label: '2 hours',
+    },
+    {
+        value: '1 day',
+        label: '1 day',
+    },
+    {
+        value: '2 day',
+        label: '2 days',
+    },
+    {
+        value: '3 day',
+        label: '3 days',
+    },
+    {
+        value: '1 week',
+        label: '1 week',
+    },
+];
+function PaymentForm(props) {
     const [creditCardNumber, setCreditCardNumber] = useState('');
     const [cardHolder, setCardHolder] = useState('');
     const [expirationDate, setExpirationDate] = useState(new Date().toISOString().substring(0,10));
     const [cvv,setCvv]=useState('')
-
-
+    const {total}=props
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -73,36 +71,13 @@ function BuyTicketsForm(props) {
                         <Avatar id="iconFormStyle" sx={{ width: 60, height: 60, mb: 1, bgcolor: '#1976d2' }}>
                             <ShoppingCartSharpIcon fontSize="large" sx={{color: '#ffeb3b' }}/>
                         </Avatar>
-                        <Box component="form" onSubmit={handleSubmit} noValidate sx={{p: 2}}>
-                            <TextField
-                                margin="normal"
-                                required
-                                id="typeTickets"
-                                select
-                                fullWidth
-                                label="Type ticktes"
-                                value={ticketsType}
-                                onChange={(event)=> setTicketsType(event.target.value)}
-                                helperText="Please select the type of the tickets"
-                            >
-                                {typeTickets.map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                            <TextField
-                                id="numberOfTickets"
-                                label="Number of tickets"
-                                type="number"
-                                autoFocus
-                                margin="normal"
-                                required
-                                fullWidth
-                                InputProps={{ inputProps: { min: 1, max: 10 } }}
-                                value={numberOfTickets}
-                                onChange={(event)=>setNumberOfTickets(parseInt(event.target.value))}
-                            />
+                        <Box component="form" onSubmit={handleSubmit} sx={{p: 2}}>
+                            <Typography variant="h3" sx={{ textAlign: 'center', color:'#1976d2' }}>
+                                {total} €
+                            </Typography>
+                            <Typography variant="subtitle1" sx={{ textAlign: 'center'}} >
+                                Insert data and proceed with payment
+                            </Typography>
                             <TextField
                                 id="creditCardNumber"
                                 label="Credit card number"
@@ -165,4 +140,4 @@ function BuyTicketsForm(props) {
         </Box>
     );
 }
-export default  BuyTicketsForm;
+export default  PaymentForm;

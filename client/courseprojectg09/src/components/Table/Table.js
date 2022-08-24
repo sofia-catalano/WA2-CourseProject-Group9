@@ -15,7 +15,7 @@ import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import {Tooltip} from "@mui/material";
+import {Checkbox, FormControl, FormControlLabel, Radio, RadioGroup, Tooltip} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import FilterListIcon from '@mui/icons-material/FilterList';
 
@@ -147,10 +147,14 @@ const EnhancedTableToolbar = (props) => {
 
 export default function GenericTable(props) {
     const {headCells, rows, nameTable, FilterMenu, onClickElement} = props
+    const {selectedValue, handleTypeTicketsChange}=props //only for buy ticket form
+
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+
 
 
     const handleRequestSort = (event, property) => {
@@ -192,6 +196,7 @@ export default function GenericTable(props) {
                         {<TableBody>
                             {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy))*/}
+
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
@@ -202,6 +207,18 @@ export default function GenericTable(props) {
                                             tabIndex={-1}
                                             key={row.id}
                                         >
+                                            {selectedValue &&
+                                                <TableCell align="center">
+                                                    <Radio
+                                                        checked={selectedValue === row.id}
+                                                        onChange={(event)=>handleTypeTicketsChange(event.target.value)}
+                                                        value={row.id}
+                                                        name="radio-buttons"
+                                                        size="small"
+                                                    />
+                                                </TableCell>
+                                            }
+
                                             {Object.keys(row).map(function(key) {
                                                 return <TableCell key={key} align="center">{row[key]}</TableCell>
                                             })
@@ -209,6 +226,7 @@ export default function GenericTable(props) {
                                         </TableRow>
                                     );
                                 })}
+
                             {emptyRows > 0 && (
                                 <TableRow
                                     style={{
@@ -219,7 +237,8 @@ export default function GenericTable(props) {
                                 </TableRow>
                             )}
                         </TableBody>
-                        }</Table>
+                        }
+                    </Table>
                 </TableContainer>
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 20]}
