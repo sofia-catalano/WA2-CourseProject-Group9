@@ -1,6 +1,5 @@
 import {useEffect, useState, Spinner} from 'react';
 import * as React from 'react';
-import GenericTable from "../Table/Table.js";
 import Typography from "@mui/material/Typography";
 import {CircularProgress, Menu, Modal, Tooltip} from "@mui/material";
 import TextField from "@mui/material/TextField";
@@ -9,6 +8,7 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import PaymentForm from "../PaymentForm/PaymentForm";
+import GenericTable from "../generic/Table/Table";
 
 function BuyTravelcard(props) {
     const [loading, setLoading] = useState(false);

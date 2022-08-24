@@ -1,8 +1,7 @@
 import {CircularProgress, Menu} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import {useState} from "react";
-import GenericTable from "../Table/Table";
-
+import GenericTable from "../generic/Table/Table";
 
 
 function AdminTravelcardsList(props) {
