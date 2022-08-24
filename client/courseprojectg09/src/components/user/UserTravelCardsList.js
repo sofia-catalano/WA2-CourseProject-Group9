@@ -1,7 +1,10 @@
-import { useState} from 'react';
+import {useEffect, useState, Spinner} from 'react';
 import * as React from 'react';
 import GenericTable from "../generic/Table/Table.js";
 import {CircularProgress, Menu, Tooltip} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import MenuItem from "@mui/material/MenuItem";
 import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 
 function UserTravelCardsList(props) {
@@ -23,14 +26,15 @@ function UserTravelCardsList(props) {
     );
 }
 
-function createData(id, purchase_date, expiration_date, status, allowed_zone, owner) {
+function createData(id, type, purchase_date, expiration_date, status, allowed_zone, holder) {
     return {
         id,
+        type,
         purchase_date,
         expiration_date,
         status, //if now < expiration date then valid otherwise status = EXPIRED
         allowed_zone,
-        owner,
+        holder,
     };
 }
 
@@ -39,6 +43,11 @@ const headCells = [
         id: 'id',
         numeric: false,
         label: 'ID',
+    },
+    {
+        id: 'type',
+        numeric: false,
+        label: 'Type',
     },
     {
         id: 'purchase_date',
@@ -61,18 +70,17 @@ const headCells = [
         label: 'Zones allowed',
     },
     {
-        id: 'owner',
+        id: 'holder',
         numeric: true,
-        label: 'Owner',
+        label: 'Holder',
     }
 
 ];
 
 const rows=[
-    createData('1',"20-01-2022","20-01-2023","VALID","AB","Giuseppe Neri"),
-    createData('2',"20-01-2022","20-01-2023","VALID","AB","Giuseppe Neri"),
-    createData('3',"20-01-2022","20-02-2022","EXPIRED","A","Giuseppe Neri"),
-
+    createData('1',"1 year", "20-01-2022","20-01-2023","VALID","AB","Giuseppe Neri"),
+    createData('2',"1 year", "20-01-2022","20-01-2023","VALID","AB","Giuseppe Neri"),
+    createData('3',"1 month", "20-01-2022","20-02-2022","EXPIRED","A","Giuseppe Neri"),
 ]
 
 export default UserTravelCardsList

@@ -31,7 +31,7 @@ import UserTravelCardsList from "./components/user/UserTravelCardsList";
 
 function App() {
 
-    const [userRole, setUserRole] = useState('user');
+    const [userRole, setUserRole] = useState('admin');
     const navigate = useNavigate();
     const [toggled, setToggled] = useState(true);
     const [collapsed, setCollapsed] = useState(false);
