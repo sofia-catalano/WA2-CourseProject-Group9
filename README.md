@@ -95,6 +95,12 @@ curl GET -v -i 'http://localhost:8100/login/admin/enrollAdmin/ADMIN2' -H "Author
 ```
 The endpoint give the enroll capability to the {admin}
 
+- GET admin/admins
+```
+curl -v -i 'http://localhost:8100/login/admin/admins' -H "Authorization:{Bearer...}"
+```
+The endpoints returns a JSON list of all Admins (except the one who is making the request)
+
 - GET /admin/travelers
 ```
 curl GET -v -i 'http://localhost:8100/traveler/admin/travelers' -H "Authorization:{Bearer...}"
@@ -213,6 +219,12 @@ curl GET -v -i 'http://localhost:8100/traveler/admin/traveler/USER1/travelcards/
 - GET /admin/traveler/{userID}/travelcards/expired → returns the expired travelcards purchased by userID in the period selected.
 ```
 curl GET -v -i 'http://localhost:8100/traveler/admin/traveler/USER1/travelcards/expired?start=10/06/2022&end=19/08/2022' -H "Authorization:{Bearer...}"
+```
+In order to download a QRCode Ticket 
+
+- GET /QRCode/generateQRCode/{ticketId}
+```
+curl --remote-name --remote-header-name --write-out "Downloaded %{filename_effective} file" -H "Authorization: Bearer..." --silent http://localhost:8100/QRCode/generateQRCode/{ticketId}
 ```
 
 

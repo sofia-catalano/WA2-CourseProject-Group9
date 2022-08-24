@@ -1,9 +1,14 @@
 package it.polito.wa2.wa2lab4group09.qrcodeservice.services
 
 import io.nayuki.qrcodegen.QrCode
+import it.polito.wa2.wa2lab4group09.qrcodeservice.entities.QRCode
+import it.polito.wa2.wa2lab4group09.qrcodeservice.repositories.QRCodeRepository
 import it.polito.wa2.wa2lab4group09.qrcodeservice.utils.QRCodeGenerator
+import it.polito.wa2.wa2lab4group09.qrcodeservice.utils.TicketPurchasedDTO
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.withContext
+import org.bson.types.ObjectId
 import org.springframework.cache.annotation.*
 import org.springframework.stereotype.Service
 import java.awt.image.BufferedImage
@@ -14,12 +19,12 @@ import javax.imageio.ImageIO
 
 
 @Service
-class QRCodeService {
+class QRCodeService(val qrCodeRepository: QRCodeRepository) {
 
     @Cacheable(cacheNames = ["qr-code-cache"], sync = true)
-    suspend fun generateQRCode( token : String, width: Int, height : Int): ByteArray {
-        token.replace("[\n\r\t]", "_")
-        println("Generating QRCODE with token :$token, width: $width, height: $height")
+    suspend fun generateQRCode( ticket : TicketPurchasedDTO){
+        val token = ticket.jws
+//        token.replace("[\n\r\t]", "_")
         try {
             val qrCode : QrCode = QrCode.encodeText(token, QrCode.Ecc.MEDIUM)
             val img: BufferedImage = QRCodeGenerator().toImage(qrCode, 8, 5)
@@ -27,10 +32,18 @@ class QRCodeService {
             withContext(Dispatchers.IO) {
                 ImageIO.write(img, MediaType.IMAGE_PNG.subtype, baos)
             }
-            return baos.toByteArray()
+            val qrCodeByteArray: ByteArray = baos.toByteArray()
+            //save the qrCode just created in DB
+            val qrCodeEntity = QRCode(qrCodeImage = qrCodeByteArray, ticketId = ticket.sub!!)
+            qrCodeRepository.save(qrCodeEntity).subscribe()
         }catch(ex : IOException) {
-            throw IllegalArgumentException(ex);
+            throw IllegalArgumentException(ex)
         }
+    }
+
+    @Cacheable(cacheNames = ["qr-code-cache"], sync = true)
+    suspend fun getQRCodeByteArray(ticketId : ObjectId) : ByteArray{
+        return qrCodeRepository.findByTicketId(ticketId).awaitSingle().qrCodeImage
     }
 
 }

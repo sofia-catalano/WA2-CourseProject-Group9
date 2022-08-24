@@ -18,6 +18,7 @@ import ValidationPage from "./components/Registration/ValidationPage";
 import UserTransactionsList from "./components/user/UserTransactionsList";
 import AdminTransactionsList from "./components/admin/AdminTransactionsList";
 import TicketsCatalogue from "./components/BuyTickets/BuyTickets";
+import AdminsList from "./components/admin/AdminsList";
 
 function App() {
 
@@ -60,6 +61,7 @@ function App() {
                         <Route exact path="/my/orders" element={<UserOrdersList/>}/>
                         <Route exact path="/buy/tickets" element={<TicketsCatalogue/>}/>
                         <Route exact path="/my/transactions" element={<UserTransactionsList/>}/>
+                        <Route exact path="/admin/admins" element={<AdminsList/>}/>
                         <Route exact path="/admin/travelers" element={<UsersList/>}/>
                         <Route exact path="/admin/tickets" element={<AdminTicketsList/>}/>
                         <Route exact path="/admin/transactions" element={<AdminTransactionsList/>}/>

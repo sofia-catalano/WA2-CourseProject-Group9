@@ -4,7 +4,10 @@ import it.polito.wa2.wa2lab3group09.loginservice.dtos.UserDTO
 import it.polito.wa2.wa2lab3group09.loginservice.entities.Role
 import it.polito.wa2.wa2lab3group09.loginservice.entities.User
 import it.polito.wa2.wa2lab3group09.loginservice.repositories.UserRepository
-import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactor.awaitSingle
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -21,6 +24,7 @@ class AdminService(val userRepository:UserRepository,val passwordEncoded: Passwo
                 password = passwordEncoded.encode(userDTO.password),
                 email = userDTO.email,
                 role= Role.ADMIN,
+                isActive = true,
                 enroll = false,
             )
             return userRepository.save(userEntity).awaitFirstOrNull()
@@ -37,7 +41,7 @@ class AdminService(val userRepository:UserRepository,val passwordEncoded: Passwo
             }
             val admin= userRepository.getByUsername(adminUsername).awaitSingle()
             if (admin != null && admin.enroll) {
-                var adminToEnroll: User? = userRepository.getByUsername(adminUsernameToEnroll).awaitSingle()
+                val adminToEnroll: User? = userRepository.getByUsername(adminUsernameToEnroll).awaitSingle()
                 adminToEnroll?.let{
                     adminToEnroll.enroll=true
                     userRepository.save(adminToEnroll).awaitFirstOrNull()
@@ -48,4 +52,21 @@ class AdminService(val userRepository:UserRepository,val passwordEncoded: Passwo
             }
     }
 
+    suspend fun getAllAdmins(username: String) : Flow<AdminInfo> {
+        val admin= userRepository.getByUsername(username).awaitSingle()
+        if (admin != null && admin.enroll) {
+            return userRepository.findAllByRole(Role.ADMIN).asFlow().filter { admin.username != it.username }.map {
+                AdminInfo(it.username, it.email, it.enroll)
+            }
+        }else{
+            throw Throwable("the current admin has not enroll capability")
+        }
+    }
+
 }
+
+data class AdminInfo(
+    val username: String,
+    val email: String,
+    val enroll: Boolean
+)

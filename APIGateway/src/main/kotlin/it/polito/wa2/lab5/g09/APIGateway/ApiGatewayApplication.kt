@@ -54,8 +54,16 @@ class GatewayConfig {
                         filter
                     )
                 }.uri("http://localhost:8081/")
+            }
+            .route(
+                "QRCodeService"
+            ) { r: PredicateSpec ->
+                r.path("/QRCode/**").filters { f: GatewayFilterSpec ->
+                    f.filter(
+                        filter
+                    )
+                }.uri("http://localhost:8084/")
             }.build()
-        //TODO aggiungere routes del qrcodeService
     }
 }
 
