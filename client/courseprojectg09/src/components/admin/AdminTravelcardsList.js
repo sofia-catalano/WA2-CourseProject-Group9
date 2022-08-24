@@ -2,6 +2,7 @@ import {CircularProgress, Menu} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import {useState} from "react";
 import GenericTable from "../generic/Table/Table";
+import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 
 
 function AdminTravelcardsList(props) {
@@ -15,7 +16,7 @@ function AdminTravelcardsList(props) {
                 headCells={headCells}
                 rows={rows}
                 nameTable={"Travelcards"}
-                FilterMenu={FilterMenu}
+                FilterMenu={TravelcardsFilterMenu}
             ></GenericTable>
         }
 
@@ -23,24 +24,6 @@ function AdminTravelcardsList(props) {
     );
 }
 
-function FilterMenu (props){
-    const {open, anchorEl, handleClose}=props
-
-    return (
-        <Menu
-            id="basic-menu"
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-                'aria-labelledby': 'basic-button',
-            }}
-            anchorEl={anchorEl}
-        >
-            <MenuItem onClick={handleClose}>Purchased Travelcards(All) </MenuItem>
-            <MenuItem onClick={handleClose}>Expired Travelcards</MenuItem>
-        </Menu>
-    );
-}
 function createData(id, type, zones, acquired, validated, expired, username) {
     return {
         id,

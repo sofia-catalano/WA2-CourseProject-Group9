@@ -7,7 +7,7 @@ import {CircularProgress, Menu, Tooltip} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import MenuItem from "@mui/material/MenuItem";
-import TicketsFilterMenu from "../generic/FilterMenu/TicketsFilterMenu";
+import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 
 function UserTicketsList(props) {
     const [loading, setLoading] = useState(false);

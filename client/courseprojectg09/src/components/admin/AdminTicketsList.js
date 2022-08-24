@@ -2,7 +2,7 @@ import {CircularProgress, Menu} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import {useState} from "react";
 import GenericTable from "../generic/Table/Table";
-import TicketsFilterMenu from "../generic/FilterMenu/TicketsFilterMenu";
+import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 
 
 
