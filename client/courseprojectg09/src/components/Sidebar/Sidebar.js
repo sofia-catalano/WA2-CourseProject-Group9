@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import { ProSidebar, Menu, MenuItem, SidebarHeader, SidebarContent } from 'react-pro-sidebar';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import {FiUsers} from 'react-icons/fi'
@@ -7,6 +7,7 @@ import './Sidebar.css'
 import {BiTransfer, BiUser} from "react-icons/bi";
 import {RiUserStarLine} from "react-icons/ri";
 import {BsCardList} from "react-icons/bs";
+import Grid from "@mui/material/Grid";
 
 /**
  * Sidebar component.
@@ -41,39 +42,43 @@ function Sidebar({
         handleToggle(false);
     };
 
-    return !userRole ? null : (
-        <ProSidebar
-            collapsed={collapsed}
-            toggled={toggled}
-            breakPoint="md"
-            onToggle={handleToggle}
-            style={{
-                marginTop: '10px',
-                height: 'auto',
-            }}>
-            <SidebarHeader>
-                <div
-                    style={{
-                        padding: '24px',
-                        textTransform: 'uppercase',
-                        fontWeight: 'bold',
-                        fontSize: 14,
-                        letterSpacing: '1px',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        display:"flex",
-                        alignItems:"center"}}
-                    className="pro-sidebar">
-                    <CollapseArrow collapsed={collapsed} handleCollapse={handleCollapse}/>
 
-                    {collapsed ? null : userRole.replace('_', ' ')}
-                </div>
-            </SidebarHeader>
-            <SidebarContent className="pro-sidebar" onClick={handleClose}>
-                {roleMenu[userRole]}
-            </SidebarContent>
-        </ProSidebar>
+
+    return (!userRole) ? null : (
+        <Grid item xs={2}>
+            <ProSidebar
+                collapsed={collapsed}
+                toggled={toggled}
+                breakPoint="md"
+                onToggle={handleToggle}
+                style={{
+                    marginTop: '10px',
+                    height: 'auto',
+                }}>
+                <SidebarHeader>
+                    <div
+                        style={{
+                            padding: '24px',
+                            textTransform: 'uppercase',
+                            fontWeight: 'bold',
+                            fontSize: 14,
+                            letterSpacing: '1px',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            display:"flex",
+                            alignItems:"center"}}
+                        className="pro-sidebar">
+                        <CollapseArrow collapsed={collapsed} handleCollapse={handleCollapse}/>
+
+                        {collapsed ? null : userRole.replace('_', ' ')}
+                    </div>
+                </SidebarHeader>
+                <SidebarContent className="pro-sidebar" onClick={handleClose}>
+                    {roleMenu[userRole]}
+                </SidebarContent>
+            </ProSidebar>
+        </Grid>
     );
 }
 function CollapseArrow({ collapsed, handleCollapse }) {
