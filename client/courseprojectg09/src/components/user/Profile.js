@@ -64,29 +64,21 @@ export default function UserProfile(props) {
     }
 
     return (
-        <Box>
-            <Toolbar
-                sx={{
-                    pl: { sm: 5 },
-                    pr: { xs: 1, sm: 1 },
-                }}
+        <Box sx={{width: '90%', mt: 2, mr: 5, ml: 5}}>
+            <Typography
+                sx={{color: '#1976d2'}}
+                variant="h4"
+                id="title"
+                component="div"
+                align="center"
             >
-                <Typography
-                    sx={{color:'#1976d2'}}
-                    variant="h4"
-                    id="tableTitle"
-                    component="div"
-                    align="center"
-                >
-                    {values.edit ? "Edit profile" : user!= undefined ? `${user}'s tickets` : "My profile"}
-                </Typography>
-
-            </Toolbar>
+                {values.edit ? "Edit profile" : user!= undefined ? `${user}'s tickets` : "My profile"}
+            </Typography>
             <Box
                 component="form"
                 sx={{
                     '& > :not(style)': { m: 1, width: '25ch' },
-                    mt:2 , mr:5, ml:5
+                    width: '90%', mt: 2, mr: 5, ml: 12
                 }}
                 autoComplete="off"
             >
