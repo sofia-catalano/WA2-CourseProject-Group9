@@ -45,12 +45,15 @@ function UsersList(props) {
                                         <Link component={RouterLink} to={{pathname: `/admin/traveler/${user}/profile`}}>
                                             <Button variant="outlined">Profile</Button>
                                         </Link>
+                                        <Link component={RouterLink} to={{pathname: `/admin/traveler/${user}/orders`}}>
                                             <Button variant="outlined">Orders</Button>
+                                        </Link>
+                                        <Link component={RouterLink} to={{pathname: `/admin/traveler/${user}/tickets`}}>
                                             <Button variant="outlined">Tickets</Button>
+                                        </Link>
                                         <Link component={RouterLink} to={{pathname: `/admin/traveler/${user}/travelcards`}}>
                                             <Button variant="outlined">Travelcards</Button>
                                         </Link>
-                                        
                                     </Stack>
                                 </ListItem>
                                 <Divider/>
