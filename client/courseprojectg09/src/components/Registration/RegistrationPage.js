@@ -11,9 +11,10 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import * as React from 'react';
 import {InputAdornment, Tooltip} from "@mui/material";
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
+import loginAPI from "../../api/LoginAPI";
 
 const theme = createTheme();
 
@@ -21,7 +22,8 @@ function RegistrationPage() {
 
     const navigate = useNavigate();
     const [hidePassword, setHidePassword] = useState(true);
-    const [showError, setShowError] = useState(false)
+    const [showError, setShowError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('')
     const regex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\$@!%*?&])(?!.*[\\s-]).*\$")
     const tipText = "● Password must not contain any whitespace\n" +
         "● It must be at least 8 characters long\n" +
@@ -41,16 +43,20 @@ function RegistrationPage() {
         const username = data.get('username');
         const email = data.get('email');
         const password = data.get('password');
-        console.log({
-            username: username,
-            email: email,
-            password: password,
-        });
         setShowError(false)
         if(username.length > 0 && email.length > 0 && regex.test(password.toString())){
-            //redirect to validate page
-            navigate("/user/validate")
+            loginAPI.registerUser(username,email,password).then(
+                r =>{
+                    if(r["error"]){
+                        setErrorMessage(r["error"]);
+                        setShowError(true)
+                    }else {
+                        navigate("/user/validate")
+                    }
+                }
+            )
         }else{
+            setErrorMessage('Invalid Fields!');
             setShowError(true)
         }
     };
@@ -129,13 +135,9 @@ function RegistrationPage() {
                         {showError ?
                             (
                                 <Typography sx={{display: "block", color:"red", textAlign:"center"}}>
-                                    Invalid data inserted!
+                                    {errorMessage}
                                 </Typography>
-                            ) : (
-                                <Typography sx={{display: "none", color:"red", textAlign:"center"}}>
-                                    Invalid data inserted!
-                                </Typography>
-                            )
+                            ) : ''
                         }
 
                     </Box>

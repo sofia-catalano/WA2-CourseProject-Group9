@@ -7,11 +7,12 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import {useLocation} from "react-router-dom";
 import Grid from "@mui/material/Grid";
+import {useUser} from "../UserProvider";
 
 
 
 function Layout(props) {
-    const { loggedIn, doLogout, userRole, userId } = props;
+    const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
 
     const [toggled, setToggled] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
