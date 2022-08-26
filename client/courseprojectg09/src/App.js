@@ -43,21 +43,12 @@ function App() {
     const handleToggle = () => {
         setToggled(!toggled);
     };
-    const AsideProps = {
-        toggled,
-        collapsed,
-        userRole,
-        handleToggle,
-        handleCollapse,
-    }
-    const LayoutProps = {
-        userRole,
-    };
+
 
     return (
         <Container maxWidth='xxl' disableGutters={true}>
             <UserProvider>
-                <Layout {...LayoutProps}>
+                <Layout>
                     <Routes>
                         <Route exact path="/" element={<Homepage/>}/>
                         <Route exact path="/admin/traveler/:user/profile" element={<UserProfile />}/>
