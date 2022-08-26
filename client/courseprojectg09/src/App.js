@@ -59,34 +59,35 @@ function App() {
 
     return (
         <Container maxWidth='xxl' disableGutters={true}>
-            <UserProvider />,
-            <Layout {...LayoutProps}>
-                <Routes>
-                    <Route exact path="/" element={<Homepage/>}/>
-                    <Route exact path="/admin/traveler/:user/profile" element={<UserProfile />}/>
-                    <Route exact path="/admin/traveler/:user/tickets" element={<AdminUserTicketsList />}/>
-                    <Route exact path="/admin/traveler/:user/travelcards" element={<AdminUserTravelcardsList/>}/>
-                    <Route exact path="/user/register" element={<RegistrationPage/>}/>
-                    <Route exact path="/user/validate" element={<ValidationPage/>}/>
-                    <Route exact path="/user/login" element={<LoginPage/>}/>
-                    <Route exact path="/my/tickets" element={<UserTicketsList/>}/>
-                    <Route exact path="/my/travelcards" element={<UserTravelCardsList/>}/>
-                    <Route exact path="/my/profile" element={<UserProfile />}/>
-                    <Route exact path="/my/orders" element={<UserOrdersList/>}/>
-                    <Route exact path="/catalogue/shop/tickets" element={<BuyTickets/>}/>
-                    <Route exact path="/catalogue/shop/travelcard" element={<BuyTravelcard/>}/>
-                    <Route exact path="/my/transactions" element={<UserTransactionsList/>}/>
-                    <Route exact path="/admin/admins" element={<AdminsList/>}/>
-                    <Route exact path="/admin/travelers" element={<UsersList/>}/>
-                    <Route exact path="/admin/tickets" element={<AdminTicketsList/>}/>
-                    <Route exact path="/admin/travelcards" element={<AdminTravelcardsList/>}/>
-                    <Route exact path="/admin/orders" element={<AdminOrdersList/>}/>
-                    <Route exact path="/admin/transactions" element={<AdminTransactionsList/>}/>
-                    <Route exact path="/catalogue" element={<TicketsCatalogue/>}/>
-                    <Route exact path="/validateTicket" element={<ValidateTicketPage/>}/>
-                    {/*<Route exact path="/my/tickets" element={<TicketsList/>}/>*/}
-                </Routes>
-            </Layout>
+            <UserProvider>
+                <Layout {...LayoutProps}>
+                    <Routes>
+                        <Route exact path="/" element={<Homepage/>}/>
+                        <Route exact path="/admin/traveler/:user/profile" element={<UserProfile />}/>
+                        <Route exact path="/admin/traveler/:user/tickets" element={<AdminUserTicketsList />}/>
+                        <Route exact path="/admin/traveler/:user/travelcards" element={<AdminUserTravelcardsList/>}/>
+                        <Route exact path="/user/register" element={<RegistrationPage/>}/>
+                        <Route exact path="/user/validate" element={<ValidationPage/>}/>
+                        <Route exact path="/user/login" element={<LoginPage/>}/>
+                        <Route exact path="/my/tickets" element={<UserTicketsList/>}/>
+                        <Route exact path="/my/travelcards" element={<UserTravelCardsList/>}/>
+                        <Route exact path="/my/profile" element={<UserProfile />}/>
+                        <Route exact path="/my/orders" element={<UserOrdersList/>}/>
+                        <Route exact path="/catalogue/shop/tickets" element={<BuyTickets/>}/>
+                        <Route exact path="/catalogue/shop/travelcard" element={<BuyTravelcard/>}/>
+                        <Route exact path="/my/transactions" element={<UserTransactionsList/>}/>
+                        <Route exact path="/admin/admins" element={<AdminsList/>}/>
+                        <Route exact path="/admin/travelers" element={<UsersList/>}/>
+                        <Route exact path="/admin/tickets" element={<AdminTicketsList/>}/>
+                        <Route exact path="/admin/travelcards" element={<AdminTravelcardsList/>}/>
+                        <Route exact path="/admin/orders" element={<AdminOrdersList/>}/>
+                        <Route exact path="/admin/transactions" element={<AdminTransactionsList/>}/>
+                        <Route exact path="/catalogue" element={<TicketsCatalogue/>}/>
+                        <Route exact path="/validateTicket" element={<ValidateTicketPage/>}/>
+                        {/*<Route exact path="/my/tickets" element={<TicketsList/>}/>*/}
+                    </Routes>
+                </Layout>
+            </UserProvider>
         </Container>
     );
 }

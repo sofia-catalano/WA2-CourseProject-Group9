@@ -2,9 +2,9 @@ import {createContext, useContext, useState} from "react";
 
 const UserContext = createContext(null)
 
-const UserProvider = () => {
+const UserProvider = ({ children }) => {
     const [userRole, setUserRole] = useState('admin');
-    const [loggedIn, setLoggedIn]= useState(true);
+    const [loggedIn, setLoggedIn]= useState(false);
 
     return (
         //This component will be used to encapsulate the whole App,
@@ -16,6 +16,7 @@ const UserProvider = () => {
                 loggedIn,
                 setLoggedIn
             }}>
+            {children}
         </UserContext.Provider>
     )
 }
