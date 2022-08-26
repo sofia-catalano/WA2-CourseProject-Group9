@@ -28,11 +28,13 @@ import ValidateTicketPage from "./components/ValidateTicketPage/ValidateTicketPa
 import AdminOrdersList from "./components/admin/AdminOrdersList";
 import UserTravelCardsList from "./components/user/UserTravelCardsList";
 import Layout from "./components/Layout/Layout";
+import {UserProvider, useUser} from "./components/UserProvider";
 
 
 function App() {
 
     const [userRole, setUserRole] = useState('admin');
+    // const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
     const navigate = useNavigate();
     const [toggled, setToggled] = useState(true);
     const [collapsed, setCollapsed] = useState(false);
@@ -57,18 +59,19 @@ function App() {
 
     return (
         <Container maxWidth='xxl' disableGutters={true}>
+            <UserProvider />,
             <Layout {...LayoutProps}>
                 <Routes>
                     <Route exact path="/" element={<Homepage/>}/>
-                    <Route exact path="/admin/traveler/:user/profile" element={<UserProfile userRole={userRole}/>}/>
-                    <Route exact path="/admin/traveler/:user/tickets" element={<AdminUserTicketsList userRole={userRole}/>}/>
-                    <Route exact path="/admin/traveler/:user/travelcards" element={<AdminUserTravelcardsList userRole={userRole}/>}/>
+                    <Route exact path="/admin/traveler/:user/profile" element={<UserProfile />}/>
+                    <Route exact path="/admin/traveler/:user/tickets" element={<AdminUserTicketsList />}/>
+                    <Route exact path="/admin/traveler/:user/travelcards" element={<AdminUserTravelcardsList/>}/>
                     <Route exact path="/user/register" element={<RegistrationPage/>}/>
                     <Route exact path="/user/validate" element={<ValidationPage/>}/>
                     <Route exact path="/user/login" element={<LoginPage/>}/>
                     <Route exact path="/my/tickets" element={<UserTicketsList/>}/>
                     <Route exact path="/my/travelcards" element={<UserTravelCardsList/>}/>
-                    <Route exact path="/my/profile" element={<UserProfile  userRole={userRole}/>}/>
+                    <Route exact path="/my/profile" element={<UserProfile />}/>
                     <Route exact path="/my/orders" element={<UserOrdersList/>}/>
                     <Route exact path="/catalogue/shop/tickets" element={<BuyTickets/>}/>
                     <Route exact path="/catalogue/shop/travelcard" element={<BuyTravelcard/>}/>

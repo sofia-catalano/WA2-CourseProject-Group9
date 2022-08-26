@@ -9,9 +9,11 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import {useParams} from "react-router-dom";
 import travelerAPI from "../../api/TravelerAPI";
+import {useUser} from "../UserProvider";
 
-export default function UserProfile(props) {
+export default function UserProfile() {
     let { user } = useParams();
+    const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
 
     const [values, setValues] = React.useState({
         name: 'Mario',
@@ -200,7 +202,7 @@ export default function UserProfile(props) {
                     helperText={values.edit ? "Required" : ""}
                 />
             </Box>
-            {props.userRole==="user" &&
+            {userRole==="user" &&
                 <Box
                 sx={{display: 'flex', flexDirection: 'row-reverse', mr: 25, mt: 10}}>
                 <Button
