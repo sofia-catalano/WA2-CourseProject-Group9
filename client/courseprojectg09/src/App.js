@@ -32,9 +32,6 @@ import {UserProvider, useUser} from "./components/UserProvider";
 
 
 function App() {
-
-    const [userRole, setUserRole] = useState('admin');
-    // const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
     const navigate = useNavigate();
     const [toggled, setToggled] = useState(true);
     const [collapsed, setCollapsed] = useState(false);
