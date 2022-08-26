@@ -4,9 +4,10 @@ import {useState} from "react";
 import GenericTable from "../generic/Table/Table";
 import {useParams} from "react-router-dom";
 import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
+import {useUser} from "../UserProvider";
 
 function AdminUserTravelcardsList(props) {
-
+    const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
     const [loading, setLoading] = useState(false);
     const {user} = useParams();
 
