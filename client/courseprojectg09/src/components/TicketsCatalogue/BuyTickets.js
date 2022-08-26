@@ -115,7 +115,7 @@ function BuyTickets(props) {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                  <AddForm/>
+                  <AddForm type="ticket"/>
                 </Modal>
             </Box>
 

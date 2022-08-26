@@ -9,11 +9,13 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import PaymentForm from "../PaymentForm/PaymentForm";
-
+import AddForm from './AddToCatalogue/AddToCatalogueForm.js';
 function BuyTravelcard(props) {
+    let userRole = "admin" //TODO sistemare
     const [loading, setLoading] = useState(false);
     const [selectedValue, setSelectedValue] = React.useState(rows[0].id);
     const [buyTravelcardModal, setBuyTravelcardModal] = React.useState(false);
+    const [addToCatalogueModal, setAddToCatalogueModal] = React.useState(false);
     const [holder, setHolder] = React.useState({
         name: 'Mario',
         surname: 'Rossi',
@@ -26,6 +28,7 @@ function BuyTravelcard(props) {
         setHolder({ ...holder, [prop]: event.target.value });
     };
 
+    const handleAddToCatalogueModal = () => setAddToCatalogueModal(true);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -60,7 +63,10 @@ function BuyTravelcard(props) {
                     nameTable={"Buy travelcard"}
                     selectedValue={selectedValue}
                     handleTypeTicketsChange={handleTypeTicketsChange}
+                    filterMenu="AddCatalogue"
+                    onAddElement={handleAddToCatalogueModal}
                 ></GenericTable>
+                {userRole != "admin" && <>
                 <Box sx={{ width: '90%' , mr:5, ml:5 }}>
                     <Paper sx={{ width: '100%', mb: 2 }}>
                         <Typography
@@ -155,6 +161,16 @@ function BuyTravelcard(props) {
                     aria-describedby="modal-modal-description"
                 >
                     <PaymentForm total={rows.find(element => element.id==selectedValue).price}/>
+                </Modal>
+                </>
+            }
+                <Modal
+                        open={addToCatalogueModal}
+                        onClose={()=>setAddToCatalogueModal((false))}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                  <AddForm type="travelcard"/>
                 </Modal>
             </Box>
 

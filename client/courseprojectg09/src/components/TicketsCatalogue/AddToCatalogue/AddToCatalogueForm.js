@@ -122,16 +122,23 @@ function AddForm(props) {
                                 id="typeTickets"
                                 select
                                 fullWidth
-                                label="Type ticktes"
+                                label={`Type ${props.type}`}
                                 value={ticketsType}
                                 onChange={(event)=> setTicketsType(event.target.value)}
-                                helperText="Please select the type of the tickets"
+                                helperText={`Please select the type of the ${props.type}`}
                             >
-                                {typeTickets.map((option) => (
+                                {props.type === "ticket" ?
+                                    typeTickets.map((option) => (
                                     <MenuItem key={option.value} value={option.value}>
                                         {option.label}
                                     </MenuItem>
-                                ))}
+                                )): 
+                                typeTravelcard.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))
+                                }
                             </TextField>
                             <TextField
                                 margin="normal"
