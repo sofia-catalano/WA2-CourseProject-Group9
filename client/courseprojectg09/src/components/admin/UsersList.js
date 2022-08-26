@@ -1,4 +1,4 @@
-import { useState} from 'react';
+import { useState, useEffect} from 'react';
 import * as React from 'react';
 import {CircularProgress, Divider, List, ListItem, Stack} from "@mui/material";
 import Button from "@mui/material/Button";
@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import { Link as RouterLink} from 'react-router-dom';
+import travelerAPI from "../../api/TravelerAPI";
 
 function UsersList(props) {
     const [loading, setLoading] = useState(false);
@@ -18,6 +19,14 @@ function UsersList(props) {
         marginTop: 5,
         marginLeft: 10
     };
+
+
+    useEffect(()=>{
+        console.log("get")
+        travelerAPI.getTravelers()
+        .then(r => console.log(r))
+        .catch(err => console.log(err))
+    },[])
 
     return (
         <>{loading
