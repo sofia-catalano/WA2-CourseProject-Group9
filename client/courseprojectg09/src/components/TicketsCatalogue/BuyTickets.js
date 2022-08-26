@@ -56,7 +56,7 @@ function BuyTickets(props) {
                     FilterMenu="AddTickets"
                     onAddElement={handleAddToCatalogueModal}
                 ></GenericTable>
-                {userRole==="user" && 
+                {userRole!="admin" && <>
                 <Box sx={{ width: '90%' , mr:5, ml:5 }}>
                     <Paper sx={{ width: '100%', mb: 2 }}>
                         <Grid container
@@ -99,7 +99,7 @@ function BuyTickets(props) {
                             </Grid>
                         </Grid>
                     </Paper>
-                </Box>}
+                </Box>
                 <Modal
                     open={buyTicketsModal}
                     onClose={()=>setBuyTicketsModal((false))}
@@ -108,6 +108,7 @@ function BuyTickets(props) {
                 >
                     <PaymentForm total={total}/>
                 </Modal>
+                </>}
                 <Modal
                         open={addToCatalogueModal}
                         onClose={()=>setAddToCatalogueModal((false))}

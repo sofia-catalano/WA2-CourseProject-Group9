@@ -103,6 +103,7 @@ function AddForm(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+        console.log(data)
 
     };
     return (
@@ -114,7 +115,7 @@ function AddForm(props) {
                         <Avatar id="iconFormStyle" sx={{ width: 60, height: 60, mb: 1, bgcolor: '#1976d2' }}>
                             <IoTicketOutline fontSize="large" sx={{color: '#ffeb3b' }}/>
                         </Avatar>
-                        <Box component="form" onSubmit={handleSubmit} noValidate sx={{p: 2}}>
+                        <Box component="form" onSubmit={handleSubmit} sx={{p: 2}}>
                             <TextField
                                 margin="normal"
                                 required
