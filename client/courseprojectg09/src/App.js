@@ -72,6 +72,8 @@ function App() {
                         <Route exact path="/admin/transactions" element={<AdminTransactionsList/>}/>
                         <Route exact path="/catalogue" element={<TicketsCatalogue/>}/>
                         <Route exact path="/validateTicket" element={<ValidateTicketPage/>}/>
+                        <Route exact path="/catalogue/admin/tickets" element={<BuyTickets/>}/>
+                        <Route exact path="/catalogue/admin/travelcard" element={<BuyTravelcard/>}/>
                         {/*<Route exact path="/my/tickets" element={<TicketsList/>}/>*/}
                     </Routes>
                 </Layout>
