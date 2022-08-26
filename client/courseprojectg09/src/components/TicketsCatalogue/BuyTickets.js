@@ -10,6 +10,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import PaymentForm from "../PaymentForm/PaymentForm";
 import AddForm from './AddToCatalogue/AddToCatalogueForm';
+import {useUser} from "../UserProvider";
 
 function BuyTickets(props) {
     const [loading, setLoading] = useState(false);
@@ -18,7 +19,7 @@ function BuyTickets(props) {
     const [buyTicketsModal, setBuyTicketsModal] = React.useState(false);
     const [addToCatalogueModal, setAddToCatalogueModal] = React.useState(false);
     const [total,setTotal]=useState(rows[0].price*numberOfTickets)
-    let userRole = "admin" //TODO sistemare
+    const {loggedIn, userRole, setUserRole, setLoggedIn} = useUser()
 
     const handleSubmit = (event) => {
         event.preventDefault();

@@ -10,8 +10,10 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import PaymentForm from "../PaymentForm/PaymentForm";
 import AddForm from './AddToCatalogue/AddToCatalogueForm.js';
+import {useUser} from "../UserProvider";
+
 function BuyTravelcard(props) {
-    let userRole = "admin" //TODO sistemare
+    const {loggedIn, userRole, setUserRole, setLoggedIn} = useUser()
     const [loading, setLoading] = useState(false);
     const [selectedValue, setSelectedValue] = React.useState(rows[0].id);
     const [buyTravelcardModal, setBuyTravelcardModal] = React.useState(false);
@@ -60,7 +62,7 @@ function BuyTravelcard(props) {
                 <GenericTable
                     headCells={headCells}
                     rows={rows}
-                    nameTable={"Buy travelcard"}
+                    nameTable={userRole==="admin" ? "Travelcards list": "Buy travelcard"}
                     selectedValue={selectedValue}
                     handleTypeTicketsChange={handleTypeTicketsChange}
                     filterMenu="AddCatalogue"
