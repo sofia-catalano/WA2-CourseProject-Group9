@@ -34,6 +34,7 @@ export default function TicketsCatalogue() {
                             border: '4px solid #1976d2',
                             borderRadius: '15px 15px 15px 15px'
                             }}
+                            key = {type}
                             component={RouterLink}
                             to={type==="Tickets" ? "/catalogue/shop/tickets" : "/catalogue/shop/travelcard"}
 

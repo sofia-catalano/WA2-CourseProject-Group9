@@ -40,7 +40,6 @@ function Layout(props) {
     return (
 
         <>
-            {console.log(location.pathname)}
             <Navbar/>
             <Grid container spacing={2}>
                 {showSidebar() &&

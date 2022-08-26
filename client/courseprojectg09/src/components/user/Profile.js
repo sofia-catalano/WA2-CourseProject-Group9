@@ -1,14 +1,14 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {AccountCircle, Visibility, VisibilityOff} from "@mui/icons-material";
 import {InputAdornment} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Toolbar from "@mui/material/Toolbar";
 import {useParams} from "react-router-dom";
+import travelerAPI from "../../api/TravelerAPI";
 
 export default function UserProfile(props) {
     let { user } = useParams();
@@ -25,6 +25,10 @@ export default function UserProfile(props) {
         showPassword: false,
         edit: false,
     });
+
+    useEffect(()=>{
+        travelerAPI.getMyProfile().then(r => console.log(r));
+    },[])
 
     const handleChange = (prop) => (event) => {
         setValues({ ...values, [prop]: event.target.value });

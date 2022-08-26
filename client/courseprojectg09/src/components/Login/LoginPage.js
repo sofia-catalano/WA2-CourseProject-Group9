@@ -12,6 +12,7 @@ import {useState} from 'react';
 import {InputAdornment} from "@mui/material";
 import VisibilityOffTwoToneIcon from "@mui/icons-material/VisibilityOffTwoTone";
 import VisibilityTwoToneIcon from "@mui/icons-material/VisibilityTwoTone";
+import loginAPI from "../../api/LoginAPI";
 
 const theme = createTheme();
 
@@ -26,8 +27,9 @@ export default function LoginPage() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+        loginAPI.logIn(data.get('username'), data.get('password')).then()
         console.log({
-            email: data.get('email'),
+            username: data.get('username'),
             password: data.get('password'),
         });
     };
@@ -45,10 +47,10 @@ export default function LoginPage() {
                             margin="normal"
                             required
                             fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
+                            id="username"
+                            label="Username"
+                            name="username"
+                            autoComplete="username"
                             autoFocus
                         />
                         <TextField

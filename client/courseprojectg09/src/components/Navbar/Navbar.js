@@ -13,13 +13,16 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import SubwayIcon from '@mui/icons-material/Subway';
-import { Link as RouterLink} from 'react-router-dom';
+import {Link as RouterLink, useNavigate} from 'react-router-dom';
+import catalogueAPI from "../../api/TicketCatalogueAPIs";
 
 const pages = ['Ticket Catalogue', 'Validate Tickets', 'About Us'];
 const url = ['/catalogue', '/validateTicket', '/aboutUs'];
 const settings = ['Logout'];
 
 function Navbar(){
+
+    const navigate = useNavigate();
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -32,12 +35,21 @@ function Navbar(){
     };
 
     const handleCloseNavMenu = () => {
+        catalogueAPI.getCatalogue().then(r => console.log(r));
         setAnchorElNav(null);
     };
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
+        //TODO : mettere link su typography "logout"
+        logOut()
     };
+
+    const logOut = () => {
+        sessionStorage.clear()
+        navigate('/')
+    };
+
     return(
         <AppBar position="static">
             <Container maxWidth="xl">
