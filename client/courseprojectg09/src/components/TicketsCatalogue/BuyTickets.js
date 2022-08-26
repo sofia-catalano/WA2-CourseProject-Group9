@@ -9,14 +9,17 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import PaymentForm from "../PaymentForm/PaymentForm";
+import AddForm from './AddToCatalogue/AddToCatalogueForm';
+import {useUser} from "../UserProvider";
 
 function BuyTickets(props) {
     const [loading, setLoading] = useState(false);
     const [selectedValue, setSelectedValue] = React.useState(rows[0].id);
     const [numberOfTickets, setNumberOfTickets]=useState(1)
     const [buyTicketsModal, setBuyTicketsModal] = React.useState(false);
+    const [addToCatalogueModal, setAddToCatalogueModal] = React.useState(false);
     const [total,setTotal]=useState(rows[0].price*numberOfTickets)
-
+    const {loggedIn, userRole, setUserRole, setLoggedIn} = useUser()
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -36,6 +39,9 @@ function BuyTickets(props) {
         const currentElement=rows.find(element => element.id==id)
         if(currentElement!=undefined) setTotal(numberOfTickets*currentElement.price)
     }
+
+    const handleAddToCatalogueModal = () => setAddToCatalogueModal(true);
+
     return (
         <>{loading
             ?
@@ -45,10 +51,13 @@ function BuyTickets(props) {
                 <GenericTable
                     headCells={headCells}
                     rows={rows}
-                    nameTable={"Buy tickets"}
+                    nameTable={userRole==="admin" ? "Tickets list": "Buy tickets"}
                     selectedValue={selectedValue}
                     handleTypeTicketsChange={handleTypeTicketsChange}
+                    FilterMenu="AddTickets"
+                    onAddElement={handleAddToCatalogueModal}
                 ></GenericTable>
+                {userRole!="admin" && <>
                 <Box sx={{ width: '90%' , mr:5, ml:5 }}>
                     <Paper sx={{ width: '100%', mb: 2 }}>
                         <Grid container
@@ -99,6 +108,15 @@ function BuyTickets(props) {
                     aria-describedby="modal-modal-description"
                 >
                     <PaymentForm total={total}/>
+                </Modal>
+                </>}
+                <Modal
+                        open={addToCatalogueModal}
+                        onClose={()=>setAddToCatalogueModal((false))}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                  <AddForm type="ticket"/>
                 </Modal>
             </Box>
 

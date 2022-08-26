@@ -18,7 +18,8 @@ import Typography from "@mui/material/Typography";
 import {Checkbox, FormControl, FormControlLabel, Radio, RadioGroup, Tooltip} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import FilterListIcon from '@mui/icons-material/FilterList';
-
+import { useLocation } from 'react-router-dom';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -98,15 +99,19 @@ GenericTableHead.propTypes = {
 
 
 const EnhancedTableToolbar = (props) => {
-    const {nameTable, FilterMenu} = props
+    const {nameTable, FilterMenu, onAddElement} = props
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
+    const location = useLocation();
+    
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
+    
+
     return (
         <Toolbar
             sx={{
@@ -125,9 +130,17 @@ const EnhancedTableToolbar = (props) => {
             </Typography>
 
             {FilterMenu &&
+            location.pathname==="/catalogue/admin/tickets" || location.pathname==="/catalogue/admin/travelcard" ?
+                <Tooltip title="Add to list">
+                    <IconButton onClick={ onAddElement }>
+                        <AddCircleOutlineIcon/>
+                    </IconButton>
+                </Tooltip>
+                    
+                :
                 <>
                     <Tooltip title="Filter list">
-                        <IconButton   onClick={handleClick}>
+                        <IconButton onClick={handleClick}>
                             <FilterListIcon/>
                         </IconButton>
                     </Tooltip>
@@ -146,7 +159,7 @@ const EnhancedTableToolbar = (props) => {
 
 
 export default function GenericTable(props) {
-    const {headCells, rows, nameTable, FilterMenu, onClickElement} = props
+    const {headCells, rows, nameTable, FilterMenu, onClickElement, onAddElement} = props
     const {selectedValue, handleTypeTicketsChange}=props //only for buy ticket form
 
     const [order, setOrder] = React.useState('asc');
@@ -179,7 +192,7 @@ export default function GenericTable(props) {
     return (
         <Box sx={{ width: '90%', mt:2 , mr:5, ml:5 }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
-                <EnhancedTableToolbar nameTable={nameTable} FilterMenu={FilterMenu}/>
+                <EnhancedTableToolbar nameTable={nameTable} FilterMenu={FilterMenu} onAddElement={onAddElement}/>
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}

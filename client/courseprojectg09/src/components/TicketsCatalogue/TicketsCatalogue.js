@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography'; 
 import Button from '@mui/material/Button'; 
+import {useUser} from "../UserProvider";
 
 const Item = styled(Paper)(({ theme }) => ({
 
@@ -17,6 +18,17 @@ const Item = styled(Paper)(({ theme }) => ({
 const catalogueTypes = ["Tickets", "Travelcard"]
 
 export default function TicketsCatalogue() {
+    const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
+    const findUrl = (type) => {
+        if(userRole==="admin" && type==="Tickets" )
+            return "/catalogue/admin/tickets"  
+        else if(userRole==="admin" && type==="Travelcard" )
+            return "/catalogue/admin/travelcard"
+        else if (type==="Tickets")
+            return "/catalogue/shop/tickets"
+        else
+            return "/catalogue/shop/travelcard"
+    }
     return (
         <Box sx={{  display: 'flex',
                     flexWrap: 'wrap',
@@ -36,8 +48,7 @@ export default function TicketsCatalogue() {
                             }}
                             key = {type}
                             component={RouterLink}
-                            to={type==="Tickets" ? "/catalogue/shop/tickets" : "/catalogue/shop/travelcard"}
-
+                            to={findUrl(type)}
                     >
                         <Typography
                                 sx={{ color:'#1976d2', display:'flex', justifyContent:'center'}}

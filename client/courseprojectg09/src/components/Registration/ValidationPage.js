@@ -8,15 +8,18 @@ import HowToRegOutlinedIcon from '@mui/icons-material/HowToRegOutlined';
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import * as React from 'react';
-import {useState, useEffect} from 'react';
-import { useNavigate } from "react-router-dom";
+import {useState} from 'react';
+import Typography from "@mui/material/Typography";
+import loginAPI from "../../api/LoginAPI";
+import Link from "@mui/material/Link";
 
 const theme = createTheme();
 
 export default function ValidationPage(){
 
-    const navigate = useNavigate();
     const [showError, setShowError] = useState(false);
+    const [activationCompleted, setActivationCompleted] = useState(false);
+    const [errorMessage , setErrorMessage] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -25,11 +28,16 @@ export default function ValidationPage(){
             setShowError(true)
         }else{
             setShowError(false)
-            console.log({
-                validation: data.get('validation')
-            });
-            //redirect to login page
-            navigate("/user/login");
+            loginAPI.validateUser(data.get('validation')).then(
+                r => {
+                    if(r["error"]){
+                        setErrorMessage(r["error"])
+                        setShowError(true)
+                    }else{
+                        setActivationCompleted(true);
+                    }
+                }
+            )
         }
     };
 
@@ -67,6 +75,18 @@ export default function ValidationPage(){
                         >
                             Validate
                         </Button>
+                        {showError ?
+                            (
+                                <Typography sx={{display: "block", color:"red", textAlign:"center"}}>
+                                    {errorMessage}
+                                </Typography>
+                            ) : activationCompleted ?
+                                (
+                                    <Typography sx={{display: "block", color:"green", textAlign:"center"}}>
+                                        User correctly registered! Please Login at this: <Link href={"/user/login"}>page.</Link>
+                                    </Typography>
+                                ) : ''
+                        }
                     </Box>
                 </Box>
             </Container>
