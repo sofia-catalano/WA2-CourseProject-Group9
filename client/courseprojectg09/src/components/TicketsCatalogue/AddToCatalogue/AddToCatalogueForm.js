@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {useState} from "react";
 import MenuItem from "@mui/material/MenuItem";
-import ShoppingCartSharpIcon from '@mui/icons-material/ShoppingCartSharp';
+import { IoTicketOutline } from "react-icons/io5";
 import './AddToCatalogueForm.css'
 const style = {
     position: 'absolute',
@@ -51,13 +51,54 @@ function AddForm(props) {
             label: '1 week',
         },
     ];
-    const [ticketsType, setTicketsType] = useState('60 min');
-    const [numberOfTickets, setNumberOfTickets]=useState(1)
-    const [creditCardNumber, setCreditCardNumber] = useState('');
-    const [cardHolder, setCardHolder] = useState('');
-    const [expirationDate, setExpirationDate] = useState(new Date().toISOString().substring(0,10));
-    const [cvv,setCvv]=useState('')
 
+    const typeTravelcard=[
+        {
+            value: '1 month',
+            label: '1 month'
+        },
+        {
+            value: '1 year',
+            label: '1 year'
+        }
+    ];
+
+    const zones=[
+        {
+            value: 'A',
+            label: 'A'
+        },
+        {
+            value: 'B',
+            label: 'B'
+        },
+        {
+            value: 'C',
+            label: 'C'
+        },
+        {
+            value: 'AB',
+            label: 'AB'
+        },
+        {
+            value: 'BC',
+            label: 'BC'
+        },
+        {
+            value: 'AC',
+            label: 'AC'
+        },
+        {
+            value: 'ABC',
+            label: 'ABC'
+        },
+    ];
+
+    const [ticketsType, setTicketsType] = useState('60 min');
+    const [allowedZones, setAllowedZones] = useState('A');
+    const [minAge, setMinAge]=useState(0);
+    const [maxAge, setMaxAge]=useState(100);
+    const [price, setPrice] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -71,7 +112,7 @@ function AddForm(props) {
                     <CssBaseline />
                     <Box id="formStyle">
                         <Avatar id="iconFormStyle" sx={{ width: 60, height: 60, mb: 1, bgcolor: '#1976d2' }}>
-                            <ShoppingCartSharpIcon fontSize="large" sx={{color: '#ffeb3b' }}/>
+                            <IoTicketOutline fontSize="large" sx={{color: '#ffeb3b' }}/>
                         </Avatar>
                         <Box component="form" onSubmit={handleSubmit} noValidate sx={{p: 2}}>
                             <TextField
@@ -92,63 +133,56 @@ function AddForm(props) {
                                 ))}
                             </TextField>
                             <TextField
-                                id="numberOfTickets"
-                                label="Number of tickets"
+                                margin="normal"
+                                required
+                                id="allowedZones"
+                                select
+                                fullWidth
+                                label="Allowed zones"
+                                value={allowedZones}
+                                onChange={(event)=> setAllowedZones(event.target.value)}
+                                helperText="Please select the allowed zones"
+                            >
+                                {zones.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+
+                            <TextField
+                                id="price"
+                                label="Price"
                                 type="number"
                                 autoFocus
                                 margin="normal"
                                 required
                                 fullWidth
-                                InputProps={{ inputProps: { min: 1, max: 10 } }}
-                                value={numberOfTickets}
-                                onChange={(event)=>setNumberOfTickets(parseInt(event.target.value))}
+                                InputProps={{ inputProps: { min: 1, max: 500} }}
+                                value={price}
+                                onChange={(event)=>setPrice(parseFloat(event.target.value))}
                             />
                             <TextField
-                                id="creditCardNumber"
-                                label="Credit card number"
-                                autoFocus
-                                margin="normal"
-                                required
-                                fullWidth
-                                inputProps={{ maxLength: 16, minLength:16 }}
-                                value={creditCardNumber}
-                                onChange={(event)=>setCreditCardNumber(event.target.value)}
-                            />
-                            <TextField
-                                id="expirationDate"
-                                label="Expiration date"
-                                autoFocus
-                                margin="normal"
-                                required
-                                fullWidth
-                                type="date"
-                                inputProps={{
-                                    min: new Date().toISOString().substring(0,10),
-                                }}
-                                value={expirationDate}
-                                onChange={(event)=>setExpirationDate(event.target.value)}
-                            />
-                            <TextField
-                                id="cvv"
-                                label="Cvv"
-                                autoFocus
-                                margin="normal"
-                                required
-                                fullWidth
+                                id="minAge"
+                                label="min Age"
                                 type="number"
-                                value={cvv}
-                                inputProps={{ maxLength: 3, minLength:3 }}
-                                onChange={(event)=>setCvv(event.target.value)}
-                            />
-                            <TextField
-                                required
-                                id="cardHolder"
-                                label="Card Holder"
                                 autoFocus
                                 margin="normal"
                                 fullWidth
-                                value={cardHolder}
-                                onChange={(event)=>setCardHolder(event.target.value)}
+                                InputProps={{ inputProps: { min: 1, max: 100} }}
+                                value={minAge}
+                                onChange={(event)=>setMinAge(parseInt(event.target.value))}
+                            />
+                            <TextField
+                                id="maxAge"
+                                label="max Age"
+                                type="number"
+                                autoFocus
+                                margin="normal"
+                                fullWidth
+                                InputProps={{ inputProps: { min: 1, max: 100} }}
+                                value={maxAge}
+                                onChange={(event)=>setMaxAge(parseInt(event.target.value))}
                             />
                             <Button
                                 type="submit"
@@ -156,7 +190,7 @@ function AddForm(props) {
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                             >
-                                Buy tickets
+                                Add to Catalogue
                             </Button>
                         </Box>
                     </Box>
