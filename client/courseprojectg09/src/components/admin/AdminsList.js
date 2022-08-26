@@ -12,7 +12,7 @@ import Paper from "@mui/material/Paper";
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import {RiUserStarFill} from "react-icons/ri";
-import AdminRegistrationForm from "../AdminRegistrationForm/AdminRegistrationForm";
+import AdminRegistrationForm from "./AdminRegistrationForm/AdminRegistrationForm";
 
 function AdminsList(props) {
     const [loading, setLoading] = useState(false);
