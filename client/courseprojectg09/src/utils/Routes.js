@@ -38,14 +38,14 @@ function AllRoutes() {
     const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
 
     const getAdminComponent=(component)=>{
-        return loggedIn && userRole === 'admin' ?
+        return loggedIn && userRole === 'ADMIN' ?
             component
             :
             <Navigate to="/login" replace={true} />
     }
 
     const getCustomerComponent=(component)=>{
-        return loggedIn && userRole === 'customer' ?
+        return loggedIn && userRole === 'CUSTOMER' ?
             component
             :
             <Navigate to="/login" replace={true} />
@@ -68,9 +68,7 @@ function AllRoutes() {
             <Route exact path="/catalogue/shop/travelcard" element={<BuyTravelcard/>}/>
             <Route exact path="/my/transactions" element={<UserTransactionsList/>}/>
             <Route exact path="/admin/admins" element={<AdminsList/>}/>
-            <Route exact
-                   path="/admin/travelers"
-                   element={getAdminComponent(<UsersList/>)}
+            <Route exact path="/admin/travelers" element={getAdminComponent(<UsersList/>)}
             />
 
             <Route exact path="/admin/tickets" element={<AdminTicketsList/>}/>

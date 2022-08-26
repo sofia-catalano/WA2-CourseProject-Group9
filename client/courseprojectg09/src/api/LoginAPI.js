@@ -12,8 +12,7 @@ function logIn(username, password) {
         }).then((response) => {
             if (response.ok) {
                 sessionStorage.setItem('authorization', response.headers.get("authorization"));
-                console.log(response)
-                resolve();
+                resolve(response.headers.get("role"));
             } else {
                 reject();
             }

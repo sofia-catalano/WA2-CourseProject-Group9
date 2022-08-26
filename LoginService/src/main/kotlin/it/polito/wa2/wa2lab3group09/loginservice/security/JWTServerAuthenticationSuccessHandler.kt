@@ -21,7 +21,6 @@ import java.util.*
 class JWTServerAuthenticationSuccessHandler(var appProperties: AppProperties) : ServerAuthenticationSuccessHandler {
     override fun onAuthenticationSuccess(webFilterExchange: WebFilterExchange?, authentication: Authentication?): Mono<Void> = mono {
         SecurityContextHolder.getContext().authentication = authentication
-        println("Authrntication SUCCC")
         val authClaims: MutableList<String> = mutableListOf()
         if (authentication != null) {
             authentication.authorities?.let { authorities ->
@@ -29,6 +28,7 @@ class JWTServerAuthenticationSuccessHandler(var appProperties: AppProperties) : 
             }
             val token= generateJwtToken(authentication.principal as UserDetails)
             webFilterExchange?.exchange?.response?.headers?.set(appProperties.jwtHeader, appProperties.jwtHeaderStart + token)
+            webFilterExchange?.exchange?.response?.headers?.set("role",authentication.authorities.first().toString())
         }
 
         return@mono null

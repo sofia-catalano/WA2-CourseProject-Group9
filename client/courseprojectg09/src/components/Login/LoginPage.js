@@ -31,15 +31,13 @@ export default function LoginPage() {
         const data = new FormData(event.currentTarget);
         loginAPI
             .logIn(data.get('username'), data.get('password'))
-            .then(()=>
+            .then((role)=>
                 {
                     setLoggedIn(true)
-                    console.log("ok")
+                    setUserRole(role)
                 }
             )
-            .catch(
-
-            )
+            .catch((err)=>console.err(err))
     };
 
     return (
