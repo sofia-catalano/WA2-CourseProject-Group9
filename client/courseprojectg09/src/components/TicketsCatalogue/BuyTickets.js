@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import PaymentForm from "../PaymentForm/PaymentForm";
+import { TicketsFilterMenu } from '../generic/FilterMenu/TicketsFilterMenu.js';
 
 function BuyTickets(props) {
     const [loading, setLoading] = useState(false);
@@ -16,7 +17,7 @@ function BuyTickets(props) {
     const [numberOfTickets, setNumberOfTickets]=useState(1)
     const [buyTicketsModal, setBuyTicketsModal] = React.useState(false);
     const [total,setTotal]=useState(rows[0].price*numberOfTickets)
-
+    let userRole = "admin" //TODO sistemare
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -45,10 +46,12 @@ function BuyTickets(props) {
                 <GenericTable
                     headCells={headCells}
                     rows={rows}
-                    nameTable={"Buy tickets"}
+                    nameTable={userRole==="admin" ? "Tickets list": "Buy tickets"}
                     selectedValue={selectedValue}
                     handleTypeTicketsChange={handleTypeTicketsChange}
+                    filterMenu={TicketsFilterMenu}
                 ></GenericTable>
+                {userRole==="user" && 
                 <Box sx={{ width: '90%' , mr:5, ml:5 }}>
                     <Paper sx={{ width: '100%', mb: 2 }}>
                         <Grid container
@@ -91,7 +94,7 @@ function BuyTickets(props) {
                             </Grid>
                         </Grid>
                     </Paper>
-                </Box>
+                </Box>}
                 <Modal
                     open={buyTicketsModal}
                     onClose={()=>setBuyTicketsModal((false))}
@@ -100,6 +103,7 @@ function BuyTickets(props) {
                 >
                     <PaymentForm total={total}/>
                 </Modal>
+                
             </Box>
 
         }

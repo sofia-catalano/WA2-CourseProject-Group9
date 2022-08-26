@@ -74,7 +74,9 @@ function App() {
                     <Route exact path="/my/profile" element={<UserProfile />}/>
                     <Route exact path="/my/orders" element={<UserOrdersList/>}/>
                     <Route exact path="/catalogue/shop/tickets" element={<BuyTickets/>}/>
+                    <Route exact path="/catalogue/admin/tickets" element={<BuyTickets/>}/>
                     <Route exact path="/catalogue/shop/travelcard" element={<BuyTravelcard/>}/>
+                    <Route exact path="/catalogue/admin/travelcard" element={<BuyTravelcard/>}/>
                     <Route exact path="/my/transactions" element={<UserTransactionsList/>}/>
                     <Route exact path="/admin/admins" element={<AdminsList/>}/>
                     <Route exact path="/admin/travelers" element={<UsersList/>}/>
