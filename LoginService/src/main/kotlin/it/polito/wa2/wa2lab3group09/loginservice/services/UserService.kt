@@ -66,7 +66,7 @@ class UserService(val emailService: EmailService,
                     return user.toDTO()
                 }else{
                     userRepository.delete(user).subscribe()
-                    throw IllegalArgumentException("Activation date expired! Deleting user registration data...")
+                    throw IllegalArgumentException("Activation date expired! Deleting user registration data... Please register again!")
                 }
 
             } else {
@@ -75,7 +75,7 @@ class UserService(val emailService: EmailService,
                         userRepository.delete(user).subscribe()
                         activationRepository.delete(activation!!).subscribe()
 
-                        throw IllegalArgumentException("Max number of activation attempt reached! Deleting user registration data...")
+                        throw IllegalArgumentException("Max number of activation attempt reached! Deleting user registration data... Please register again!")
                     }
                     else -> {
                         if (activation != null) {
