@@ -10,37 +10,43 @@ import Typography from "@mui/material/Typography";
 import {useParams} from "react-router-dom";
 import travelerAPI from "../../api/TravelerAPI";
 import {useUser} from "../UserProvider";
+import {CircularProgress, Divider, List, ListItem, Stack} from "@mui/material";
+
 
 export default function UserProfile() {
     let { user } = useParams();
-    const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
+    const {userRole}=useUser()
 
-    const [values, setValues] = React.useState({
-        name: 'Mario',
-        surname: 'Rossi',
-        username: user,
-        address: 'Via Torino',
-        birthday: '04/08/2020',
-        telephone: '43274392487',
-        email: 'mariorossi@gmail.com',
-        password: 'Passw0rd1!',
-        showPassword: false,
-        edit: false,
-    });
+    const [userData, setUserData] = React.useState();
+    const [showPassword, setShowPassword]=React.useState(false);
+    const [edit, setEdit]=React.useState(false);
+    const [loading,setLoading]=React.useState(true)
 
     useEffect(()=>{
-        travelerAPI.getMyProfile().then(r => console.log(r));
-    },[])
+
+        if(user!=undefined){
+            travelerAPI.getTravelerProfile(user).then((r)=>
+            {
+                setUserData(r)
+                setLoading(false)
+            })
+        }
+        else {
+            travelerAPI.getMyProfile().then(r =>
+            {
+                setUserData(r)
+                setLoading(false)
+            })
+        }
+
+    },[user])
 
     const handleChange = (prop) => (event) => {
-        setValues({ ...values, [prop]: event.target.value });
+        setUserData({ ...userData, [prop]: event.target.value });
     };
 
     const handleClickShowPassword = () => {
-        setValues({
-            ...values,
-            showPassword: !values.showPassword,
-        });
+       setShowPassword(!showPassword)
     };
 
 
@@ -51,8 +57,8 @@ export default function UserProfile() {
     const handleSubmit = evt => {
         evt.preventDefault();
         let valid = true
-        if(values.edit){
-            if(values.name === "" || values.surname === "" || values.email === "" || values.password === ""){
+        if(edit){
+            if(userData.name === "" || userData.surname === "" /*|| values.email === "" || values.password === ""*/){
                 valid = false
             }
 
@@ -60,16 +66,24 @@ export default function UserProfile() {
 
         if(valid){
             //TODO salvare i campi
-
-            setValues({
-                ...values,
-                edit: !values.edit
-            });
+            const userUpdate={
+                name: userData.name,
+                surname: userData.surname,
+                address: userData.address,
+                date_of_birth: userData.date_of_birth,
+                telephone_number: userData.telephone_number
+            }
+            travelerAPI
+                .updateMyProfile(userUpdate)
+                .then(console.log("ok"))
+                .catch((err)=>console.log(err))
+           setEdit(!edit)
         }
 
     }
 
     return (
+        <>{ loading ?  <CircularProgress /> :
         <Box sx={{width: '90%', mt: 2, mr: 5, ml: 5}}>
             <Typography
                 sx={{color: '#1976d2'}}
@@ -78,7 +92,7 @@ export default function UserProfile() {
                 component="div"
                 align="center"
             >
-                {values.edit ? "Edit profile" : user!= undefined ? `${user}'s tickets` : "My profile"}
+                {edit ? "Edit profile" : user!= undefined ? `${user}'s tickets` : "My profile"}
             </Typography>
             <Box
                 component="form"
@@ -91,96 +105,97 @@ export default function UserProfile() {
                 <TextField
                     id="username"
                     label="Username"
-                    defaultValue={values.username}
+                    defaultValue={userData.username ? userData.username : ''}
                     InputProps={{
-                        readOnly: !values.edit,
+                        readOnly: !edit,
                         endAdornment: (
                             <InputAdornment position="start">
                                 <AccountCircle />
                             </InputAdornment>
                         )
                     }}
-                    disabled={values.edit}
+                    disabled={true}
                     variant="standard"
                 />
                 <TextField
                     id="name"
                     label="Name"
-                    defaultValue={values.name}
+                    defaultValue={userData.name ? userData.name : ''}
                     InputProps={{
-                        readOnly: !values.edit,
+                        readOnly: !edit,
                     }}
                     variant="standard"
-                    required={values.edit}
+                    required={edit}
                     onChange={handleChange("name")}
-                    error={values.name === ""}
-                    helperText={values.edit ? "Required" : ""}
+                    error={userData.name === ""}
+                    helperText={edit ? "Required" : ""}
                 />
                 <TextField
                     id="surname"
                     label="Surname"
-                    defaultValue={values.surname}
+                    defaultValue={userData.surname ? userData.surname : ''}
                     InputProps={{
-                        readOnly: !values.edit,
+                        readOnly: !edit,
                     }}
                     variant="standard"
-                    required={values.edit}
+                    required={edit}
                     onChange={handleChange("surname")}
-                    error={values.surname === ""}
-                    helperText={values.edit ? "Required" : ""}
+                    error={userData.surname === ""}
+                    helperText={edit ? "Required" : ""}
                 />
                 <TextField
                     id="address"
                     label="Address"
-                    defaultValue={values.address}
+                    defaultValue={userData.address ? userData.address : ''}
                     InputProps={{
-                        readOnly: !values.edit,
+                        readOnly: !edit,
                     }}
                     variant="standard"
                     onChange={handleChange("address")}
                 />
                 <TextField
-                    id="birthday"
-                    label="Birthday"
-                    defaultValue={values.birthday}
+                    id="date_of_birth"
+                    label="Date of birth"
+                    defaultValue={userData.date_of_birth ? userData.date_of_birth  : ''}
                     InputProps={{
-                        readOnly: !values.edit,
+                        readOnly: !edit,
                     }}
                     //type="date"
                     variant="standard"
-                    onChange={handleChange("birthday")}
+                    onChange={handleChange("date_of_birth")}
                 />
                 <TextField
-                    id="telephone"
+                    id="telephone_number"
                     label="Telephone"
-                    defaultValue={values.telephone}
+                    defaultValue={userData.telephone_number? userData.telephone_number : ''}
                     InputProps={{
-                        readOnly: !values.edit,
+                        readOnly: !edit,
                     }}
                     type="tel"
                     variant="standard"
-                    onChange={handleChange("telephone")}
+                    onChange={handleChange("telephone_number")}
                 />
+                {/*
                 <TextField
                     id="email"
                     label="Email"
                     defaultValue={values.email}
                     InputProps={{
-                        readOnly: !values.edit,
+                        readOnly: !edit,
                     }}
                     type="email"
                     variant="standard"
-                    required={values.edit}
+                    required={edit}
                     onChange={handleChange("email")}
                     error={values.email === ""}
-                    helperText={values.edit ? "Required" : ""}
+                    helperText={edit ? "Required" : ""}
                 />
                 <TextField
                     id="password"
                     label="Password"
                     defaultValue={values.password}
                     InputProps={{
-                        readOnly: !values.edit,
+                        readOnly: !edit,
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton
@@ -189,20 +204,22 @@ export default function UserProfile() {
                                     onMouseDown={handleMouseDownPassword}
                                     edge="end"
                                 >
-                                    {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
                                 </IconButton>
                             </InputAdornment>
                         )
                     }}
-                    type={values.showPassword ? 'text' : 'password'}
+                    type={showPassword ? 'text' : 'password'}
                     variant="standard"
-                    required={values.edit}
+                    required={edit}
                     onChange={handleChange("password")}
                     error={values.password === ""}
-                    helperText={values.edit ? "Required" : ""}
+                    helperText={edit ? "Required" : ""}
+
                 />
+                */}
             </Box>
-            {userRole==="user" &&
+            {user === undefined &&
                 <Box
                 sx={{display: 'flex', flexDirection: 'row-reverse', mr: 25, mt: 10}}>
                 <Button
@@ -211,9 +228,11 @@ export default function UserProfile() {
                     style={{minWidth: "10vw"}}
                     onClick={handleSubmit}
                 >
-                    {values.edit ? "Submit" : "Edit profile"}
+                    {edit ? "Submit" : "Edit profile"}
                 </Button>
             </Box>}
         </Box>
+    }
+    </>
     );
 }

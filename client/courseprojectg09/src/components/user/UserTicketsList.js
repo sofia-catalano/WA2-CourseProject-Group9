@@ -8,9 +8,45 @@ import IconButton from "@mui/material/IconButton";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import MenuItem from "@mui/material/MenuItem";
 import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
+import moment from "moment";
+import travelerAPI from "../../api/TravelerAPI";
 
 function UserTicketsList(props) {
     const [loading, setLoading] = useState(false);
+    const [data, setData]=useState([])
+    const typeTicket = (date1, date2) =>{
+        let diff= moment(date1).diff(moment(date2), 'minutes')
+        if(diff<60) {
+            return diff+ ' minutes'
+        }
+        diff= moment(date1).diff(moment(date2), 'hours')
+        if(diff<24){
+            return diff + ' hours'
+        }
+        diff= moment(date1).diff(moment(date2), 'days')
+        if(diff<7){
+            return diff + ' days'
+        }
+    }
+    useEffect(()=>{
+        travelerAPI.getMyTickets()
+            .then(r => {
+                console.log(r)
+                const tmp= r.map((element)=> {
+                    return {
+                        id:element.sub,
+                        zones:element.zid,
+                        acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
+                        validated: element.validated?  moment(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
+                        expired: element.validated ?  moment(element.expired).format('YYYY-MM-DD HH:mm:ss') : '',
+                        type: typeTicket(element.exp, element.iat)
+                    }
+                })
+                setData(tmp)
+                setLoading(false)
+            })
+            .catch(err => console.log(err))
+    },[])
     return (
         <>{loading
             ?
@@ -18,7 +54,7 @@ function UserTicketsList(props) {
             :
             <GenericTable
                 headCells={headCells}
-                rows={rows}
+                rows={data}
                 nameTable={"My Tickets"}
                 FilterMenu={TicketsFilterMenu}
             ></GenericTable>
@@ -47,11 +83,6 @@ const headCells = [
         label: 'ID',
     },
     {
-        id: 'type',
-        numeric: false,
-        label: 'Type',
-    },
-    {
         id: 'zones',
         numeric: false,
         label: 'Zones allowed',
@@ -71,23 +102,12 @@ const headCells = [
         numeric: true,
         label: 'Expired',
     },
-
+    {
+        id: 'type',
+        numeric: false,
+        label: 'Type',
+    },
 ];
-const rows=[
-    createData('Cupcake', 305, 3.7, 67, 4.3, 1.0),
-    createData('Donut', 452, 25.0, 51, 4.9, 1.0),
-    createData('Eclair', 262, 16.0, 24, 6.0,1.0),
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 1.0),
-    createData('Gingerbread', 356, 16.0, 49, 3.9, 1.0),
-    createData('Honeycomb', 408, 3.2, 87, 6.5, 1.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 1.0),
-    createData('Jelly Bean', 375, 0.0, 94, 0.0, 1.0),
-    createData('KitKat', 518, 26.0, 65, 7.0, 1.0),
-    createData('Lollipop', 392, 0.2, 98, 0.0, 1.0),
-    createData('Marshmallow', 318, 0, 81, 2.0,1.0),
-    createData('Nougat', 360, 19.0, 9, 37.0, 1.0),
-    createData('Oreo', 437, 18.0, 63, 4.0, 1.0)
-]
 
 export default UserTicketsList
 

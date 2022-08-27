@@ -14,6 +14,7 @@ import VisibilityOffTwoToneIcon from "@mui/icons-material/VisibilityOffTwoTone";
 import VisibilityTwoToneIcon from "@mui/icons-material/VisibilityTwoTone";
 import loginAPI from "../../api/LoginAPI";
 import {useUser} from "../UserProvider";
+import {useNavigate} from "react-router-dom";
 
 const theme = createTheme();
 
@@ -21,7 +22,7 @@ export default function LoginPage() {
 
     const [hidePassword, setHidePassword] = useState(true);
     const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
-
+    const navigate=useNavigate()
     const showPassword = () => {
         setHidePassword(!hidePassword)
     };
@@ -35,6 +36,7 @@ export default function LoginPage() {
                 {
                     setLoggedIn(true)
                     setUserRole(role)
+                    navigate(role === "CUSTOMER"? '/my/tickets' : '/admin/travelers')
                 }
             )
             .catch((err)=>console.err(err))
