@@ -1,7 +1,5 @@
-import {useEffect, useState, Spinner} from 'react';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -15,7 +13,7 @@ import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import {Checkbox, FormControl, FormControlLabel, Radio, RadioGroup, Tooltip} from "@mui/material";
+import {Radio, Tooltip} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useLocation } from 'react-router-dom';
@@ -205,20 +203,20 @@ export default function GenericTable(props) {
                             orderBy={orderBy}
                             onRequestSort={handleRequestSort}
                             rowCount={rows.length}
-                        />
+                            onSelectAllClick={()=>{}}/>
                         {<TableBody>
                             {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy))*/}
 
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((row, index) => {
+                                .map((row) => {
                                     return (
                                         <TableRow
                                             hover
                                             onClick={onClickElement}
                                             tabIndex={-1}
-                                            key={row.id}
+                                            key={rows.indexOf(row)}
                                         >
                                             {selectedValue &&
                                                 <TableCell align="center">

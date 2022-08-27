@@ -1,7 +1,9 @@
 package it.polito.wa2.lab5.g09.paymentservice.controllers
 
+import it.polito.wa2.lab5.g09.paymentservice.dtos.toDTO
 import it.polito.wa2.lab5.g09.paymentservice.security.JwtUtils
 import it.polito.wa2.lab5.g09.paymentservice.services.PaymentService
+import kotlinx.coroutines.flow.map
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -19,7 +21,10 @@ class PaymentController(val paymentService: PaymentService) {
     @GetMapping("/payment/admin/transactions")
     suspend fun getAllUsersTransactions(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
         return try {
-            val orders = paymentService.getAllUsersTransactions()
+            val orders = paymentService.getAllUsersTransactions().map {
+                    t-> t.toDTO()
+            }
+
             ResponseEntity(orders, HttpStatus.OK)
         }catch (t: Throwable) {
             ResponseEntity(t.message, HttpStatus.BAD_REQUEST)
@@ -31,7 +36,10 @@ class PaymentController(val paymentService: PaymentService) {
     suspend fun getAllTransactions(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
         val newToken = jwt.replace("Bearer", "")
         return try {
-            val orders = paymentService.getUserTransactions(JwtUtils.getDetailsFromJwtToken(newToken, key).username)
+            val orders = paymentService.getUserTransactions(JwtUtils.getDetailsFromJwtToken(newToken, key).username).map {
+                    t-> t.toDTO()
+            }
+
             ResponseEntity(orders, HttpStatus.OK)
         }catch (t: Throwable) {
             ResponseEntity(t.message, HttpStatus.BAD_REQUEST)
