@@ -88,7 +88,6 @@ function BuyTickets(props) {
                     nameTable={userRole==="admin" ? "Tickets list": "Buy tickets"}
                     selectedValue={selectedValue}
                     handleTypeTicketsChange={handleTypeTicketsChange}
-                    FilterMenu="AddTickets"
                     onAddElement={handleAddToCatalogueModal}
                 ></GenericTable>
                 {userRole!="admin" && <>

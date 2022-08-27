@@ -98,7 +98,6 @@ function BuyTravelcard(props) {
                     nameTable={userRole==="admin" ? "Travelcards list": "Buy travelcard"}
                     selectedValue={selectedValue}
                     handleTypeTicketsChange={handleTypeTicketsChange}
-                    filterMenu="AddCatalogue"
                     onAddElement={handleAddToCatalogueModal}
                 ></GenericTable>
                 {userRole != "admin" && <>
@@ -195,7 +194,7 @@ function BuyTravelcard(props) {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <PaymentForm total={data.find(element => element.id==selectedValue).price}/>
+                    <PaymentForm total={data.find(element => element.id==selectedValue) ? data.find(element => element.id==selectedValue).price : 0}/>
                 </Modal>
                 </>
             }

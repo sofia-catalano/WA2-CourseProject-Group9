@@ -127,7 +127,7 @@ const EnhancedTableToolbar = (props) => {
                 {nameTable}
             </Typography>
 
-            {FilterMenu &&
+            {
             location.pathname==="/catalogue/admin/tickets" || location.pathname==="/catalogue/admin/travelcard" ?
                 <Tooltip title="Add to list">
                     <IconButton onClick={ onAddElement }>
@@ -136,7 +136,7 @@ const EnhancedTableToolbar = (props) => {
                 </Tooltip>
                     
                 :
-                <>
+                FilterMenu && <>
                     <Tooltip title="Filter list">
                         <IconButton onClick={handleClick}>
                             <FilterListIcon/>
