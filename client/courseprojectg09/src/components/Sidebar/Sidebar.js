@@ -34,8 +34,8 @@ function Sidebar({
      * Dictionary for selection of the the menu, based on its role
      */
     const roleMenu = {
-        admin: <AdminMenu collapsed={collapsed} />,
-        user: <UserMenu collapsed={collapsed} />,
+        ADMIN: <AdminMenu collapsed={collapsed} />,
+        CUSTOMER: <UserMenu collapsed={collapsed} />,
     };
 
     const handleClose = () => {

@@ -9,11 +9,18 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import PaymentForm from "../PaymentForm/PaymentForm";
+import AddForm from './AddToCatalogue/AddToCatalogueForm.js';
+import {useUser} from "../UserProvider";
+import moment from 'moment';
+import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
+import typeTicket from '../../utils/TicketType.js';
 
 function BuyTravelcard(props) {
+    const {loggedIn, userRole, setUserRole, setLoggedIn} = useUser()
     const [loading, setLoading] = useState(false);
-    const [selectedValue, setSelectedValue] = React.useState(rows[0].id);
+    const [selectedValue, setSelectedValue] = React.useState('');
     const [buyTravelcardModal, setBuyTravelcardModal] = React.useState(false);
+    const [addToCatalogueModal, setAddToCatalogueModal] = React.useState(false);
     const [holder, setHolder] = React.useState({
         name: 'Mario',
         surname: 'Rossi',
@@ -21,11 +28,42 @@ function BuyTravelcard(props) {
         birthday: '04/08/2020',
         telephone: ''
     });
+    const [data, setData] = React.useState([]);
+
+    const findType = (date1, date2) => {
+        let diff= moment(date1).diff(moment(date2), 'days')
+        if(diff<8){
+            return 'ticket'
+        }else
+            return 'travelcard' 
+    }
+
+    catalogueAPI.getCatalogue().then(r => {
+        console.log(r)
+        const tmp = []
+        r.forEach(element => {
+            if(findType(element.exp, element.iat) === 'travelcard' ){
+                tmp.push({
+                    id: element.ticketId,
+                    type: typeTicket(element.exp, element.iat),
+                    price: element.price,
+                    zones: element.zones,
+                    minAge: element.minAge,
+                    maxAge: element.maxAge
+                })
+            }
+        })
+
+        setData(tmp);
+        setSelectedValue(tmp[0].id)
+    });
+
 
     const handleChange = (prop) => (event) => {
         setHolder({ ...holder, [prop]: event.target.value });
     };
 
+    const handleAddToCatalogueModal = () => setAddToCatalogueModal(true);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -56,11 +94,14 @@ function BuyTravelcard(props) {
             <Box component="form" onSubmit={handleSubmit} sx={{p: 2}}>
                 <GenericTable
                     headCells={headCells}
-                    rows={rows}
-                    nameTable={"Buy travelcard"}
+                    rows={data}
+                    nameTable={userRole==="admin" ? "Travelcards list": "Buy travelcard"}
                     selectedValue={selectedValue}
                     handleTypeTicketsChange={handleTypeTicketsChange}
+                    filterMenu="AddCatalogue"
+                    onAddElement={handleAddToCatalogueModal}
                 ></GenericTable>
+                {userRole != "admin" && <>
                 <Box sx={{ width: '90%' , mr:5, ml:5 }}>
                     <Paper sx={{ width: '100%', mb: 2 }}>
                         <Typography
@@ -154,7 +195,17 @@ function BuyTravelcard(props) {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <PaymentForm total={rows.find(element => element.id==selectedValue).price}/>
+                    <PaymentForm total={data.find(element => element.id==selectedValue).price}/>
+                </Modal>
+                </>
+            }
+                <Modal
+                        open={addToCatalogueModal}
+                        onClose={()=>setAddToCatalogueModal((false))}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                  <AddForm type="travelcard"/>
                 </Modal>
             </Box>
 
@@ -164,17 +215,6 @@ function BuyTravelcard(props) {
     );
 }
 
-
-function createData(id, type, price, zones, minAge,maxAge) {
-    return {
-        id,
-        type,
-        price,
-        zones,
-        minAge,
-        maxAge
-    };
-}
 
 const headCells = [
     {
@@ -215,9 +255,5 @@ const headCells = [
     },
 
 ];
-const rows=[
-    createData('1', 305, 3.7, 'AB', 2, 2),
-    createData('2', 452, 25.0, 'A', 3, 3),
-]
 
 export default BuyTravelcard

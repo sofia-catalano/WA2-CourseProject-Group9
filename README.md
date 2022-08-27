@@ -56,7 +56,7 @@ curl --request GET -H "Authorization: {Bearer...}" -v -i  http://localhost:8100/
 ```
 - POST "/my/tickets"
 ```
-curl --request POST -H "Authorization: {Bearer...}" -H "Accept: application/json" -H "Content-Type:application/json" -d '{"cmd":"buy_tickets","quantity":"3","zones":"ABC","type":"2"}' -v -i  http://localhost:8100/my/tickets
+curl --request POST -H "Authorization: {Bearer...}" -H "Accept: application/json" -H "Content-Type:application/json" -d '{"cmd":"buy_tickets","quantity":"3","zones":"ABC","type":"60 min","typeId":"6309d66044e2b5368040bf58"}' -v -i  http://localhost:8100/traveler/my/tickets
 ```
 - GET "/my/travelcards"
 ```

@@ -13,13 +13,16 @@ import {InputAdornment} from "@mui/material";
 import VisibilityOffTwoToneIcon from "@mui/icons-material/VisibilityOffTwoTone";
 import VisibilityTwoToneIcon from "@mui/icons-material/VisibilityTwoTone";
 import loginAPI from "../../api/LoginAPI";
+import {useUser} from "../UserProvider";
+import {useNavigate} from "react-router-dom";
 
 const theme = createTheme();
 
 export default function LoginPage() {
 
     const [hidePassword, setHidePassword] = useState(true);
-
+    const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
+    const navigate=useNavigate()
     const showPassword = () => {
         setHidePassword(!hidePassword)
     };
@@ -27,11 +30,16 @@ export default function LoginPage() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        loginAPI.logIn(data.get('username'), data.get('password')).then()
-        console.log({
-            username: data.get('username'),
-            password: data.get('password'),
-        });
+        loginAPI
+            .logIn(data.get('username'), data.get('password'))
+            .then((role)=>
+                {
+                    setLoggedIn(true)
+                    setUserRole(role)
+                    navigate(role === "CUSTOMER"? '/my/tickets' : '/admin/travelers')
+                }
+            )
+            .catch((err)=>console.err(err))
     };
 
     return (

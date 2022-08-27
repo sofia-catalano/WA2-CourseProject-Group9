@@ -36,7 +36,6 @@ function Navbar(){
     };
 
     const handleCloseNavMenu = () => {
-        catalogueAPI.getCatalogue().then(r => console.log(r));
         setAnchorElNav(null);
     };
 

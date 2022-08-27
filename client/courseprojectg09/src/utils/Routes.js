@@ -38,14 +38,14 @@ function AllRoutes() {
     const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
 
     const getAdminComponent=(component)=>{
-        return loggedIn && userRole === 'admin' ?
+        return loggedIn && userRole === 'ADMIN' ?
             component
             :
             <Navigate to="/login" replace={true} />
     }
 
     const getCustomerComponent=(component)=>{
-        return loggedIn && userRole === 'customer' ?
+        return loggedIn && userRole === 'CUSTOMER' ?
             component
             :
             <Navigate to="/login" replace={true} />
@@ -54,26 +54,22 @@ function AllRoutes() {
     return (
         <Routes>
             <Route exact path="/" element={<Homepage/>}/>
-            <Route exact path="/admin/traveler/:user/profile" element={<UserProfile />}/>
-            <Route exact path="/admin/traveler/:user/tickets" element={<AdminUserTicketsList />}/>
+            <Route exact path="/admin/traveler/:user/profile" element={getAdminComponent(<UserProfile/>)}/>
+            <Route exact path="/admin/traveler/:user/tickets" element={getAdminComponent(<AdminUserTicketsList/>)}/>
             <Route exact path="/admin/traveler/:user/travelcards" element={<AdminUserTravelcardsList/>}/>
             <Route exact path="/user/register" element={<RegistrationPage/>}/>
             <Route exact path="/user/validate" element={<ValidationPage/>}/>
             <Route exact path="/user/login" element={<LoginPage/>}/>
-            <Route exact path="/my/tickets" element={<UserTicketsList/>}/>
+            <Route exact path="/my/tickets" element={getCustomerComponent(<UserTicketsList/>)}/>
             <Route exact path="/my/travelcards" element={<UserTravelCardsList/>}/>
-            <Route exact path="/my/profile" element={<UserProfile />}/>
+            <Route exact path="/my/profile" element={getCustomerComponent(<UserProfile/>)}/>
             <Route exact path="/my/orders" element={<UserOrdersList/>}/>
             <Route exact path="/catalogue/shop/tickets" element={<BuyTickets/>}/>
             <Route exact path="/catalogue/shop/travelcard" element={<BuyTravelcard/>}/>
             <Route exact path="/my/transactions" element={<UserTransactionsList/>}/>
             <Route exact path="/admin/admins" element={<AdminsList/>}/>
-            <Route exact
-                   path="/admin/travelers"
-                   element={getAdminComponent(<UsersList/>)}
-            />
-
-            <Route exact path="/admin/tickets" element={<AdminTicketsList/>}/>
+            <Route exact path="/admin/travelers" element={getAdminComponent(<UsersList/>)}/>
+            <Route exact path="/admin/tickets" element={getAdminComponent(<AdminTicketsList/>)}/>
             <Route exact path="/admin/travelcards" element={<AdminTravelcardsList/>}/>
             <Route exact path="/admin/orders" element={<AdminOrdersList/>}/>
             <Route exact path="/admin/transactions" element={<AdminTransactionsList/>}/>

@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography'; 
 import Button from '@mui/material/Button'; 
-//import {useUser} from "../UserProvider";
+import {useUser} from "../UserProvider";
 
 const Item = styled(Paper)(({ theme }) => ({
 
@@ -18,8 +18,7 @@ const Item = styled(Paper)(({ theme }) => ({
 const catalogueTypes = ["Tickets", "Travelcard"]
 
 export default function TicketsCatalogue() {
-    //const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
-    const userRole = "admin" //TODO sistemare
+    const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
     const findUrl = (type) => {
         if(userRole==="admin" && type==="Tickets" )
             return "/catalogue/admin/tickets"  

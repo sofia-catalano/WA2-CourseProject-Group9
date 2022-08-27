@@ -1,13 +1,40 @@
 import {CircularProgress, Menu} from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import GenericTable from "../generic/Table/Table";
 import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
-
-
+import travelerAPI from "../../api/TravelerAPI";
+import moment from "moment";
+import typeTicket from "../../utils/TicketType";
 
 function AdminTicketsList(props) {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [data, setData]=useState([]);
+
+    const filterRows=()=>{
+        console.log(" ")
+    }
+    
+    useEffect(()=>{
+        travelerAPI.getTravelersTicketsPurchased()
+        .then(r => {
+            console.log(r)
+            const tmp= r.map((element)=> {
+                return {
+                    id:element.sub,
+                    zones:element.zid,
+                    acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
+                    validated: element.validated?  moment(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
+                    expired: element.validated ?  moment(element.expired).format('YYYY-MM-DD HH:mm:ss') : '',
+                    username:element.userID,
+                    type: typeTicket(element.exp, element.iat)
+                }
+            })
+            setData(tmp)
+            setLoading(false)
+        })
+        .catch(err => console.log(err))
+    },[])
+
     return (
         <>{loading
             ?
@@ -15,9 +42,10 @@ function AdminTicketsList(props) {
             :
             <GenericTable
                 headCells={headCells}
-                rows={rows}
+                rows={data}
                 nameTable={"Tickets"}
                 FilterMenu={TicketsFilterMenu}
+                filterRows={filterRows}
             ></GenericTable>
         }
 
@@ -25,28 +53,11 @@ function AdminTicketsList(props) {
     );
 }
 
-function createData(id, type, zones, acquired, validated, expired, username) {
-    return {
-        id,
-        type,
-        zones,
-        acquired,
-        validated,
-        expired,
-        username
-    };
-}
-
 const headCells = [
     {
         id: 'id',
         numeric: false,
         label: 'ID',
-    },
-    {
-        id: 'type',
-        numeric: false,
-        label: 'Type',
     },
     {
         id: 'zones',
@@ -73,21 +84,12 @@ const headCells = [
         numeric: false,
         label: 'Username',
     },
+    {
+        id: 'type',
+        numeric: false,
+        label: 'Type',
+    },
 
 ];
-const rows=[
-    createData('Cupcake', 305, 3.7, 67, 4.3, 1.0, 'Mario'),
-    createData('Donut', 452, 25.0, 51, 4.9, 1.0, 'Mario'),
-    createData('Eclair', 262, 16.0, 24, 6.0,1.0, 'Mario'),
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 1.0, 'Mario'),
-    createData('Gingerbread', 356, 16.0, 49, 3.9, 1.0, 'Mario'),
-    createData('Honeycomb', 408, 3.2, 87, 6.5, 1.0, 'Mario'),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 1.0, 'Mario'),
-    createData('Jelly Bean', 375, 0.0, 94, 0.0, 1.0, 'Mario'),
-    createData('KitKat', 518, 26.0, 65, 7.0, 1.0, 'Mario'),
-    createData('Lollipop', 392, 0.2, 98, 0.0, 1.0,'Mario'),
-    createData('Marshmallow', 318, 0, 81, 2.0,1.0,'Mario'),
-    createData('Nougat', 360, 19.0, 9, 37.0, 1.0, 'Mario'),
-    createData('Oreo', 437, 18.0, 63, 4.0, 1.0, 'Mario')
-]
+
 export default AdminTicketsList;

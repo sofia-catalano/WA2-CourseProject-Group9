@@ -3,7 +3,7 @@ import {createContext, useContext, useState} from "react";
 const UserContext = createContext(null)
 
 const UserProvider = ({ children }) => {
-    const [userRole, setUserRole] = useState('admin');
+    const [userRole, setUserRole] = useState('');
     const [loggedIn, setLoggedIn]= useState(false);
 
     return (
