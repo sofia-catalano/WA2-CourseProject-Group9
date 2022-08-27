@@ -227,6 +227,14 @@ In order to download a QRCode Ticket
 curl --remote-name --remote-header-name --write-out "Downloaded %{filename_effective} file" -H "Authorization: Bearer..." --silent http://localhost:8100/QRCode/generateQRCode/{ticketId}
 ```
 
+In order to validate a ticket
+
+- POST /QRCode/checkTicket
+
+```
+curl --request POST -H "Accept: application/json" -H "Content-Type:application/json" -d '{"jwt":"{jwt}","zid":"{A/B/C}"}' -v -i  http://localhost:8100/QRCode/validateQRCode
+```
+
 
 
 

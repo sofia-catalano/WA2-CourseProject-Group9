@@ -11,6 +11,7 @@ data class QRCode(
     @Indexed
     val qrCodeId : ObjectId = ObjectId.get(),
     val qrCodeImage : ByteArray,
+    val token : String,
     @Indexed
     val ticketId : ObjectId
 

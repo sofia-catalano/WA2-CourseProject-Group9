@@ -10,5 +10,6 @@ import reactor.core.publisher.Mono
 interface QRCodeRepository: ReactiveMongoRepository<QRCode, ObjectId> {
 
     fun findByTicketId(ticketId : ObjectId) : Mono<QRCode>
+    fun findByToken(token : String) : Mono<QRCode>
 
 }

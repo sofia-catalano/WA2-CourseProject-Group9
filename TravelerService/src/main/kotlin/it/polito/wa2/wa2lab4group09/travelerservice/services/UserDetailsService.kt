@@ -5,6 +5,7 @@ import io.jsonwebtoken.security.Keys
 import it.polito.wa2.wa2lab4group09.travelerservice.controllers.ActionTicket
 import it.polito.wa2.wa2lab4group09.travelerservice.controllers.ActionTravelcard
 import it.polito.wa2.wa2lab4group09.travelerservice.controllers.UserDetailsUpdate
+import it.polito.wa2.wa2lab4group09.travelerservice.controllers.ValidationToTravelerService
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TicketPurchasedDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TravelcardPurchasedDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.toDTO
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.bson.types.ObjectId
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -97,13 +99,14 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                 val token = Jwts.builder()
                     .setSubject(userDetails.username)
                     .setIssuedAt(Date.from(Instant.now()))
-                    .setExpiration(exp)
+                    .setNotBefore(Date.from(Instant.now().plus(1, ChronoUnit.SECONDS)))
+                    .setId(actionTicket.type) //the id of the ticket is the duration, the field in the jwts is jid
                     .signWith(Keys.hmacShaKeyFor(keyTicket.toByteArray())).compact()
                 tickets.add(ticketPurchasedRepository.save(TicketPurchased(
                     iat = Timestamp(System.currentTimeMillis()),
-                    exp = Timestamp.from(exp.toInstant()),
                     zid = actionTicket.zones,
                     jws = token,
+                    duration = actionTicket.type,
                     typeId = actionTicket.typeId,
                     userId = userDetails.username
                 )).awaitFirst().toDTO())
@@ -176,6 +179,21 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
         } else throw IllegalArgumentException("Action is not supported")
     }
 
-    //TODO: ADD TICKET VALIDATION SERVICE (update del campo validate)
+    suspend fun checkTicket(validationToTravelerService: ValidationToTravelerService) : TicketPurchasedDTO{
+        val ticketPurchased = ticketPurchasedRepository.findById(ObjectId(validationToTravelerService.ticketId)).awaitFirst()
+        return if(ticketPurchased.validated == null  && ticketPurchased.zid.contains(validationToTravelerService.zid)){
+            ticketPurchased.validated = Timestamp(System.currentTimeMillis())
+            ticketPurchased.exp = validationToTravelerService.expiration
+            ticketPurchasedRepository.save(ticketPurchased).awaitFirst().toDTO()
+        }else if(ticketPurchased.exp != null && ticketPurchased.exp!! >= Timestamp(System.currentTimeMillis()) && ticketPurchased.zid.contains(validationToTravelerService.zid)){
+            ticketPurchased.toDTO()
+        } else if(!ticketPurchased.zid.contains(validationToTravelerService.zid)){
+            throw IllegalArgumentException("You are not allowed to use this ticket in this zone!")
+        } else {
+            throw IllegalArgumentException("Ticket expired at ${ticketPurchased.exp}")
+        }
+    }
+
+    //TODO: ADD TICKET VALIDATION per le travelcards SERVICE (update del campo validate)
 
 }

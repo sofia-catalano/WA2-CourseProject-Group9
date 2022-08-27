@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 
 @RestController
 class MyController(val userDetailsService: UserDetailsService) {
@@ -93,6 +94,18 @@ class MyController(val userDetailsService: UserDetailsService) {
             ResponseEntity(error, HttpStatus.BAD_REQUEST)
         }
     }
+
+    @PostMapping("/traveler/checkTicket")
+    suspend fun checkTicket(@RequestBody validationToTravelerService: ValidationToTravelerService) : ResponseEntity<Any>{
+        return try {
+            val body = userDetailsService.checkTicket(validationToTravelerService)
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t : Throwable){
+            val error = ErrorMessage(t.message)
+            ResponseEntity(error, HttpStatus.OK)
+        }
+    }
+
 }
 
 data class ActionTicket(val cmd: String, val quantity: Int, val zones: String, val type: String, val typeId: ObjectId)
@@ -100,4 +113,5 @@ data class ActionTicket(val cmd: String, val quantity: Int, val zones: String, v
 data class ErrorMessage(val error: String?)
 data class UserDetailsUpdate(val name : String?, val surname : String?, val address : String?, val date_of_birth : String?, val telephone_number : String?)
 data class ActionTravelcard(val cmd : String, val zones : String, val type : String, val typeId: ObjectId, val owner: TravelcardOwnerDTO)
+data class ValidationToTravelerService(val expiration : Date, val ticketId: String, val zid : String)
 

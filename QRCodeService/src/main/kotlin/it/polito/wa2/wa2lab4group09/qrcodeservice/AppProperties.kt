@@ -14,4 +14,8 @@ class AppProperties {
 
     @Value("\${application.jwt.jwtSecret}")
     lateinit var key: String
+
+    @Value("\${application.jwt.jwtSecretTicket}")
+    lateinit var keyTicket : String
+
 }

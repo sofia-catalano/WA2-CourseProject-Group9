@@ -14,7 +14,7 @@ data class TicketPurchasedDTO(
     @JsonProperty("iat")
     var iat: Date,
     @JsonProperty("exp")
-    var exp: Date,
+    var exp: Date?,
     @JsonProperty("zid")
     var zid: String,
     @JsonProperty("jws")

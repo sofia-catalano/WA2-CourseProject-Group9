@@ -5,14 +5,10 @@ import it.polito.wa2.wa2lab4group09.qrcodeservice.services.QRCodeService
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.ByteArrayResource
-import org.springframework.http.ContentDisposition
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
+import org.springframework.http.*
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @Controller
 class QRCodeController(val qrCodeService: QRCodeService) {
@@ -37,8 +33,20 @@ class QRCodeController(val qrCodeService: QRCodeService) {
             .body(resource)
     }
 
+    @PostMapping("/QRCode/validateQRCode")
+    suspend fun validateQRCode(@RequestBody validationInfo: ValidationInfo) : ResponseEntity<Any>{
+        return try {
+            val body = qrCodeService.validateTicket(validationInfo)
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t : Throwable){
+            val error = ErrorMessage("Ticket expired or ticket zone not allowed!")
+            ResponseEntity(error, HttpStatus.BAD_REQUEST)
+        }
+    }
+
     //TODO: validate qrCode
 
-
-
+    data class ValidationInfo(val jwt : String, val zid : String)
+    data class ValidationToTravelerService(val expiration : Date, val ticketId: String, val zid: String)
+    data class ErrorMessage(val error: String?)
 }
