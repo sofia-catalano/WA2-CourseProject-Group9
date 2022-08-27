@@ -91,6 +91,36 @@ function addNewTicketToCatalogue(ticketCatalogue) {
     });
 }
 
-const catalogueAPI = {getCatalogue, getAllOrders, getUserOrders, addNewTicketToCatalogue};
+function buyTickets(quantity, ticketId, paymentInfo) {
+    return new Promise((resolve, reject) => {
+        fetch(`${BASEURL}/shop/${ticketId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': sessionStorage.getItem('authorization')
+            },
+            body: JSON.stringify({
+                quantity: quantity,
+                ticketId: ticketId,
+                paymentInfo: {
+                    creditCardNumber: paymentInfo.creditCardNumber,
+                    expirationDate: paymentInfo.expirationDate,
+                    cvv: paymentInfo.cvv,
+                    cardHolder: paymentInfo.cardHolder,
+                },
+            }),
+        }).then((response) => {
+            if (response.ok) {
+                console.log(response)
+                resolve();
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
+const catalogueAPI = {getCatalogue, getAllOrders, getUserOrders, addNewTicketToCatalogue, buyTickets};
 
 export default catalogueAPI;
