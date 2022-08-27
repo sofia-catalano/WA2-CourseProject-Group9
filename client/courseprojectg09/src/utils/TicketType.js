@@ -1,7 +1,7 @@
-const typeTicket = (date1, date2) =>{
+const typeTicket = (date1, date2) => {
     let diff= moment(date1).diff(moment(date2), 'minutes')
     if(diff<60) {
-        return diff+ ' minutes'
+        return diff + ' minutes'
     }
     diff= moment(date1).diff(moment(date2), 'hours')
     if(diff<24){
