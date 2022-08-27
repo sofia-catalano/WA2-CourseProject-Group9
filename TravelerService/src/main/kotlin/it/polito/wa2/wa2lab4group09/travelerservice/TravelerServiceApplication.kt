@@ -4,6 +4,7 @@ import com.mongodb.reactivestreams.client.MongoClient
 import com.mongodb.reactivestreams.client.MongoClients
 import org.apache.kafka.clients.admin.AdminClientConfig
 import org.apache.kafka.clients.admin.NewTopic
+import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
@@ -15,6 +16,7 @@ import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguratio
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories
 import org.springframework.kafka.core.KafkaAdmin
+import java.nio.ByteBuffer
 import java.sql.Timestamp
 import java.util.*
 
@@ -41,12 +43,30 @@ class SpringMongoConfiguration
     fun customConversions(): MongoCustomConversions {
         val converterList: MutableList<Converter<*, *>> = ArrayList()
         converterList.add(MongoDateToTimestampConverter())
+        converterList.add(MongoLongToObjectIDConverter())
         return MongoCustomConversions(converterList)
     }
     private class MongoDateToTimestampConverter : Converter<Date, Timestamp> {
         override fun convert(source: Date): Timestamp {
             return Timestamp(source.time)
         }
+    }
+    private class MongoLongToObjectIDConverter : Converter<Long, ObjectId> {
+        override fun convert(source: Long): ObjectId {
+            val b = ByteArray(12)
+            val bb2 = ByteBuffer.wrap(b)
+            bb2.putLong(source)
+            bb2.putInt(32)
+            return ObjectId(b)
+        }
+    }
+
+    fun longToObjectId(l: Long, inc: Int): ObjectId? {
+        val b = ByteArray(12)
+        val bb2 = ByteBuffer.wrap(b)
+        bb2.putLong(l)
+        bb2.putInt(inc)
+        return ObjectId(b)
     }
 }
 
