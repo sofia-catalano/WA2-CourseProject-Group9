@@ -1,7 +1,9 @@
 package it.polito.wa2.lab5.group09.ticketcatalogueservice.controllers
 
+import it.polito.wa2.lab5.group09.ticketcatalogueservice.dtos.toDTO
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogue
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.services.TicketCatalogueService
+import kotlinx.coroutines.flow.map
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -40,7 +42,9 @@ class AdminController(
     @GetMapping("/catalogue/admin/orders")
     suspend fun getAllUsersOrders(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
         return try {
-            val orders = ticketCatalogueService.getAllUsersOrders()
+            val orders = ticketCatalogueService.getAllUsersOrders().map {
+                    o -> o.toDTO()
+            }
             ResponseEntity(orders,HttpStatus.OK)
         }catch (t: Throwable) {
             ResponseEntity(t.message, HttpStatus.BAD_REQUEST)
@@ -52,7 +56,9 @@ class AdminController(
     @GetMapping("/catalogue/admin/orders/{userId}")
     suspend fun getUserOrders(@PathVariable userId:String, @RequestHeader("Authorization") jwt:String ) : ResponseEntity<Any>{
         return try {
-            val orders = ticketCatalogueService.getUserOrders(userId)
+            val orders = ticketCatalogueService.getUserOrders(userId).map {
+                    o -> o.toDTO()
+            }
             ResponseEntity(orders,HttpStatus.OK)
         }catch (t: Throwable) {
             ResponseEntity(t.message, HttpStatus.BAD_REQUEST)

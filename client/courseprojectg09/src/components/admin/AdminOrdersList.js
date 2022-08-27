@@ -1,10 +1,12 @@
-import {useState} from "react";
-import {CircularProgress, Modal} from "@mui/material";
+import {useState, useEffect} from "react";
+import {CircularProgress, Menu, Modal} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import GenericTable from "../generic/Table/Table";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
+import MenuItem from "@mui/material/MenuItem";
+import ticketCatalogueAPIs from "../../api/TicketCatalogueAPIs";
 
 const style = {
     position: 'absolute',
@@ -26,6 +28,34 @@ function AdminOrdersList(props){
     const handleCloseTicketsDetailsModal = () => setOpenTicketsModal(false);
     const handleOpenTravelerCardsDetailsModal = () => setOpenTravelerCardsModal(true);
     const handleCloseTravelerCardsDetailsModal = () => setOpenTravelerCardsModal(false);
+
+    const [ticketsOrders, setTicketsOrders] = useState([])
+    const [travelcardsOrders, setTravelcardsOrders] = useState([])
+
+    useEffect(() => {
+        //fill ticket orders table
+        ticketCatalogueAPIs.getAllOrders()
+            .then((fetchedTicketsOrders) => {
+                fetchedTicketsOrders.forEach(function (obj) {
+                    obj['owner'] == null && delete obj['owner'];
+                })
+
+                setTicketsOrders(fetchedTicketsOrders);
+            });
+
+        //fill travelcard orders table
+        ticketCatalogueAPIs.getAllOrders()
+            .then((fetchedTicketsOrders) => {
+                fetchedTicketsOrders.filter(o => !o['owner'].isNull()).forEach(function (obj) {
+                    obj['quantity'] && delete obj['quantity'];
+                })
+
+                setTravelcardsOrders(fetchedTicketsOrders)
+            });
+
+    }, []);
+
+
     return (
         <>{loading
             ?
@@ -35,10 +65,11 @@ function AdminOrdersList(props){
                 <Grid item xs={12}>
                     <GenericTable
                         headCells={headCellsTickets}
-                        rows={rowsTickets}
+                        rows={ticketsOrders}
                         nameTable={"All Orders (Tickets)"}
+                        FilterMenu={FilterMenu}
                         onClickElement={handleOpenTicketsDetailsModal}
-                    ></GenericTable>
+                    />
                     <Modal
                         open={openTicketsModal}
                         onClose={handleCloseTicketsDetailsModal}
@@ -58,10 +89,11 @@ function AdminOrdersList(props){
                 <Grid item xs={12}>
                     <GenericTable
                         headCells={headCellsTravelerCards}
-                        rows={rowsTravelerCards}
+                        rows={travelcardsOrders}
                         nameTable={"All Orders (Traveler Cards)"}
+                        FilterMenu={FilterMenu}
                         onClickElement={handleOpenTravelerCardsDetailsModal}
-                    ></GenericTable>
+                    />
                     <Modal
                         open={openTravelerCardsModal}
                         onClose={handleCloseTravelerCardsDetailsModal}
@@ -89,7 +121,7 @@ function AdminOrdersList(props){
         </>
     );
 }
-/*function FilterMenu (props){
+function FilterMenu (props){
     const {open, anchorEl, handleClose}=props
 
     return (
@@ -102,30 +134,14 @@ function AdminOrdersList(props){
             }}
             anchorEl={anchorEl}
         >
-            {/!*<MenuItem onClick={handleClose}>Purchased tickets(All) </MenuItem>
+            <MenuItem onClick={handleClose}>Purchased tickets(All) </MenuItem>
             <MenuItem onClick={handleClose}>Valid tickets </MenuItem>
             <MenuItem onClick={handleClose}>Validated tickets</MenuItem>
-            <MenuItem onClick={handleClose}>Expired Tickets</MenuItem>*!/}
+            <MenuItem onClick={handleClose}>Expired Tickets</MenuItem>
         </Menu>
     );
-}*/
-function createDataTickets(id, status, type_of_purchase, quantity, username) {
-    return {
-        id,
-        status,
-        type_of_purchase,
-        quantity,
-        username
-    };
 }
-function createDataTravelerCards(id, status, owner, username) {
-    return {
-        id,
-        status,
-        owner,
-        username
-    };
-}
+
 const headCellsTickets = [
     {
         id: 'id',
@@ -167,6 +183,11 @@ const headCellsTravelerCards = [
         label: 'Status',
     },
     {
+        id: 'type_of_purchase',
+        numeric: false,
+        label: 'Type of Purchase', //if tickets specify the type of ticket(1h,2h...)
+    },
+    {
         id: 'owner',
         numeric: false,
         label: 'Owner',
@@ -177,29 +198,5 @@ const headCellsTravelerCards = [
         label: 'Username',
     }
 ]
-
-const rowsTickets=[
-    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3, "USER1"),
-
-
-];
-const rowsTravelerCards=[
-    createDataTravelerCards('1','CANCELLED','Isabella Verdi',"USER1"),
-    createDataTravelerCards('1','CANCELLED','Isabella Verdi',"USER1"),
-    createDataTravelerCards('1','CANCELLED','Isabella Verdi',"USER1"),
-    createDataTravelerCards('1','CANCELLED','Isabella Verdi',"USER1"),
-    createDataTravelerCards('1','CANCELLED','Isabella Verdi',"USER1"),
-    createDataTravelerCards('1','CANCELLED','Isabella Verdi',"USER1"),
-];
 
 export default AdminOrdersList;

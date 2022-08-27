@@ -1,3 +1,6 @@
+import Transaction from "../model/Transaction";
+import Orders from "../model/Order";
+
 const BASEURL = '/catalogue';
 
 function getCatalogue() {
@@ -28,7 +31,9 @@ function getAllOrders() {
         }).then((response) => {
             if (response.ok) {
                 response.json().then((json) => {
-                    resolve(json);
+                    console.log(json)
+                    const orders = json.map((ordersJson) => Orders.from(ordersJson));
+                    resolve(orders);
                 }).catch((err) => {
                     reject(err)
                 });

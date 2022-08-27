@@ -30,7 +30,7 @@ function UserOrdersList(props) {
     return (
         <>{loading
             ?
-            <CircularProgress />
+            <CircularProgress/>
             :
             <Grid container>
                 <Grid item xs={12}>
@@ -38,8 +38,9 @@ function UserOrdersList(props) {
                         headCells={headCellsTickets}
                         rows={rowsTickets}
                         nameTable={"My Orders (Tickets)"}
+                        FilterMenu={FilterMenu}
                         onClickElement={handleOpenTicketsDetailsModal}
-                    ></GenericTable>
+                    />
                     <Modal
                         open={openTicketsModal}
                         onClose={handleCloseTicketsDetailsModal}
@@ -50,7 +51,8 @@ function UserOrdersList(props) {
                             <Typography id="modal-modal-title" variant="h6" component="h2">
                                 Order Tickets Details:
                             </Typography>
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }} onClick={()=>console.log("Vai alla pagina my tickets a questo ticket")}>
+                            <Typography id="modal-modal-description" sx={{mt: 2}}
+                                        onClick={() => console.log("Vai alla pagina my tickets a questo ticket")}>
                                 TicketID1
                             </Typography>
                         </Box>
@@ -61,8 +63,9 @@ function UserOrdersList(props) {
                         headCells={headCellsTravelerCards}
                         rows={rowsTravelerCards}
                         nameTable={"My Orders (Traveler Cards)"}
+                        FilterMenu={FilterMenu}
                         onClickElement={handleOpenTravelerCardsDetailsModal}
-                    ></GenericTable>
+                    />
                     <Modal
                         open={openTravelerCardsModal}
                         onClose={handleCloseTravelerCardsDetailsModal}
@@ -73,13 +76,13 @@ function UserOrdersList(props) {
                             <Typography id="modal-modal-title" variant="h6" component="h2">
                                 Order Traveler Card Details:
                             </Typography>
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <Typography id="modal-modal-description" sx={{mt: 2}}>
                                 TravelerCardID1
                             </Typography>
                         </Box>
                     </Modal>
                 </Grid>
-                <Grid item xs={12} style={{marginLeft : "3vw"}}>
+                <Grid item xs={12} style={{marginLeft: "3vw"}}>
                     <Typography>
                         Click an element to see further details.
                     </Typography>
@@ -90,7 +93,8 @@ function UserOrdersList(props) {
         </>
     );
 }
-/*function FilterMenu (props){
+
+function FilterMenu (props){
     const {open, anchorEl, handleClose}=props
 
     return (
@@ -103,13 +107,14 @@ function UserOrdersList(props) {
             }}
             anchorEl={anchorEl}
         >
-            {/!*<MenuItem onClick={handleClose}>Purchased tickets(All) </MenuItem>
+            <MenuItem onClick={handleClose}>Purchased tickets(All) </MenuItem>
             <MenuItem onClick={handleClose}>Valid tickets </MenuItem>
             <MenuItem onClick={handleClose}>Validated tickets</MenuItem>
-            <MenuItem onClick={handleClose}>Expired Tickets</MenuItem>*!/}
+            <MenuItem onClick={handleClose}>Expired Tickets</MenuItem>
         </Menu>
     );
-}*/
+}
+
 function createDataTickets(id, status, type_of_purchase, quantity) {
     return {
         id,
@@ -118,6 +123,7 @@ function createDataTickets(id, status, type_of_purchase, quantity) {
         quantity
     };
 }
+
 function createDataTravelerCards(id, status, owner) {
     return {
         id,
@@ -125,6 +131,7 @@ function createDataTravelerCards(id, status, owner) {
         owner
     };
 }
+
 const headCellsTickets = [
     {
         id: 'id',
@@ -167,19 +174,19 @@ const headCellsTravelerCards = [
     },
 ]
 
-const rowsTickets=[
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
-    createDataTickets('1','ACCEPTED','Daily : 1h',3),
+const rowsTickets = [
+    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
+    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
+    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
+    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
+    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
+    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
+    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
+    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
 
 ];
-const rowsTravelerCards=[
-    createDataTravelerCards('1','CANCELLED','Isabella Verdi')
+const rowsTravelerCards = [
+    createDataTravelerCards('1', 'CANCELLED', 'Isabella Verdi')
 ];
 
 export default UserOrdersList

@@ -16,7 +16,7 @@ function UserTransactionsList(props) {
     useEffect(() => {
         paymentAPI.getUserTransactions()
             .then((fetchedTransactions) => {
-                fetchedTransactions.forEach(function (obj, i) {
+                fetchedTransactions.forEach(function (obj) {
                     obj['customerUsername'] && delete obj['customerUsername'];
                 })
                 setTransactions(fetchedTransactions);

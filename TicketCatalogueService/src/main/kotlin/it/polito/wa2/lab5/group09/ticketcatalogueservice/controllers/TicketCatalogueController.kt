@@ -3,6 +3,7 @@ package it.polito.wa2.lab5.group09.ticketcatalogueservice.controllers
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
+import it.polito.wa2.lab5.group09.ticketcatalogueservice.dtos.toDTO
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Order
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.Status
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.repositories.OrderRepository
@@ -12,6 +13,7 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.services.TicketCatalogu
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactor.awaitSingle
 import org.bson.types.ObjectId
 import org.slf4j.LoggerFactory
@@ -55,7 +57,9 @@ class TicketCatalogueController(
     suspend fun getOrders(@RequestHeader("Authorization") jwt: String): ResponseEntity<Any> {
         val newToken = jwt.replace("Bearer", "")
         return try {
-            val orders: Flow<Order> = ticketCatalogueService.getOrders(newToken)
+            val orders = ticketCatalogueService.getOrders(newToken).map {
+                    o -> o.toDTO()
+            }
             ResponseEntity(orders, HttpStatus.OK)
         } catch (t: Throwable) {
             val error = ErrorMessage(t.message)
@@ -64,14 +68,14 @@ class TicketCatalogueController(
     }
 
     @GetMapping("/catalogue/orders/{orderId}")
-    suspend fun getOrdersByUUID(
+    suspend fun getOrderByUUID(
         @PathVariable orderId: ObjectId,
         @RequestHeader("Authorization") jwt: String
     ): ResponseEntity<Any> {
         val newToken = jwt.replace("Bearer", "")
         return try {
-            val orders: Order = ticketCatalogueService.getOrderByUUID(orderId, newToken)
-            ResponseEntity(orders, HttpStatus.OK)
+            val order = ticketCatalogueService.getOrderByUUID(orderId, newToken).toDTO()
+            ResponseEntity(order, HttpStatus.OK)
         } catch (t: Throwable) {
             val error = ErrorMessage(t.message)
             ResponseEntity(error, HttpStatus.BAD_REQUEST)
