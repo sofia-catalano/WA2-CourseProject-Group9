@@ -1,12 +1,36 @@
 import {CircularProgress, Menu} from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import GenericTable from "../generic/Table/Table";
 import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
-
+import travelerAPI from "../../api/TravelerAPI";
+import moment from "moment";
+import typeTicket from "../../utils/TicketType";
 
 function AdminTravelcardsList(props) {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState([]);
+
+    useEffect(()=>{
+        travelerAPI.getTravelersTravelcardsPurchased()
+        .then(r => {
+            console.log(r)
+            const tmp = r.map((element)=> {
+                return {
+                    id:element.sub,
+                    type: typeTicket(element.exp, element.iat),
+                    acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
+                    expired: moment(element.expired).format('YYYY-MM-DD HH:mm:ss'),
+                    status:  (moment(element.expired)).diff(moment(), 'days') > 0 ? 'VALID' : 'EXPIRED',
+                    zones:element.zid,
+                    username:element.userId,
+                }
+            })
+            setData(tmp)
+            setLoading(false)
+        })
+        .catch(err => console.log(err))
+    },[])
+
     return (
         <>{loading
             ?
@@ -14,7 +38,7 @@ function AdminTravelcardsList(props) {
             :
             <GenericTable
                 headCells={headCells}
-                rows={rows}
+                rows={data}
                 nameTable={"Travelcards"}
                 FilterMenu={TravelcardsFilterMenu}
             ></GenericTable>
@@ -22,19 +46,6 @@ function AdminTravelcardsList(props) {
 
         </>
     );
-}
-
-function createData(id, type, purchase_date, expiration_date, status, allowed_zone, username, holder) {
-    return {
-        id,
-        type,
-        purchase_date,
-        expiration_date,
-        status, //if now < expiration date then valid otherwise status = EXPIRED
-        allowed_zone,
-        username,
-        holder,
-    };
 }
 
 const headCells = [
@@ -49,12 +60,12 @@ const headCells = [
         label: 'Type',
     },
     {
-        id: 'purchase_date',
+        id: 'acquired',
         numeric: false,
         label: 'Purchase Date',
     },
     {
-        id: 'expiration_date',
+        id: 'expired',
         numeric: false,
         label: 'Expiration Date',
     },
@@ -64,7 +75,7 @@ const headCells = [
         label: 'Status',
     },
     {
-        id: 'allowed_zones',
+        id: 'zones',
         numeric: false,
         label: 'Zones allowed',
     },
@@ -72,17 +83,7 @@ const headCells = [
         id: 'username',
         numeric: false,
         label: 'Username',
-    },
-    {
-        id: 'holder',
-        numeric: false,
-        label: 'Holder',
-    },
-
+    }
 ];
-const rows=[
-    createData('1',"1 year", "20-01-2022","20-01-2023","VALID","AB","Giuseppe Neri","Giuseppe Neri"),
-    createData('2',"1 year", "20-01-2022","20-01-2023","VALID","AB","Giuseppe Neri","Giuseppe Neri"),
-    createData('3',"1 month", "20-01-2022","20-02-2022","EXPIRED","A","Giuseppe Neri","Giuseppe Neri"),
-]
+
 export default AdminTravelcardsList;

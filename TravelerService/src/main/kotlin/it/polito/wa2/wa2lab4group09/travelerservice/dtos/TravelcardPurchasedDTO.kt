@@ -9,9 +9,10 @@ data class TravelcardPurchasedDTO(
     var iat: Timestamp,
     var exp: Timestamp,
     var zid: String,
-    var jws: String
+    var jws: String,
+    var userId: String
 )
 
 fun TravelcardPurchased.toDTO(): TravelcardPurchasedDTO {
-    return TravelcardPurchasedDTO(sub, iat, exp, zid, jws)
+    return TravelcardPurchasedDTO(sub, iat, exp, zid, jws, userId)
 }

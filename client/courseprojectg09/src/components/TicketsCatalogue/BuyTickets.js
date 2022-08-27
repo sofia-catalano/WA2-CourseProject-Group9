@@ -11,15 +11,49 @@ import Grid from "@mui/material/Grid";
 import PaymentForm from "../PaymentForm/PaymentForm";
 import AddForm from './AddToCatalogue/AddToCatalogueForm';
 import {useUser} from "../UserProvider";
+import moment from 'moment';
+import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
+import typeTicket from '../../utils/TicketType.js';
 
 function BuyTickets(props) {
     const [loading, setLoading] = useState(false);
-    const [selectedValue, setSelectedValue] = React.useState(rows[0].id);
+    const [selectedValue, setSelectedValue] = React.useState('');
     const [numberOfTickets, setNumberOfTickets]=useState(1)
     const [buyTicketsModal, setBuyTicketsModal] = React.useState(false);
     const [addToCatalogueModal, setAddToCatalogueModal] = React.useState(false);
-    const [total,setTotal]=useState(rows[0].price*numberOfTickets)
+    const [total,setTotal]=useState(0)
     const {loggedIn, userRole, setUserRole, setLoggedIn} = useUser()
+    const [data, setData] = React.useState([]);
+
+    const findType = (date1, date2) => {
+        let diff= moment(date1).diff(moment(date2), 'days')
+        if(diff<8){
+            return 'ticket'
+        }else
+            return 'travelcard' 
+    }
+
+    catalogueAPI.getCatalogue().then(r => {
+        console.log(r)
+        const tmp = []
+        r.forEach(element => {
+            if(findType(element.exp, element.iat) === 'ticket' ){
+                tmp.push({
+                    id: element.ticketId,
+                    type: typeTicket(element.exp, element.iat),
+                    price: element.price,
+                    zones: element.zones,
+                    minAge: element.minAge,
+                    maxAge: element.maxAge
+                })
+            }
+        })
+
+        setData(tmp);
+        setSelectedValue(tmp[0].id)
+        setTotal(tmp[0].price*numberOfTickets)
+    });
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -30,13 +64,13 @@ function BuyTickets(props) {
     };
     const handleNumberOfTicketsChange=(event)=>{
         setNumberOfTickets(parseInt(event.target.value))
-        const currentElement=rows.find(element => element.id==selectedValue)
+        const currentElement=data.find(element => element.id==selectedValue)
         if(currentElement!=undefined) setTotal(event.target.value*currentElement.price)
     }
     const handleTypeTicketsChange=(id)=>{
         console.log(id)
         setSelectedValue(id)
-        const currentElement=rows.find(element => element.id==id)
+        const currentElement=data.find(element => element.id==id)
         if(currentElement!=undefined) setTotal(numberOfTickets*currentElement.price)
     }
 
@@ -50,7 +84,7 @@ function BuyTickets(props) {
             <Box component="form" onSubmit={handleSubmit} sx={{p: 2}}>
                 <GenericTable
                     headCells={headCells}
-                    rows={rows}
+                    rows={data}
                     nameTable={userRole==="admin" ? "Tickets list": "Buy tickets"}
                     selectedValue={selectedValue}
                     handleTypeTicketsChange={handleTypeTicketsChange}
@@ -127,17 +161,6 @@ function BuyTickets(props) {
 }
 
 
-function createData(id, type, price, zones, minAge,maxAge) {
-    return {
-        id,
-        type,
-        price,
-        zones,
-        minAge,
-        maxAge
-    };
-}
-
 const headCells = [
     {
         id: 'select',
@@ -177,15 +200,6 @@ const headCells = [
     },
 
 ];
-const rows=[
-    createData('1', 305, 3.7, 'AB', 2, 2),
-    createData('2', 452, 25.0, 'A', 3, 3),
-    createData('3', 262, 16.0, 'C', 4,4),
-    createData('4', 159, 6.0, 'AB', 2, 5),
-    createData('5', 356, 16.0, 'AB', 5, 6),
-    createData('6', 408, 3.2, 'AB', 2, 7),
-    createData('7', 237, 9.0, 'AB', 3, 8),
-]
 
 export default BuyTickets
 

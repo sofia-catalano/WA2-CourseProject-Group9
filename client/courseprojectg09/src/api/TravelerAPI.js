@@ -112,6 +112,31 @@ function getTravelersTicketsPurchased(){
     });
 
 }
+
+function getTravelersTravelcardsPurchased(){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/admin/travelers/travelcards/purchased', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            console.log(response)
+            if(response.ok){
+                response.json().then((json)=>{
+                    console.log(json)
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+
 function getTravelersTicketsValidated(){
     return new Promise((resolve, reject) => {
         fetch(BASEURL+'/admin/travelers/tickets/validated', {
@@ -209,6 +234,7 @@ const travelerAPI = {
          getTravelers,
          getTravelersTicketsPurchased,
          getTravelersTicketsValidated,
+         getTravelersTravelcardsPurchased,
          getTravelerProfile,
          getTravelerTicketPurchased,
          getTravelerTicketsValidated,
