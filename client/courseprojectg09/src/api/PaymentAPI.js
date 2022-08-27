@@ -1,21 +1,25 @@
+import Transaction from "../model/Transaction";
+
 const BASEURL = '/payment';
 
 function getUserTransactions() {
     return new Promise((resolve, reject) => {
-        fetch(BASEURL +'/transactions', {
+        fetch(BASEURL + '/transactions', {
             method: 'GET',
-            headers : {
+            headers: {
                 'Content-Type': 'application/json',
-                'Authorization' : sessionStorage.getItem('authorization')
+                'Authorization': sessionStorage.getItem('authorization')
             }
         }).then((response) => {
-            if(response.ok){
-                response.json().then((json)=>{
-                    resolve(json);
-                }).catch((err)=> {
+            if (response.ok) {
+                response.json().then((json) => {
+                    console.log(json)
+                    const transactions = json.map((transactionJson) => Transaction.from(transactionJson));
+                    resolve(transactions);
+                }).catch((err) => {
                     reject(err)
                 });
-            } else{
+            } else {
                 reject();
             }
         }).catch((err) => reject(err));
@@ -24,20 +28,22 @@ function getUserTransactions() {
 
 function getAllTransactions() {
     return new Promise((resolve, reject) => {
-        fetch(BASEURL +'/admin/transactions', {
+        fetch(BASEURL + '/admin/transactions', {
             method: 'GET',
-            headers : {
+            headers: {
                 'Content-Type': 'application/json',
-                'Authorization' : sessionStorage.getItem('authorization')
+                'Authorization': sessionStorage.getItem('authorization')
             }
         }).then((response) => {
-            if(response.ok){
-                response.json().then((json)=>{
-                    resolve(json);
-                }).catch((err)=> {
+            if (response.ok) {
+                response.json().then((json) => {
+                    console.log(json)
+                    const transactions = json.map((transactionJson) => Transaction.from(transactionJson));
+                    resolve(transactions);
+                }).catch((err) => {
                     reject(err)
                 });
-            } else{
+            } else {
                 reject();
             }
         }).catch((err) => reject(err));
