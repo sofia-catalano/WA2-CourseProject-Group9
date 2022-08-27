@@ -46,7 +46,27 @@ function updateMyProfile(user) {
         }).catch((err) => reject(err));
     });
 }
-
+function getMyTickets() {
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/my/tickets', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    console.log(json)
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
 function getTravelers() {
     return new Promise((resolve, reject) => {
         fetch(BASEURL+'/admin/travelers', {
@@ -184,13 +204,15 @@ function getTravelerTicketsValidated(userID){
     });
 
 }
-const travelerAPI = {getMyProfile,
+const travelerAPI = {
+        getMyProfile,
          getTravelers,
          getTravelersTicketsPurchased,
          getTravelersTicketsValidated,
          getTravelerProfile,
          getTravelerTicketPurchased,
          getTravelerTicketsValidated,
-         updateMyProfile};
+         updateMyProfile,
+        getMyTickets};
 
 export default travelerAPI;
