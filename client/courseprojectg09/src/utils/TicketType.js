@@ -1,3 +1,4 @@
+import moment from "moment"
 const typeTicket = (date1, date2) => {
     let diff= moment(date1).diff(moment(date2), 'minutes')
     if(diff<60) {

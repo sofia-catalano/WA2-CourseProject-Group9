@@ -11,6 +11,9 @@ import Grid from "@mui/material/Grid";
 import PaymentForm from "../PaymentForm/PaymentForm";
 import AddForm from './AddToCatalogue/AddToCatalogueForm.js';
 import {useUser} from "../UserProvider";
+import moment from 'moment';
+import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
+import typeTicket from '../../utils/TicketType.js';
 
 function BuyTravelcard(props) {
     const {loggedIn, userRole, setUserRole, setLoggedIn} = useUser()
@@ -40,7 +43,7 @@ function BuyTravelcard(props) {
         const tmp = []
         r.forEach(element => {
             if(findType(element.exp, element.iat) === 'travelcard' ){
-                tmpTickets.push({
+                tmp.push({
                     id: element.ticketId,
                     type: typeTicket(element.exp, element.iat),
                     price: element.price,
