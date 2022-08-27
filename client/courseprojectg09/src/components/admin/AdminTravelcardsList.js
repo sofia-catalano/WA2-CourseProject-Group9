@@ -8,8 +8,6 @@ function AdminTravelcardsList(props) {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
 
-
-
     useEffect(()=>{
         travelerAPI.getTravelersTravelcardsPurchased()
         .then(r => {
@@ -17,11 +15,12 @@ function AdminTravelcardsList(props) {
             const tmp = r.map((element)=> {
                 return {
                     id:element.sub,
-                    zones:element.zid,
+                    type: typeTicket(element.exp, element.iat),
                     acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
                     expired: moment(element.expired).format('YYYY-MM-DD HH:mm:ss'),
+                    status:  (moment(element.expired)).diff(moment(), 'days') > 0 ? 'VALID' : 'EXPIRED',
+                    zones:element.zid,
                     username:element.userId,
-                    type: typeTicket(element.exp, element.iat)
                 }
             })
             setData(tmp)
@@ -59,12 +58,12 @@ const headCells = [
         label: 'Type',
     },
     {
-        id: 'purchase_date',
+        id: 'acquired',
         numeric: false,
         label: 'Purchase Date',
     },
     {
-        id: 'expiration_date',
+        id: 'expired',
         numeric: false,
         label: 'Expiration Date',
     },
@@ -74,7 +73,7 @@ const headCells = [
         label: 'Status',
     },
     {
-        id: 'allowed_zones',
+        id: 'zones',
         numeric: false,
         label: 'Zones allowed',
     },
