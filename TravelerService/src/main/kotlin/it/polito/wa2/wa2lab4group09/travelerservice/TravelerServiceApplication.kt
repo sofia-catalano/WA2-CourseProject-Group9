@@ -74,8 +74,10 @@ class SpringMongoConfiguration
 class KafkaProducerConfig(
     @Value("\${spring.kafka.producer.bootstrap-servers}")
     private val servers: String,
-    @Value("\${spring.kafka.producer.topics}")
-    private val topic: String
+    @Value("\${spring.kafka.producer.topic1}")
+    private val topic1: String,
+    @Value("\${spring.kafka.producer.topic2}")
+    private val topic2: String,
 ) {
 
     @Bean
@@ -87,8 +89,14 @@ class KafkaProducerConfig(
 
     @Bean
     fun porduto(): NewTopic {
-        return NewTopic(topic, 1, 1.toShort())
+        return NewTopic(topic1, 1, 1.toShort())
     }
+
+    @Bean
+    fun generateTravelcardQRCode() : NewTopic{
+        return NewTopic(topic2,1,1.toShort())
+    }
+
 }
 
 @SpringBootApplication(exclude = [DataSourceAutoConfiguration::class])

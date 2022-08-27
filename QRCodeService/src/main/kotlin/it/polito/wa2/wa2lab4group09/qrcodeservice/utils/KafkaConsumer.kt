@@ -13,14 +13,28 @@ import java.nio.charset.StandardCharsets
 class KafkaConsumer(val qrCodeService: QRCodeService){
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    @KafkaListener(topics = ["\${spring.kafka.consumer.topics}"], groupId = "\${spring.kafka.consumer.group-id}")
+    @KafkaListener(topics = ["\${spring.kafka.consumer.topic1}"], groupId = "\${spring.kafka.consumer.group-id}")
     fun listenGroupFoo(consumerRecord: ConsumerRecord<Any, Any>, ack: Acknowledgment) {
         logger.info("Message received {}", consumerRecord)
         val header = consumerRecord.headers().filter{it.key().equals("Authorization")}[0]
         val token = String(header.value(), StandardCharsets.UTF_8)
-        runBlocking {
-            qrCodeService.generateQRCode(consumerRecord.value() as TicketPurchasedDTO)
-        }
+        println(consumerRecord.topic())
+            runBlocking {
+                val a = consumerRecord.value() as TicketPurchasedDTO
+                qrCodeService.generateQRCode(a.jws,a.sub!!)
+            }
+        ack.acknowledge()
+    }
+    @KafkaListener(topics = ["\${spring.kafka.consumer.topic2}"], groupId = "\${spring.kafka.consumer.group-id}")
+    fun listenGroupFoo2(consumerRecord: ConsumerRecord<Any, Any>, ack: Acknowledgment) {
+        logger.info("Message received {}", consumerRecord)
+        val header = consumerRecord.headers().filter{it.key().equals("Authorization")}[0]
+        val token = String(header.value(), StandardCharsets.UTF_8)
+        println(consumerRecord.topic())
+            runBlocking {
+                val a = consumerRecord.value() as TravelcardPurchasedDTO
+                qrCodeService.generateQRCode(a.jws,a.sub!!)
+            }
         ack.acknowledge()
     }
 }

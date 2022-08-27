@@ -38,9 +38,13 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                          val ticketPurchasedRepository: TicketPurchasedRepository,
                          val travelcardPurchasedRepository: TravelcardPurchasedRepository,
                          val travelcardOwnerRepository: TravelcardOwnerRepository,
-                         @Value("\${spring.kafka.producer.topics}") val topic: String,
+                         @Value("\${spring.kafka.producer.topic1}") val topic1: String,
+                         @Value("\${spring.kafka.producer.topic2}") val topic2: String,
                          @Autowired
-                         private val kafkaTemplate: KafkaTemplate<String, Any>
+                         private val kafkaTemplate: KafkaTemplate<String, TicketPurchasedDTO>,
+                         @Autowired
+                         private val kafkaTemplate2: KafkaTemplate<String, TravelcardPurchasedDTO>
+
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -117,7 +121,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                 log.info("Sending message to Kafka {}", it)
                 val message: Message<TicketPurchasedDTO> = MessageBuilder
                     .withPayload(it)
-                    .setHeader(KafkaHeaders.TOPIC, topic)
+                    .setHeader(KafkaHeaders.TOPIC, topic1)
                     .setHeader("Authorization", jwt)
                     .build()
                 kafkaTemplate.send(message)
@@ -167,7 +171,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                 .setExpiration(exp)
                 .signWith(Keys.hmacShaKeyFor(keyTicket.toByteArray())).compact()
 
-            return travelcardPurchasedRepository.save(TravelcardPurchased(
+            val travelcard = travelcardPurchasedRepository.save(TravelcardPurchased(
                 iat = Timestamp(System.currentTimeMillis()),
                 exp = Timestamp.from(exp.toInstant()),
                 zid = actionTravelcard.zones,
@@ -176,6 +180,15 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                 userId = userDetails.username,
                 ownerId = actionTravelcard.owner.fiscal_code
             )).awaitFirst().toDTO()
+            println(travelcard)
+            //send kafka message to QRCodeService for QRCode generation
+                val message: Message<TravelcardPurchasedDTO> = MessageBuilder
+                    .withPayload(travelcard)
+                    .setHeader(KafkaHeaders.TOPIC, topic2)
+                    .setHeader("Authorization", jwt)
+                    .build()
+                kafkaTemplate2.send(message)
+            return travelcard
         } else throw IllegalArgumentException("Action is not supported")
     }
 
