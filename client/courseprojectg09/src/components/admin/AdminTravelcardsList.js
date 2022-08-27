@@ -4,18 +4,11 @@ import {useState} from "react";
 import GenericTable from "../generic/Table/Table";
 import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 
-
 function AdminTravelcardsList(props) {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
 
-    const typeTicket = (date1, date2) =>{
-        let diff = moment(date1).diff(moment(date2), 'years')
-        if(diff >= 1) {
-            return '1 year'
-        }else
-            return '1 month'
-    }
+
 
     useEffect(()=>{
         travelerAPI.getTravelersTravelcardsPurchased()

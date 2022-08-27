@@ -5,7 +5,7 @@ import GenericTable from "../generic/Table/Table";
 import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 import travelerAPI from "../../api/TravelerAPI";
 import moment from "moment";
-
+import typeTicket from "../../utils/TicketType";
 function AdminTicketsList(props) {
     const [loading, setLoading] = useState(true);
     const [data, setData]=useState([]);
@@ -13,20 +13,7 @@ function AdminTicketsList(props) {
     const filterRows=()=>{
         console.log(" ")
     }
-    const typeTicket = (date1, date2) =>{
-        let diff= moment(date1).diff(moment(date2), 'minutes')
-        if(diff<60) {
-            return diff+ ' minutes'
-        }
-        diff= moment(date1).diff(moment(date2), 'hours')
-        if(diff<24){
-            return diff + ' hours'
-        }
-        diff= moment(date1).diff(moment(date2), 'days')
-        if(diff<7){
-            return diff + ' days'
-        }
-    }
+    
     useEffect(()=>{
         travelerAPI.getTravelersTicketsPurchased()
         .then(r => {
