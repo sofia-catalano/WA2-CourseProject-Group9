@@ -6,7 +6,37 @@ import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 
 
 function AdminTravelcardsList(props) {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState([]);
+
+    const typeTicket = (date1, date2) =>{
+        let diff = moment(date1).diff(moment(date2), 'years')
+        if(diff >= 1) {
+            return '1 year'
+        }else
+            return '1 month'
+    }
+
+    useEffect(()=>{
+        travelerAPI.getTravelersTravelcardsPurchased()
+        .then(r => {
+            console.log(r)
+            const tmp = r.map((element)=> {
+                return {
+                    id:element.sub,
+                    zones:element.zid,
+                    acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
+                    expired: moment(element.expired).format('YYYY-MM-DD HH:mm:ss'),
+                    username:element.userId,
+                    type: typeTicket(element.exp, element.iat)
+                }
+            })
+            setData(tmp)
+            setLoading(false)
+        })
+        .catch(err => console.log(err))
+    },[])
+
     return (
         <>{loading
             ?
@@ -14,7 +44,7 @@ function AdminTravelcardsList(props) {
             :
             <GenericTable
                 headCells={headCells}
-                rows={rows}
+                rows={data}
                 nameTable={"Travelcards"}
                 FilterMenu={TravelcardsFilterMenu}
             ></GenericTable>
@@ -22,19 +52,6 @@ function AdminTravelcardsList(props) {
 
         </>
     );
-}
-
-function createData(id, type, purchase_date, expiration_date, status, allowed_zone, username, holder) {
-    return {
-        id,
-        type,
-        purchase_date,
-        expiration_date,
-        status, //if now < expiration date then valid otherwise status = EXPIRED
-        allowed_zone,
-        username,
-        holder,
-    };
 }
 
 const headCells = [
@@ -72,17 +89,7 @@ const headCells = [
         id: 'username',
         numeric: false,
         label: 'Username',
-    },
-    {
-        id: 'holder',
-        numeric: false,
-        label: 'Holder',
-    },
-
+    }
 ];
-const rows=[
-    createData('1',"1 year", "20-01-2022","20-01-2023","VALID","AB","Giuseppe Neri","Giuseppe Neri"),
-    createData('2',"1 year", "20-01-2022","20-01-2023","VALID","AB","Giuseppe Neri","Giuseppe Neri"),
-    createData('3',"1 month", "20-01-2022","20-02-2022","EXPIRED","A","Giuseppe Neri","Giuseppe Neri"),
-]
+
 export default AdminTravelcardsList;
