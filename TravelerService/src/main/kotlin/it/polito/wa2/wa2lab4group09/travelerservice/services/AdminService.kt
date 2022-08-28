@@ -45,7 +45,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
         return ticketPurchasedRepository
             .findAll()
             .map {
-                TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId)
+                TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId, it.duration)
             }
 
     }
@@ -53,21 +53,21 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
         return ticketPurchasedRepository
             .findByIatBetween(convertDateToTimestamp(start),convertDateToTimestamp(end))
             .map {
-                TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId)
+                TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId, it.duration)
             }
     }
     suspend fun getTicketsValidated():Flow<TicketPurchasedDTO> {
         return ticketPurchasedRepository
             .findByValidate()
             .map {
-                TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId)
+                TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId, it.duration)
             }
     }
     suspend fun getTicketsValidatedPeriodOfTime(start: String, end:String): Flow<TicketPurchasedDTO> {
         return ticketPurchasedRepository.
         findByValidateAndPeriodOfTime(convertDateToTimestamp(start),convertDateToTimestamp(end))
             .map {
-                TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId)
+                TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId,it.duration)
             }
     }
 
@@ -93,7 +93,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
             return ticketPurchasedRepository
                 .findByUserDetailsAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime),userDetail.username)
                 .map {
-                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId)
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId, it.duration)
                 }
         }
     }
@@ -106,7 +106,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
             return ticketPurchasedRepository
                 .findAllValidatedByUserDetails(userDetail.username)
                 .map {
-                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId)
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId,it.duration)
                 }
         }
     }
@@ -119,7 +119,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
             return ticketPurchasedRepository
                 .findAllValidatedByUserDetailsAndPeriodOfTime(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetail.username)
                 .map {
-                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId)
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId, it.duration)
                 }
         }
     }

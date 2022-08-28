@@ -13,11 +13,10 @@ function AdminTicketsList(props) {
     const filterRows=()=>{
         console.log(" ")
     }
-    
+
     useEffect(()=>{
         travelerAPI.getTravelersTicketsPurchased()
         .then(r => {
-            console.log(r)
             const tmp= r.map((element)=> {
                 return {
                     id:element.sub,
@@ -26,7 +25,7 @@ function AdminTicketsList(props) {
                     validated: element.validated?  moment(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
                     expired: element.validated ?  moment(element.expired).format('YYYY-MM-DD HH:mm:ss') : '',
                     username:element.userID,
-                    type: typeTicket(element.exp, element.iat)
+                    type: element.duration
                 }
             })
             setData(tmp)

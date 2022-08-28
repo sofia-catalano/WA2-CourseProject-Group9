@@ -22,9 +22,11 @@ data class TicketPurchasedDTO(
     @JsonProperty("validated")
     var validated: Date?,
     @JsonProperty("userID")
-    var userId: String
+    var userId: String,
+    @JsonProperty("duration")
+    var duration: String
 )
 
 fun TicketPurchased.toDTO(): TicketPurchasedDTO {
-    return TicketPurchasedDTO(sub, iat, exp, zid, jws,validated, userId)
+    return TicketPurchasedDTO(sub, iat, exp, zid, jws,validated, userId, duration)
 }

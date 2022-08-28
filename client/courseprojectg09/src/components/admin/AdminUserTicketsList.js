@@ -39,7 +39,7 @@ function AdminTicketsList(props) {
                         acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
                         validated: element.validated?  moment(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
                         expired: element.validated ?  moment(element.expired).format('YYYY-MM-DD HH:mm:ss') : '',
-                        type: typeTicket(element.exp, element.iat)
+                        type: element.duration
                     }
                 })
                 setData(tmp)
