@@ -13,7 +13,6 @@ import AddForm from './AddToCatalogue/AddToCatalogueForm';
 import {useUser} from "../UserProvider";
 import moment from 'moment';
 import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
-import typeTicket from '../../utils/TicketType.js';
 
 function BuyTickets(props) {
     const [loading, setLoading] = useState(false);
@@ -25,22 +24,22 @@ function BuyTickets(props) {
     const {loggedIn, userRole, setUserRole, setLoggedIn} = useUser()
     const [data, setData] = React.useState([]);
 
-    const findType = (date1, date2) => {
-        let diff= moment(date1).diff(moment(date2), 'days')
-        if(diff<8){
-            return 'ticket'
-        }else
-            return 'travelcard' 
+    const findType = (duration) => {
+        /*switch (duration) {
+            case "60 min", "90 min", "120 min", "1 day", "2 day", "3 day", "1 week": return "ticket"
+            case "1 month", "1 year" : return "travelcard"
+            default : return  ""
+        }*/
     }
 
     catalogueAPI.getCatalogue().then(r => {
         console.log(r)
         const tmp = []
         r.forEach(element => {
-            if(findType(element.exp, element.iat) === 'ticket' ){
+            if(findType(element.duration) === 'ticket' ){
                 tmp.push({
                     id: element.ticketId,
-                    type: typeTicket(element.exp, element.iat),
+                    type: element.duration,
                     price: element.price,
                     zones: element.zones,
                     minAge: element.minAge,

@@ -185,6 +185,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                 exp = Timestamp.from(exp.toInstant()),
                 zid = actionTravelcard.zones,
                 jws = token,
+                duration = actionTravelcard.type,
                 typeId = actionTravelcard.typeId,
                 userId = userDetails.username,
                 ownerId = actionTravelcard.owner.fiscal_code

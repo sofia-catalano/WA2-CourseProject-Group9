@@ -4,7 +4,6 @@ import GenericTable from "../generic/Table/Table";
 import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 import travelerAPI from "../../api/TravelerAPI";
 import moment from "moment";
-import typeTicket from "../../utils/TicketType";
 
 function AdminTicketsList(props) {
     const [loading, setLoading] = useState(true);

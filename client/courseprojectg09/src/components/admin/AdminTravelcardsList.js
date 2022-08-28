@@ -4,7 +4,6 @@ import GenericTable from "../generic/Table/Table";
 import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 import travelerAPI from "../../api/TravelerAPI";
 import moment from "moment";
-import typeTicket from "../../utils/TicketType";
 
 function AdminTravelcardsList(props) {
     const [loading, setLoading] = useState(true);
@@ -17,7 +16,7 @@ function AdminTravelcardsList(props) {
             const tmp = r.map((element)=> {
                 return {
                     id:element.sub,
-                    type: typeTicket(element.exp, element.iat),
+                    type:  element.duration,
                     acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
                     expired: moment(element.expired).format('YYYY-MM-DD HH:mm:ss'),
                     status:  (moment(element.expired)).diff(moment(), 'days') > 0 ? 'VALID' : 'EXPIRED',
