@@ -41,14 +41,14 @@ function AllRoutes() {
         return loggedIn && userRole === 'ADMIN' ?
             component
             :
-            <Navigate to="/login" replace={true} />
+            <Navigate to="/user/login" replace={true} />
     }
 
     const getCustomerComponent=(component)=>{
         return loggedIn && userRole === 'CUSTOMER' ?
             component
             :
-            <Navigate to="/login" replace={true} />
+            <Navigate to="/user/login" replace={true} />
     }
 
     return (

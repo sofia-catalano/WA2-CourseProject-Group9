@@ -16,6 +16,7 @@ import it.polito.wa2.wa2lab4group09.travelerservice.repositories.TravelcardPurch
 import it.polito.wa2.wa2lab4group09.travelerservice.repositories.UserDetailsRepository
 import it.polito.wa2.wa2lab4group09.travelerservice.security.JwtUtils
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
@@ -191,6 +192,19 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
             throw IllegalArgumentException("You are not allowed to use this ticket in this zone!")
         } else {
             throw IllegalArgumentException("Ticket expired at ${ticketPurchased.exp}")
+        }
+    }
+
+    suspend fun getUserTicketsValidated(token: String): Flow<TicketPurchasedDTO> {
+        val userDetails = getUserDetails(token)
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return ticketPurchasedRepository
+                .findAllValidatedByUserDetails(userDetails.username)
+                .map {
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId,it.duration)
+                }
         }
     }
 

@@ -1,8 +1,13 @@
 import {Menu} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 function TicketsFilterMenu (props){
-    const {open, anchorEl, handleClose}=props
+    const {open, anchorEl, handleClose, typeSelected, handleTypeSelectedChange}=props
 
     return (
         <Menu
@@ -14,10 +19,30 @@ function TicketsFilterMenu (props){
             }}
             anchorEl={anchorEl}
         >
-            <MenuItem onClick={handleClose}>Purchased tickets(All) </MenuItem>
-            <MenuItem onClick={handleClose}>Valid tickets </MenuItem>
-            <MenuItem onClick={handleClose}>Validated tickets</MenuItem>
-            <MenuItem onClick={handleClose}>Expired Tickets</MenuItem>
+            <FormControl>
+                <MenuItem>
+                    <FormLabel id="demo-radio-buttons-group-label">Type tickets</FormLabel>
+                </MenuItem>
+                <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={typeSelected}
+                    name="radio-buttons-group"
+                    onChange={handleTypeSelectedChange}
+                >
+                    <MenuItem>
+                        <FormControlLabel value="all" control={<Radio />} label="Purchased tickets(All)" />
+                    </MenuItem>
+                    <MenuItem>
+                        <FormControlLabel value="valid" control={<Radio />} label="Valid tickets" />
+                    </MenuItem>
+                    <MenuItem>
+                         <FormControlLabel value="validated" control={<Radio />} label="Validated tickets" />
+                    </MenuItem>
+                    <MenuItem>
+                        <FormControlLabel value="expired" control={<Radio />} label="Expired tickets" />
+                    </MenuItem>
+                </RadioGroup>
+            </FormControl>
         </Menu>
     );
 }

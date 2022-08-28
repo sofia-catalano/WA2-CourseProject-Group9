@@ -56,6 +56,17 @@ class MyController(val userDetailsService: UserDetailsService) {
             ResponseEntity(error, HttpStatus.BAD_REQUEST)
         }
     }
+    @GetMapping("/traveler/my/tickets/validated")
+    suspend fun getUserTicketsValidated(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
+        val newToken = jwt.replace("Bearer", "")
+        return try {
+            val body = userDetailsService.getUserTicketsValidated(newToken)
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t: Throwable) {
+            val error = ErrorMessage(t.message)
+            ResponseEntity(error, HttpStatus.BAD_REQUEST)
+        }
+    }
 
     @PostMapping("/traveler/my/tickets")
     suspend fun buyTickets(@RequestHeader("Authorization") jwt:String, @RequestBody actionTicket: ActionTicket) : ResponseEntity<Any>{

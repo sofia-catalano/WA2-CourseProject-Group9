@@ -9,29 +9,56 @@ import typeTicket from "../../utils/TicketType";
 function AdminTicketsList(props) {
     const [loading, setLoading] = useState(true);
     const [data, setData]=useState([]);
+    const [typeTicketsSelected, setTypeTicketsSelected]=useState('all')
+    const [nameTable, setNameTable]=useState('Tickets')
 
-    const filterRows=()=>{
-        console.log(" ")
+    const handleTypeTicketsSelectedChange=(event)=>{
+        console.log("Event "+ event.target.value)
+        setTypeTicketsSelected(event.target.value)
+        if(event.target.value!= typeTicketsSelected){
+            if(event.target.value== 'all'){
+                console.log('all')
+                getAllTravelersTicketPurchased()
+            }
+            else if(event.target.value == 'validated'){
+                console.log('validated')
+                travelerAPI.getTravelersTicketsValidated()
+                    .then(r => {
+                        setTickets(r)
+                        setNameTable('Validated tickets')
+                    })
+                    .catch(err => console.log(err))
+
+            }
+        }
+    }
+
+    const setTickets= (result) => {
+        const tmp= result.map((element)=> {
+            return {
+                id:element.sub,
+                zones:element.zid,
+                acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
+                validated: element.validated?  moment(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
+                expired: element.validated ?  moment(element.expired).format('YYYY-MM-DD HH:mm:ss') : '',
+                username:element.userID,
+                type: element.duration
+            }
+        })
+        setData(tmp)
+        setLoading(false)
+    }
+    const getAllTravelersTicketPurchased = () => {
+        travelerAPI.getTravelersTicketsPurchased()
+            .then(r => {
+                setTickets(r)
+                setNameTable('All tickets')
+            })
+            .catch(err => console.log(err))
     }
 
     useEffect(()=>{
-        travelerAPI.getTravelersTicketsPurchased()
-        .then(r => {
-            const tmp= r.map((element)=> {
-                return {
-                    id:element.sub,
-                    zones:element.zid,
-                    acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
-                    validated: element.validated?  moment(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
-                    expired: element.validated ?  moment(element.expired).format('YYYY-MM-DD HH:mm:ss') : '',
-                    username:element.userID,
-                    type: element.duration
-                }
-            })
-            setData(tmp)
-            setLoading(false)
-        })
-        .catch(err => console.log(err))
+        getAllTravelersTicketPurchased()
     },[])
 
     return (
@@ -42,9 +69,10 @@ function AdminTicketsList(props) {
             <GenericTable
                 headCells={headCells}
                 rows={data}
-                nameTable={"Tickets"}
+                nameTable={nameTable}
                 FilterMenu={TicketsFilterMenu}
-                filterRows={filterRows}
+                typeSelected={typeTicketsSelected}
+                handleTypeSelectedChange={handleTypeTicketsSelectedChange}
             ></GenericTable>
         }
 

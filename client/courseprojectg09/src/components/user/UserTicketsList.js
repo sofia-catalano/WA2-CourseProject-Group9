@@ -14,20 +14,57 @@ import travelerAPI from "../../api/TravelerAPI";
 function UserTicketsList(props) {
     const [loading, setLoading] = useState(false);
     const [data, setData]=useState([])
-    const typeTicket = (date1, date2) =>{
-        let diff= moment(date1).diff(moment(date2), 'minutes')
-        if(diff<60) {
-            return diff+ ' minutes'
-        }
-        diff= moment(date1).diff(moment(date2), 'hours')
-        if(diff<24){
-            return diff + ' hours'
-        }
-        diff= moment(date1).diff(moment(date2), 'days')
-        if(diff<7){
-            return diff + ' days'
+    const [typeTicketsSelected, setTypeTicketsSelected]=useState('all')
+    const [nameTable, setNameTable]=useState('Tickets')
+
+    const handleTypeTicketsSelectedChange=(event)=>{
+        console.log("Event "+ event.target.value)
+        setTypeTicketsSelected(event.target.value)
+        if(event.target.value!= typeTicketsSelected){
+            if(event.target.value== 'all'){
+                console.log('all')
+                getAllTicketsPurchased()
+            }
+            else if(event.target.value == 'validated'){
+                console.log('validated')
+                travelerAPI.getMyTicketsValidated()
+                    .then(r => {
+                        setTickets(r)
+                        setNameTable('Validated tickets')
+                    })
+                    .catch(err => console.log(err))
+            }
         }
     }
+    const setTickets= (result) => {
+        const tmp= result.map((element)=> {
+            return {
+                id:element.sub,
+                zones:element.zid,
+                acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
+                validated: element.validated?  moment(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
+                expired: element.validated ?  moment(element.expired).format('YYYY-MM-DD HH:mm:ss') : '',
+                username:element.userID,
+                type: element.duration
+            }
+        })
+        setData(tmp)
+        setLoading(false)
+    }
+
+    const getAllTicketsPurchased = () => {
+        travelerAPI.getMyTickets()
+            .then(r => {
+                setTickets(r)
+                setNameTable('All tickets')
+            })
+            .catch(err => console.log(err))
+    }
+    useEffect(()=>{
+        getAllTicketsPurchased()
+    },[])
+
+
     useEffect(()=>{
         travelerAPI.getMyTickets()
             .then(r => {
@@ -57,6 +94,8 @@ function UserTicketsList(props) {
                 rows={data}
                 nameTable={"My Tickets"}
                 FilterMenu={TicketsFilterMenu}
+                typeSelected={typeTicketsSelected}
+                handleTypeSelectedChange={handleTypeTicketsSelectedChange}
             ></GenericTable>
         }
 
@@ -65,16 +104,7 @@ function UserTicketsList(props) {
 }
 
 
-function createData(id, type, zones, acquired, validated, expired) {
-    return {
-        id,
-        type,
-        zones,
-        acquired,
-        validated,
-        expired,
-    };
-}
+
 
 const headCells = [
     {
