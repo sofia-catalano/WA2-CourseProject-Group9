@@ -258,6 +258,9 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
     }
 
     suspend fun getTravelerTravelcardsExpiredPeriodOfTime(userID: String, startTime:String, endTime:String):Flow<TravelcardPurchasedDTO> {
+        if (convertDateToTimestamp(endTime) < convertDateToTimestamp(startTime) )
+            throw IllegalArgumentException("End date should be greater than start date!")
+
         if (convertDateToTimestamp(startTime) > Timestamp.from(Instant.now()) || convertDateToTimestamp(endTime) > Timestamp.from(Instant.now()))
             throw IllegalArgumentException("Selected period of time should be less than today!")
 
@@ -266,7 +269,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
             throw IllegalArgumentException("User doesn't exist!")
         else{
             return travelcardPurchasedRepository
-                .findByUserAndExpBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username)
+                .findExpiredByUserAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username, Timestamp.from(Instant.now()))
                 .map {
                     TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
                 }

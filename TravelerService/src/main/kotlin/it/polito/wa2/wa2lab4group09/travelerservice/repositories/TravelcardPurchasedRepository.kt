@@ -30,8 +30,8 @@ interface TravelcardPurchasedRepository: ReactiveMongoRepository<TravelcardPurch
     @Query("{'exp' : { \$lt: ?0 },'userId' : { \$eq: ?1}}")
     fun findByUserAndExp(end: Timestamp, userId : String): Flow<TravelcardPurchased>
 
-    @Query("{'exp' : { \$gte: ?0, \$lte: ?1 }, 'userId' : { \$eq: ?2}}")
-    fun findByUserAndExpBetween(start:Timestamp, end: Timestamp, userId : String): Flow<TravelcardPurchased>
+    @Query("{'iat' : { \$gte: ?0, \$lte: ?1 }, 'userId' : { \$eq: ?2}, 'exp' : { \$lt: ?3}}")
+    fun findExpiredByUserAndIatBetween(start:Timestamp, end: Timestamp, userId : String): Flow<TravelcardPurchased>
 
     @Query("{'exp' : { \$lt : ?0 }}")
     fun findExpired(end: Timestamp): Flow<TravelcardPurchased>
