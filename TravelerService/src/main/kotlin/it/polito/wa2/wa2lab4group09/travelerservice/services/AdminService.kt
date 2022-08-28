@@ -187,11 +187,36 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
     }
 
     suspend fun getTravelcardsExpiredPeriodOfTime(start: String, end:String): Flow<TravelcardPurchasedDTO> {
+        if (convertDateToTimestamp(end) < convertDateToTimestamp(start) )
+            throw IllegalArgumentException("End date should be greater than start date!")
+
         if (convertDateToTimestamp(start) > Timestamp.from(Instant.now()) || convertDateToTimestamp(end) > Timestamp.from(Instant.now()))
             throw IllegalArgumentException("Selected period of time should be less than today!")
 
         return travelcardPurchasedRepository
-            .findByExpBetween(convertDateToTimestamp(start), convertDateToTimestamp(end))
+            .findExpiredByIatBetween(convertDateToTimestamp(start), convertDateToTimestamp(end), Timestamp.from(Instant.now()))
+            .map {
+                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+            }
+    }
+
+    suspend fun getTravelcardsValid():Flow<TravelcardPurchasedDTO> {
+        return travelcardPurchasedRepository
+            .findValid(Timestamp.from(Instant.now()))
+            .map {
+                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+            }
+    }
+
+    suspend fun getTravelcardsValidPeriodOfTime(start: String, end:String): Flow<TravelcardPurchasedDTO> {
+        if (convertDateToTimestamp(end) < convertDateToTimestamp(start) )
+            throw IllegalArgumentException("End date should be greater than start date!")
+
+        if (convertDateToTimestamp(end) < Timestamp.from(Instant.now()))
+            throw IllegalArgumentException("Selected period of time should be greater than today!")
+
+        return travelcardPurchasedRepository
+            .findValidByIatBetween(convertDateToTimestamp(start), convertDateToTimestamp(end), Timestamp.from(Instant.now()))
             .map {
                 TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
             }

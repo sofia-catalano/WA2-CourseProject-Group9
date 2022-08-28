@@ -47,8 +47,9 @@ function TicketsFilterMenu (props){
     );
 }
 
+
 function TravelcardsFilterMenu (props){
-    const {open, anchorEl, handleClose}=props
+    const {open, anchorEl, handleClose, typeSelected, handleTypeSelectedChange}=props
 
     return (
         <Menu
@@ -60,9 +61,27 @@ function TravelcardsFilterMenu (props){
             }}
             anchorEl={anchorEl}
         >
-            <MenuItem onClick={handleClose}>Purchased travelcards(All) </MenuItem>
-            <MenuItem onClick={handleClose}>Valid travelcards </MenuItem>
-            <MenuItem onClick={handleClose}>Expired travelcards</MenuItem>
+            <FormControl>
+                <MenuItem>
+                    <FormLabel id="demo-radio-buttons-group-label">Type travelcards</FormLabel>
+                </MenuItem>
+                <RadioGroup
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    value={typeSelected}
+                    name="radio-buttons-group"
+                    onChange={handleTypeSelectedChange}
+                >
+                    <MenuItem>
+                        <FormControlLabel value="all" control={<Radio />} label="Purchased travelcards(All)" />
+                    </MenuItem>
+                    <MenuItem>
+                        <FormControlLabel value="valid" control={<Radio />} label="Valid travelcards" />
+                    </MenuItem>
+                    <MenuItem>
+                        <FormControlLabel value="expired" control={<Radio />} label="Expired travelcards" />
+                    </MenuItem>
+                </RadioGroup>
+            </FormControl>
         </Menu>
     );
 }

@@ -296,6 +296,52 @@ function getTravelerTicketsValid(userID){
     });
 
 }
+
+function getTravelersTravelcardsExpired(){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/admin/travelers/travelcards/expired', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+
+
+function getTravelersTravelcardsValid(){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/admin/travelers/travelcards/valid', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+
 const travelerAPI = {
         getMyProfile,
          getTravelers,
@@ -307,9 +353,11 @@ const travelerAPI = {
          getTravelerTicketPurchased,
          getTravelerTicketsValidated,
         getTravelerTicketsValid,
-         updateMyProfile,
+        updateMyProfile,
         getMyTickets,
         getMyTicketsValidated,
+        getTravelersTravelcardsExpired,
+        getTravelersTravelcardsValid,
         getMyTicketsValid};
 
 export default travelerAPI;
