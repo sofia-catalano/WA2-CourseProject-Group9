@@ -135,6 +135,52 @@ class MyController(val userDetailsService: UserDetailsService) {
         }
     }
 
+    @GetMapping("/traveler/my/travelcards/valid")
+    suspend fun getUserTravelcardsValid(
+        @RequestParam("start", required = false) startTime: String,
+        @RequestParam("end", required = false) endTime: String,
+        @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
+        val newToken = jwt.replace("Bearer", "")
+        return try {
+            val body : Flow<TicketPurchasedDTO>
+            if(startTime==null && endTime==null){
+                body =userDetailsService.getUserTravelcardsValid(newToken)
+            }
+            else {
+                body =userDetailsService.getUserTravelcardsValidPeriodOfTime(newToken, startTime,endTime).map { t ->
+                    t.toDTO()
+                }
+            }
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t: Throwable) {
+            val error = ErrorMessage(t.message)
+            ResponseEntity(error, HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @GetMapping("/traveler/my/travelcards/expired")
+    suspend fun getUserTravelcardsValid(
+        @RequestParam("start", required = false) startTime: String,
+        @RequestParam("end", required = false) endTime: String,
+        @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
+        val newToken = jwt.replace("Bearer", "")
+        return try {
+            val body : Flow<TicketPurchasedDTO>
+            if(startTime==null && endTime==null){
+                body =userDetailsService.getUserTravelcardsExpired(newToken)
+            }
+            else {
+                body =userDetailsService.getUserTravelcardsExpiredPeriodOfTime(newToken, startTime,endTime).map { t ->
+                    t.toDTO()
+                }
+            }
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t: Throwable) {
+            val error = ErrorMessage(t.message)
+            ResponseEntity(error, HttpStatus.BAD_REQUEST)
+        }
+    }
+
     @PostMapping("/traveler/my/travelcards")
     suspend fun buyTravelcard(@RequestHeader("Authorization") jwt:String, @RequestBody actionTravelcard: ActionTravelcard) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")

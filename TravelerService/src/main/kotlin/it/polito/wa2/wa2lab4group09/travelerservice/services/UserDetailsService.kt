@@ -145,6 +145,43 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
         return travelcardPurchasedRepository.findAllByUserIdOrderByIat(userDetails.username).asFlow()
     }
 
+    suspend fun getUserTravelcardsValid(token: String): Flow<TravelcardPurchasedDTO> {
+        val userDetails = getUserDetails(token)
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return travelcardPurchasedRepository
+                .findAllValidByUserDetails(userDetails.username, Timestamp.from(Instant.now()))
+                .map {
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                }
+        }
+    }
+    suspend fun getUserTravelcardsValidPeriodOfTime(jwt:String, startTime:String, endTime:String): Flow<TravelcardPurchased> {
+        val userDetails = getUserDetails(jwt)
+        return travelcardPurchasedRepository
+            .findAllValidByUserDetailsAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username, Timestamp.from(Instant.now()) )
+    }
+
+
+    suspend fun getUserTravelcardsExpired(token: String): Flow<TravelcardPurchasedDTO> {
+        val userDetails = getUserDetails(token)
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return travelcardPurchasedRepository
+                .findAllExpiredByUserDetails(userDetails.username, Timestamp.from(Instant.now()))
+                .map {
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                }
+        }
+    }
+    suspend fun getUserTravelcardsExpiredPeriodOfTime(jwt:String, startTime:String, endTime:String): Flow<TravelcardPurchased> {
+        val userDetails = getUserDetails(jwt)
+        return travelcardPurchasedRepository
+            .findAllExpiredByUserDetailsAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username, Timestamp.from(Instant.now()) )
+    }
+
     suspend fun buyTravelcards(jwt: String, actionTravelcard: ActionTravelcard): TravelcardPurchasedDTO {
         if (actionTravelcard.cmd == "buy_travelcard"){
             val userDetails = getUserDetails(jwt)
