@@ -27,6 +27,7 @@ function UserTicketsList(props) {
             }
             else if(event.target.value == 'validated'){
                 console.log('validated')
+                setLoading(true)
                 travelerAPI.getMyTicketsValidated()
                     .then(r => {
                         setTickets(r)
@@ -36,6 +37,7 @@ function UserTicketsList(props) {
             }
             else if(event.target.value == 'valid'){
                 console.log('valid')
+                setLoading(true)
                 travelerAPI.getMyTicketsValid()
                     .then(r => {
                         setTickets(r)
@@ -62,6 +64,7 @@ function UserTicketsList(props) {
     }
 
     const getAllTicketsPurchased = () => {
+        setLoading(true)
         travelerAPI.getMyTickets()
             .then(r => {
                 setTickets(r)

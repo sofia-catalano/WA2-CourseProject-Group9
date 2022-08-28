@@ -22,6 +22,7 @@ function AdminTicketsList(props) {
             }
             else if(event.target.value == 'validated'){
                 console.log('validated')
+                setLoading(true)
                 travelerAPI.getTravelersTicketsValidated()
                     .then(r => {
                         setTickets(r)
@@ -31,6 +32,7 @@ function AdminTicketsList(props) {
             }
             else if(event.target.value == 'valid'){
                 console.log('validated')
+                setLoading(true)
                 travelerAPI.getTravelersTicketsValid()
                     .then(r => {
                         setTickets(r)
@@ -58,6 +60,7 @@ function AdminTicketsList(props) {
         setLoading(false)
     }
     const getAllTravelersTicketPurchased = () => {
+        setLoading(true)
         travelerAPI.getTravelersTicketsPurchased()
             .then(r => {
                 setTickets(r)
