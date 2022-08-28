@@ -64,6 +64,24 @@ class AdminController(val adminService: AdminService) {
             ResponseEntity("${t.message}", HttpStatus.BAD_REQUEST)
         }
     }
+    @GetMapping("/traveler/admin/travelers/tickets/valid")
+    suspend fun getTravelersTicketsValid(
+        @RequestParam("start", required = false) startTime: String,
+        @RequestParam("end", required = false) endTime: String,
+        @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
+        return try {
+            val body : Flow<TicketPurchasedDTO>
+            if(startTime==null && endTime==null){
+                body =adminService.getTicketsValid()
+            }
+            else {
+                body = adminService.getTicketsValidPeriodOfTime(startTime,endTime)
+            }
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t : Throwable){
+            ResponseEntity("${t.message}", HttpStatus.BAD_REQUEST)
+        }
+    }
 
 
 
@@ -100,7 +118,7 @@ class AdminController(val adminService: AdminService) {
             ResponseEntity("${t.message}", HttpStatus.BAD_REQUEST)
         }
     }
-    
+
 
     @GetMapping("/traveler/admin/traveler/{userID}/tickets/validated")
     suspend fun getTravelersTicketsValidatedTime(
@@ -121,7 +139,25 @@ class AdminController(val adminService: AdminService) {
             ResponseEntity("${t.message}", HttpStatus.BAD_REQUEST)
         }
     }
-
+    @GetMapping("/traveler/admin/traveler/{userID}/tickets/valid")
+    suspend fun getTravelersTicketsValidTime(
+        @PathVariable userID:String,
+        @RequestParam("start", required = false) startTime: String,
+        @RequestParam("end", required = false) endTime: String,
+        @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
+        return try {
+            val body : Flow<TicketPurchasedDTO>
+            if(startTime==null && endTime==null){
+                body = adminService.getTravelerTicketsValid(userID)
+            }
+            else {
+                body = adminService.getTravelerTicketsValidPeriodOfTime(userID, startTime,endTime)
+            }
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t : Throwable){
+            ResponseEntity("${t.message}", HttpStatus.BAD_REQUEST)
+        }
+    }
     @GetMapping("/traveler/admin/travelers/travelcards/purchased")
     suspend fun getTravelersTravelcardsPurchasedTime(
         @RequestParam("start", required = false) startTime: String,

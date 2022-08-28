@@ -34,6 +34,15 @@ function UserTicketsList(props) {
                     })
                     .catch(err => console.log(err))
             }
+            else if(event.target.value == 'valid'){
+                console.log('valid')
+                travelerAPI.getMyTicketsValid()
+                    .then(r => {
+                        setTickets(r)
+                        setNameTable('Valid tickets')
+                    })
+                    .catch(err => console.log(err))
+            }
         }
     }
     const setTickets= (result) => {
@@ -92,7 +101,7 @@ function UserTicketsList(props) {
             <GenericTable
                 headCells={headCells}
                 rows={data}
-                nameTable={"My Tickets"}
+                nameTable={nameTable}
                 FilterMenu={TicketsFilterMenu}
                 typeSelected={typeTicketsSelected}
                 handleTypeSelectedChange={handleTypeTicketsSelectedChange}

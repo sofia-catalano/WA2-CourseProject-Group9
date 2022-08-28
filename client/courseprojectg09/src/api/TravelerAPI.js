@@ -85,6 +85,26 @@ function getMyTicketsValidated() {
         }).catch((err) => reject(err));
     });
 }
+function getMyTicketsValid() {
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/my/tickets/valid', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
 function getTravelers() {
     return new Promise((resolve, reject) => {
         fetch(BASEURL+'/admin/travelers', {
@@ -171,6 +191,27 @@ function getTravelersTicketsValidated(){
     });
 
 }
+function getTravelersTicketsValid(){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/admin/travelers/tickets/valid', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
 function getTravelerProfile(userID){
     return new Promise((resolve, reject) => {
         fetch(BASEURL+`/admin/traveler/${userID}/profile`, {
@@ -234,17 +275,41 @@ function getTravelerTicketsValidated(userID){
     });
 
 }
+function getTravelerTicketsValid(userID){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+`/admin/traveler/${userID}/tickets/valid`, {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
 const travelerAPI = {
         getMyProfile,
          getTravelers,
          getTravelersTicketsPurchased,
          getTravelersTicketsValidated,
+         getTravelersTicketsValid,
          getTravelersTravelcardsPurchased,
          getTravelerProfile,
          getTravelerTicketPurchased,
          getTravelerTicketsValidated,
+        getTravelerTicketsValid,
          updateMyProfile,
         getMyTickets,
-        getMyTicketsValidated};
+        getMyTicketsValidated,
+        getMyTicketsValid};
 
 export default travelerAPI;

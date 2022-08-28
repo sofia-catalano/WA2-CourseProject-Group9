@@ -58,7 +58,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
     }
     suspend fun getTicketsValidated():Flow<TicketPurchasedDTO> {
         return ticketPurchasedRepository
-            .findByValidate()
+            .findByValidated()
             .map {
                 TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId, it.duration)
             }
@@ -70,7 +70,20 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
                 TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId,it.duration)
             }
     }
-
+    suspend fun getTicketsValid():Flow<TicketPurchasedDTO> {
+        return ticketPurchasedRepository
+            .findByValid()
+            .map {
+                TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId, it.duration)
+            }
+    }
+    suspend fun getTicketsValidPeriodOfTime(start: String, end:String): Flow<TicketPurchasedDTO> {
+        return ticketPurchasedRepository.
+        findByValidAndIatBetween(convertDateToTimestamp(start),convertDateToTimestamp(end))
+            .map {
+                TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId,it.duration)
+            }
+    }
     suspend fun getTravelerProfile(jwt:String, userID:String): UserDetails {
         return userDetailsRepository.findById(userID).awaitFirstOrNull() ?:throw IllegalArgumentException("User doesn't exist!")
     }
@@ -117,7 +130,32 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
             throw IllegalArgumentException("User doesn't exist!")
         else{
             return ticketPurchasedRepository
-                .findAllValidatedByUserDetailsAndPeriodOfTime(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetail.username)
+                .findValidatedByUserDetailsAndPeriodOfTime(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetail.username)
+                .map {
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId, it.duration)
+                }
+        }
+    }
+    suspend fun getTravelerTicketsValid(userID:String): Flow<TicketPurchasedDTO>  {
+        val userDetail = userDetailsRepository.findById(userID).awaitFirst()
+        if (userDetail == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return ticketPurchasedRepository
+                .findAllValidByUserDetails(userDetail.username)
+                .map {
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId,it.duration)
+                }
+        }
+    }
+
+    suspend fun getTravelerTicketsValidPeriodOfTime(userID: String, startTime:String, endTime:String): Flow<TicketPurchasedDTO>  {
+        val userDetail = userDetailsRepository.findById(userID).awaitFirst()
+        if (userDetail == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return ticketPurchasedRepository
+                .findAllValidByUserDetailsAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetail.username)
                 .map {
                     TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId, it.duration)
                 }

@@ -30,6 +30,7 @@ import org.springframework.messaging.Message
 import org.springframework.messaging.support.MessageBuilder
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -50,6 +51,12 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
 
     @Value("\${application.jwt.jwtSecretTicket}")
     lateinit var keyTicket : String
+
+    fun convertDateToTimestamp(date:String):Timestamp{
+        val formatter = SimpleDateFormat("dd/MM/yyyy")
+        val date2 = formatter.parse(date)
+        return Timestamp.from(date2.toInstant())
+    }
 
     suspend fun getUserDetails(jwt : String): UserDetails {
         val username = JwtUtils.getDetailsFromJwtToken(jwt, key).username
@@ -76,6 +83,11 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
     suspend fun getUserTickets(jwt:String): Flow<TicketPurchased> {
         val userDetails = getUserDetails(jwt)
         return ticketPurchasedRepository.findAllByUserIdOrderByIat(userDetails.username).asFlow()
+    }
+    suspend fun getUserTicketsPeriodOfTime(jwt:String, startTime:String, endTime:String): Flow<TicketPurchased> {
+        val userDetails = getUserDetails(jwt)
+        return ticketPurchasedRepository
+            .findByUserDetailsAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username )
     }
 
     suspend fun buyTickets(jwt: String, actionTicket: ActionTicket): List<TicketPurchasedDTO> {
@@ -195,6 +207,28 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
         }
     }
 
+    suspend fun getUserTicketsValid(token: String): Flow<TicketPurchasedDTO> {
+        val userDetails = getUserDetails(token)
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return ticketPurchasedRepository
+                .findAllValidByUserDetails(userDetails.username)
+                .map {
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId,it.duration)
+                }
+        }
+    }
+    suspend fun getUserTicketsValidPeriodOfTime(jwt:String, startTime:String, endTime:String): Flow<TicketPurchased> {
+        val userDetails = getUserDetails(jwt)
+        return ticketPurchasedRepository
+            .findAllValidByUserDetailsAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username )
+    }
+    suspend fun getUserTicketsValidatedPeriodOfTime(jwt:String, startTime:String, endTime:String): Flow<TicketPurchased> {
+        val userDetails = getUserDetails(jwt)
+        return ticketPurchasedRepository
+            .findValidatedByUserDetailsAndPeriodOfTime(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username )
+    }
     suspend fun getUserTicketsValidated(token: String): Flow<TicketPurchasedDTO> {
         val userDetails = getUserDetails(token)
         if (userDetails == null)

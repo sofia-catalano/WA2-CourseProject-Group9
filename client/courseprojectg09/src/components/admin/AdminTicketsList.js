@@ -28,6 +28,15 @@ function AdminTicketsList(props) {
                         setNameTable('Validated tickets')
                     })
                     .catch(err => console.log(err))
+            }
+            else if(event.target.value == 'valid'){
+                console.log('validated')
+                travelerAPI.getTravelersTicketsValid()
+                    .then(r => {
+                        setTickets(r)
+                        setNameTable('Valid tickets')
+                    })
+                    .catch(err => console.log(err))
 
             }
         }

@@ -33,6 +33,15 @@ function AdminTicketsList(props) {
                     })
                     .catch(err => console.log(err))
             }
+            else if(event.target.value == 'valid'){
+                console.log('valid')
+                travelerAPI.getTravelerTicketsValid(user)
+                    .then(r => {
+                        setTickets(r)
+                        setNameTable('Valid tickets')
+                    })
+                    .catch(err => console.log(err))
+            }
         }
     }
 
