@@ -16,7 +16,7 @@ import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
 
 function BuyTravelcard(props) {
     const {loggedIn, userRole, setUserRole, setLoggedIn} = useUser()
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [selectedValue, setSelectedValue] = React.useState('');
     const [buyTravelcardModal, setBuyTravelcardModal] = React.useState(false);
     const [addToCatalogueModal, setAddToCatalogueModal] = React.useState(false);
@@ -30,35 +30,36 @@ function BuyTravelcard(props) {
     const [data, setData] = React.useState([]);
 
     const findType = (duration) => {
-        /*switch (duration) {
+        switch (duration) {
             case "60 min", "90 min", "120 min", "1 day", "2 day", "3 day", "1 week": return "ticket"
             case "1 month", "1 year" : return "travelcard"
             default : return  ""
-        }*/
-        return ""
+        }
     }
 
-    catalogueAPI.getCatalogue().then(r => {
-        console.log(r)
-        const tmp = []
-        r.forEach(element => {
-            if(findType(element.duration) === 'travelcard' ){
-                tmp.push({
-                    id: element.ticketId,
-                    type: element.duration,
-                    price: element.price,
-                    zones: element.zones,
-                    minAge: element.minAge,
-                    maxAge: element.maxAge
-                })
-            }
-        })
-
-        setData(tmp);
-        setSelectedValue(tmp[0].id)
-    });
-
-
+    useEffect(() => {
+        catalogueAPI.getCatalogue().then(r => {
+            console.log(r)
+            const tmp = []
+            r.forEach(element => {
+                if(findType(element.duration) === 'travelcard' ){
+                    tmp.push({
+                        id: element.ticketId,
+                        type: element.duration,
+                        price: element.price,
+                        zones: element.zones,
+                        minAge: element.minAge,
+                        maxAge: element.maxAge
+                    })
+                }
+            })
+    
+            setData(tmp);
+            setSelectedValue(tmp[0].id)
+            setLoading(false)
+        });
+    }, [])
+    
     const handleChange = (prop) => (event) => {
         setHolder({ ...holder, [prop]: event.target.value });
     };

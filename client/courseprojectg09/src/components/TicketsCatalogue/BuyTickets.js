@@ -15,7 +15,7 @@ import moment from 'moment';
 import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
 
 function BuyTickets(props) {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [selectedValue, setSelectedValue] = React.useState('');
     const [numberOfTickets, setNumberOfTickets]=useState(1)
     const [buyTicketsModal, setBuyTicketsModal] = React.useState(false);
@@ -25,33 +25,37 @@ function BuyTickets(props) {
     const [data, setData] = React.useState([]);
 
     const findType = (duration) => {
-        /*switch (duration) {
+        switch (duration) {
             case "60 min", "90 min", "120 min", "1 day", "2 day", "3 day", "1 week": return "ticket"
             case "1 month", "1 year" : return "travelcard"
             default : return  ""
-        }*/
+        }
     }
 
-    catalogueAPI.getCatalogue().then(r => {
-        console.log(r)
-        const tmp = []
-        r.forEach(element => {
-            if(findType(element.duration) === 'ticket' ){
-                tmp.push({
-                    id: element.ticketId,
-                    type: element.duration,
-                    price: element.price,
-                    zones: element.zones,
-                    minAge: element.minAge,
-                    maxAge: element.maxAge
-                })
-            }
-        })
+    useEffect(() => {
+        catalogueAPI.getCatalogue().then(r => {
+            console.log(r)
+            const tmp = []
+            r.forEach(element => {
+                if(findType(element.duration) === 'ticket' ){
+                    tmp.push({
+                        id: element.ticketId,
+                        type: element.duration,
+                        price: element.price,
+                        zones: element.zones,
+                        minAge: element.minAge,
+                        maxAge: element.maxAge
+                    })
+                }
+            })
+    
+            setData(tmp);
+            setSelectedValue(tmp[0].id)
+            setTotal(tmp[0].price*numberOfTickets)
+            setLoading(false)
+        });
 
-        setData(tmp);
-        setSelectedValue(tmp[0].id)
-        setTotal(tmp[0].price*numberOfTickets)
-    });
+    })
 
 
     const handleSubmit = (event) => {
