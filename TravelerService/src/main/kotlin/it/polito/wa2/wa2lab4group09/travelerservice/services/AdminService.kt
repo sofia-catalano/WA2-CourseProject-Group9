@@ -84,6 +84,20 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
                 TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId,it.duration)
             }
     }
+    fun getTicketsExpired(): Flow<TicketPurchasedDTO> {
+        return ticketPurchasedRepository
+            .findByExpired(Timestamp.from(Instant.now()))
+            .map {
+                TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId, it.duration)
+            }
+    }
+    fun getTicketsExpiredPeriodOfTime(startTime: String, endTime: String): Flow<TicketPurchasedDTO> {
+        return ticketPurchasedRepository
+            .findByExpiredAndExpiredBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime),Timestamp.from(Instant.now()))
+            .map {
+                TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId, it.duration)
+            }
+    }
     suspend fun getTravelerProfile(jwt:String, userID:String): UserDetails {
         return userDetailsRepository.findById(userID).awaitFirstOrNull() ?:throw IllegalArgumentException("User doesn't exist!")
     }
@@ -162,6 +176,33 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
         }
     }
 
+    suspend fun getTravelerTicketsExpired(userID: String): Flow<TicketPurchasedDTO> {
+        val userDetails = userDetailsRepository.findById(userID).awaitFirstOrNull()
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return ticketPurchasedRepository
+                .findAllExpiredByUserDetails(userDetails.username, Timestamp.from(Instant.now()))
+                .map {
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId, it.duration)
+                }
+        }
+
+    }
+
+    suspend fun getTravelerTicketsExpiredPeriodOfTime(userID: String, startTime: String, endTime: String): Flow<TicketPurchasedDTO> {
+        val userDetails = userDetailsRepository.findById(userID).awaitFirstOrNull()
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return ticketPurchasedRepository
+                .findAllExpiredByUserDetailsAndExpiredBetween(userDetails.username, convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), Timestamp.from(Instant.now()))
+                .map {
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId, it.duration)
+                }
+        }
+
+    }
     suspend fun getTravelcardsPurchased(): Flux<TravelcardPurchasedDTO> {
         return travelcardPurchasedRepository
             .findAll()
@@ -308,6 +349,8 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
                 }
         }
     }
+
+
 }
 
 

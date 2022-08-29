@@ -280,6 +280,31 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
         }
     }
 
+    suspend fun getUserTicketsExpired(token: String): Flow<TicketPurchasedDTO> {
+        val userDetails = getUserDetails(token)
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return ticketPurchasedRepository
+                .findAllExpiredByUserDetails(userDetails.username,Timestamp.from(Instant.now()) )
+                .map {
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId,it.duration)
+                }
+        }
+    }
+    suspend fun getUserTicketsExpiredPeriodOfTime(token: String, startTime: String, endTime: String): Flow<TicketPurchasedDTO> {
+        val userDetails = getUserDetails(token)
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return ticketPurchasedRepository
+                .findAllExpiredByUserDetailsAndExpiredBetween(userDetails.username,convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), Timestamp.from(Instant.now()) )
+                .map {
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId,it.duration)
+                }
+        }
+    }
+
     //TODO: ADD TICKET VALIDATION per le travelcards SERVICE (update del campo validate)
 
 }
