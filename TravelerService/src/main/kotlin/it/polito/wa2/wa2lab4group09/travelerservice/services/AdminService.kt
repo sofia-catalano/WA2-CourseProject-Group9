@@ -261,6 +261,25 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
         if (convertDateToTimestamp(endTime) < convertDateToTimestamp(startTime) )
             throw IllegalArgumentException("End date should be greater than start date!")
 
+        if (convertDateToTimestamp(end) < Timestamp.from(Instant.now()))
+            throw IllegalArgumentException("Selected period of time should be greater than today!")
+
+        val userDetails = userDetailsRepository.findById(userID).awaitFirstOrNull()
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return travelcardPurchasedRepository
+                .findExpiredByUserAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username, Timestamp.from(Instant.now()))
+                .map {
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                }
+        }
+    }
+
+    suspend fun getTravelerTravelcardsValidPeriodOfTime(userID: String, startTime:String, endTime:String):Flow<TravelcardPurchasedDTO> {
+        if (convertDateToTimestamp(endTime) < convertDateToTimestamp(startTime) )
+            throw IllegalArgumentException("End date should be greater than start date!")
+
         if (convertDateToTimestamp(startTime) > Timestamp.from(Instant.now()) || convertDateToTimestamp(endTime) > Timestamp.from(Instant.now()))
             throw IllegalArgumentException("Selected period of time should be less than today!")
 
@@ -269,7 +288,21 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
             throw IllegalArgumentException("User doesn't exist!")
         else{
             return travelcardPurchasedRepository
-                .findExpiredByUserAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username, Timestamp.from(Instant.now()))
+                .findAllValidByUserDetailsAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username, Timestamp.from(Instant.now()))
+                .map {
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                }
+        }
+    }
+
+
+    suspend fun getTravelerTravelcardsValid(userID: String):Flow<TravelcardPurchasedDTO> {
+        val userDetails = userDetailsRepository.findById(userID).awaitFirstOrNull()
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return travelcardPurchasedRepository
+                .findAllValidByUserDetails(userDetails.username, Timestamp.from(Instant.now()))
                 .map {
                     TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
                 }

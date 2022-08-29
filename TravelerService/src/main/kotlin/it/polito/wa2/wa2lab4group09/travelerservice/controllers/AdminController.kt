@@ -177,29 +177,6 @@ class AdminController(val adminService: AdminService) {
         }
     }
 
-
-    @GetMapping("/traveler/admin/traveler/{userID}/travelcards/purchased")
-    suspend fun getTravelerTravelcardsPurchasedTime(
-        @PathVariable userID:String,
-        @RequestParam("start", required=false) startTime: String,
-        @RequestParam("end", required=false) endTime: String,
-        @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
-        return try {
-            val body : Flow<TravelcardPurchasedDTO>
-            if(startTime==null && endTime==null){
-                body = adminService.getTravelerTravelcards(userID).map {
-                        t->t.toDTO()
-                }
-            }
-            else {
-                body = adminService.getTravelerTravelcardsPurchasedPeriodOfTime(userID, startTime, endTime)
-            }
-            ResponseEntity(body, HttpStatus.OK)
-        } catch (t : Throwable){
-            ResponseEntity("${t.message}", HttpStatus.BAD_REQUEST)
-        }
-    }
-
     @GetMapping("/traveler/admin/travelers/travelcards/expired")
     suspend fun getTravelersTravelcardsExpiredTime(
         @RequestParam("start", required = false) startTime: String,
@@ -239,6 +216,28 @@ class AdminController(val adminService: AdminService) {
     }
 
 
+    @GetMapping("/traveler/admin/traveler/{userID}/travelcards/purchased")
+    suspend fun getTravelerTravelcardsPurchasedTime(
+        @PathVariable userID:String,
+        @RequestParam("start", required=false) startTime: String,
+        @RequestParam("end", required=false) endTime: String,
+        @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
+        return try {
+            val body : Flow<TravelcardPurchasedDTO>
+            if(startTime==null && endTime==null){
+                body = adminService.getTravelerTravelcards(userID).map {
+                        t->t.toDTO()
+                }
+            }
+            else {
+                body = adminService.getTravelerTravelcardsPurchasedPeriodOfTime(userID, startTime, endTime)
+            }
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t : Throwable){
+            ResponseEntity("${t.message}", HttpStatus.BAD_REQUEST)
+        }
+    }
+
     @GetMapping("/traveler/admin/traveler/{userID}/travelcards/expired")
     suspend fun getTravelerTravelcardsExpiredTime(
         @PathVariable userID:String,
@@ -252,6 +251,26 @@ class AdminController(val adminService: AdminService) {
             }
             else {
                 body = adminService.getTravelerTravelcardsExpiredPeriodOfTime(userID, startTime, endTime)
+            }
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t : Throwable){
+            ResponseEntity("${t.message}", HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @GetMapping("/traveler/admin/traveler/{userID}/travelcards/valid")
+    suspend fun getTravelersTravelcardsValidTime(
+        @PathVariable userID:String,
+        @RequestParam("start", required = false) startTime: String,
+        @RequestParam("end", required = false) endTime: String,
+        @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
+        return try {
+            val body : Flow<TravelcardPurchasedDTO>
+            if(startTime==null && endTime==null){
+                body = adminService.getTravelerTravelcardsValid(userID)
+            }
+            else {
+                body = adminService.getTravelerTravelcardsValidPeriodOfTime(userID, startTime, endTime)
             }
             ResponseEntity(body, HttpStatus.OK)
         } catch (t : Throwable){
