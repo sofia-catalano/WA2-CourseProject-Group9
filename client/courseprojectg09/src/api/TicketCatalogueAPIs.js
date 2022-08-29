@@ -69,6 +69,30 @@ function getUserOrders(userId) {
     });
 }
 
+//ista di tutti gli ordini effettuati da un utente
+function getTravelerOrders() {
+    return new Promise((resolve, reject) => {
+        fetch(`${BASEURL}/orders`, {
+            method: 'GET',
+            headers: {
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => {
+            reject(err)
+        });
+    });
+}
+
 function addNewTicketToCatalogue(ticketCatalogue) {
     return new Promise((resolve, reject) => {
         fetch(BASEURL + '/admin/tickets', {
@@ -126,6 +150,6 @@ function buyTickets(quantity, ticketId, paymentInfo) {
     });
 }
 
-const catalogueAPI = {getCatalogue, getAllOrders, getUserOrders, addNewTicketToCatalogue, buyTickets};
+const catalogueAPI = {getCatalogue, getAllOrders, getUserOrders, getTravelerOrders, addNewTicketToCatalogue, buyTickets};
 
 export default catalogueAPI;

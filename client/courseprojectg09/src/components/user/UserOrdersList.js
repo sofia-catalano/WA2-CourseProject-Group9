@@ -6,6 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import catalogueAPI from "../../api/TicketCatalogueAPIs";
 
 const style = {
     position: 'absolute',
@@ -20,13 +21,44 @@ const style = {
 };
 
 function UserOrdersList(props) {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [openTicketsModal, setOpenTicketsModal] = useState(false);
     const [openTravelerCardsModal, setOpenTravelerCardsModal] = useState(false);
+    const [ticketOrders, setTIcketOrders] = useState([])
+    const [travelcardOrders, setTravelcardOrders] = useState([])
     const handleOpenTicketsDetailsModal = () => setOpenTicketsModal(true);
     const handleCloseTicketsDetailsModal = () => setOpenTicketsModal(false);
     const handleOpenTravelerCardsDetailsModal = () => setOpenTravelerCardsModal(true);
     const handleCloseTravelerCardsDetailsModal = () => setOpenTravelerCardsModal(false);
+
+    React.useEffect(() => {
+        catalogueAPI.getTravelerOrders().then(r => {
+            console.log(r)
+            let tmp1, tmp2 = []
+            r.forEach(element => {
+                if(element.owner === null ){
+                    tmp1.push({
+                        id: element.orderId,
+                        status: element.status,
+                        type_of_purchase: element.duration,
+                        quantity: element.quantity,
+                    })
+                }else{
+                    tmp2.push({
+                        id: element.orderId,
+                        status: element.status,
+                        type_of_purchase: element.duration,
+                        owner: `${element.owner.name} ${element.owner.surname}`
+                    })
+                }
+            })
+    
+            setTIcketOrders(tmp1);
+            setTravelcardOrders(tmp2);
+            setLoading(false)
+        });
+    })
+
     return (
         <>{loading
             ?
@@ -36,9 +68,8 @@ function UserOrdersList(props) {
                 <Grid item xs={12}>
                     <GenericTable
                         headCells={headCellsTickets}
-                        rows={rowsTickets}
+                        rows={ticketOrders}
                         nameTable={"My Orders (Tickets)"}
-                        FilterMenu={FilterMenu}
                         onClickElement={handleOpenTicketsDetailsModal}
                     />
                     <Modal
@@ -61,9 +92,8 @@ function UserOrdersList(props) {
                 <Grid item xs={12}>
                     <GenericTable
                         headCells={headCellsTravelerCards}
-                        rows={rowsTravelerCards}
-                        nameTable={"My Orders (Traveler Cards)"}
-                        FilterMenu={FilterMenu}
+                        rows={travelcardOrders}
+                        nameTable={"My Orders (Travelcards)"}
                         onClickElement={handleOpenTravelerCardsDetailsModal}
                     />
                     <Modal
@@ -74,7 +104,7 @@ function UserOrdersList(props) {
                     >
                         <Box sx={style}>
                             <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Order Traveler Card Details:
+                                Order Travelcard Details:
                             </Typography>
                             <Typography id="modal-modal-description" sx={{mt: 2}}>
                                 TravelerCardID1
@@ -94,44 +124,6 @@ function UserOrdersList(props) {
     );
 }
 
-function FilterMenu (props){
-    const {open, anchorEl, handleClose}=props
-
-    return (
-        <Menu
-            id="basic-menu"
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-                'aria-labelledby': 'basic-button',
-            }}
-            anchorEl={anchorEl}
-        >
-            <MenuItem onClick={handleClose}>Purchased tickets(All) </MenuItem>
-            <MenuItem onClick={handleClose}>Valid tickets </MenuItem>
-            <MenuItem onClick={handleClose}>Validated tickets</MenuItem>
-            <MenuItem onClick={handleClose}>Expired Tickets</MenuItem>
-        </Menu>
-    );
-}
-
-function createDataTickets(id, status, type_of_purchase, quantity) {
-    return {
-        id,
-        status,
-        type_of_purchase,
-        quantity
-    };
-}
-
-function createDataTravelerCards(id, status, owner) {
-    return {
-        id,
-        status,
-        owner
-    };
-}
-
 const headCellsTickets = [
     {
         id: 'id',
@@ -146,7 +138,7 @@ const headCellsTickets = [
     {
         id: 'type_of_purchase',
         numeric: false,
-        label: 'Type of Purchase', //if tickets specify the type of ticket(1h,2h...), else specify Traveler Card
+        label: 'Type of Purchase', 
     },
     {
         id: 'quantity',
@@ -168,25 +160,16 @@ const headCellsTravelerCards = [
         label: 'Status',
     },
     {
+        id: 'type_of_purchase',
+        numeric: false,
+        label: 'Type of Purchase', 
+    },
+    {
         id: 'owner',
         numeric: false,
         label: 'Owner',
     },
 ]
 
-const rowsTickets = [
-    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
-    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
-    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
-    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
-    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
-    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
-    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
-    createDataTickets('1', 'ACCEPTED', 'Daily : 1h', 3),
-
-];
-const rowsTravelerCards = [
-    createDataTravelerCards('1', 'CANCELLED', 'Isabella Verdi')
-];
 
 export default UserOrdersList

@@ -67,7 +67,6 @@ function AdminOrdersList(props){
                         headCells={headCellsTickets}
                         rows={ticketsOrders}
                         nameTable={"All Orders (Tickets)"}
-                        FilterMenu={FilterMenu}
                         onClickElement={handleOpenTicketsDetailsModal}
                     />
                     <Modal
@@ -90,8 +89,7 @@ function AdminOrdersList(props){
                     <GenericTable
                         headCells={headCellsTravelerCards}
                         rows={travelcardsOrders}
-                        nameTable={"All Orders (Traveler Cards)"}
-                        FilterMenu={FilterMenu}
+                        nameTable={"All Orders (Travelcards)"}
                         onClickElement={handleOpenTravelerCardsDetailsModal}
                     />
                     <Modal
@@ -102,7 +100,7 @@ function AdminOrdersList(props){
                     >
                         <Box sx={style}>
                             <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Order Traveler Card Details:
+                                Order Travelcard Details:
                             </Typography>
                             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                 TravelerCardID1
@@ -119,26 +117,6 @@ function AdminOrdersList(props){
         }
 
         </>
-    );
-}
-function FilterMenu (props){
-    const {open, anchorEl, handleClose}=props
-
-    return (
-        <Menu
-            id="basic-menu"
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-                'aria-labelledby': 'basic-button',
-            }}
-            anchorEl={anchorEl}
-        >
-            <MenuItem onClick={handleClose}>Purchased tickets(All) </MenuItem>
-            <MenuItem onClick={handleClose}>Valid tickets </MenuItem>
-            <MenuItem onClick={handleClose}>Validated tickets</MenuItem>
-            <MenuItem onClick={handleClose}>Expired Tickets</MenuItem>
-        </Menu>
     );
 }
 
