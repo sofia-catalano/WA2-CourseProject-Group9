@@ -261,7 +261,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
         if (convertDateToTimestamp(endTime) < convertDateToTimestamp(startTime) )
             throw IllegalArgumentException("End date should be greater than start date!")
 
-        if (convertDateToTimestamp(end) < Timestamp.from(Instant.now()))
+        if (convertDateToTimestamp(endTime) < Timestamp.from(Instant.now()))
             throw IllegalArgumentException("Selected period of time should be greater than today!")
 
         val userDetails = userDetailsRepository.findById(userID).awaitFirstOrNull()

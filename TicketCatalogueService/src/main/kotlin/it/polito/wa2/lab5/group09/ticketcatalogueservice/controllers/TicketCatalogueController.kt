@@ -159,7 +159,7 @@ class TicketCatalogueController(
                     Order(
                         status = Status.PENDING,
                         ticketCatalogueId = purchasingInfo.ticketId,
-                        duration = purchasingInfo.type
+                        duration = purchasingInfo.type,
                         quantity = purchasingInfo.numberOfTickets,
                         customerUsername = username,
                         owner = purchasingInfo.owner

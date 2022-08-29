@@ -2,6 +2,7 @@ package it.polito.wa2.wa2lab4group09.travelerservice.controllers
 
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TicketPurchasedDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TravelcardOwnerDTO
+import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TravelcardPurchasedDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.toDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.services.UserDetailsService
 import kotlinx.coroutines.flow.Flow
