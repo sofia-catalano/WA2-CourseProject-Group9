@@ -1,8 +1,7 @@
 import {useState} from "react";
-import {CircularProgress, Menu, Modal} from "@mui/material";
+import {CircularProgress, Modal} from "@mui/material";
 import GenericTable from "../generic/Table/Table";
 import * as React from "react";
-import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";

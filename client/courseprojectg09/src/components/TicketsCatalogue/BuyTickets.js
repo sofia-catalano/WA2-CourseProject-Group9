@@ -1,8 +1,8 @@
-import {useEffect, useState, Spinner} from 'react';
+import {useEffect, useState} from 'react';
 import * as React from 'react';
 import GenericTable from "../generic/Table/Table.js";
 import Typography from "@mui/material/Typography";
-import {CircularProgress, Menu, Modal, Tooltip} from "@mui/material";
+import {CircularProgress, Modal} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -11,7 +11,6 @@ import Grid from "@mui/material/Grid";
 import PaymentForm from "../PaymentForm/PaymentForm";
 import AddForm from './AddToCatalogue/AddToCatalogueForm';
 import {useUser} from "../UserProvider";
-import moment from 'moment';
 import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
 
 function BuyTickets(props) {
@@ -26,9 +25,19 @@ function BuyTickets(props) {
 
     const findType = (duration) => {
         switch (duration) {
-            case "60 min", "90 min", "120 min", "1 day", "2 day", "3 day", "1 week": return "ticket"
-            case "1 month", "1 year" : return "travelcard"
-            default : return  ""
+            case "60 min":
+            case "90 min":
+            case "120 min":
+            case "1 day":
+            case "2 day":
+            case "3 day":
+            case "1 week":
+                 return "ticket";
+            case "1 month":
+            case "1 year" :
+                return "travelcard";
+            default:
+                return "";
         }
     }
 
@@ -67,14 +76,14 @@ function BuyTickets(props) {
     };
     const handleNumberOfTicketsChange=(event)=>{
         setNumberOfTickets(parseInt(event.target.value))
-        const currentElement=data.find(element => element.id==selectedValue)
-        if(currentElement!=undefined) setTotal(event.target.value*currentElement.price)
+        const currentElement=data.find(element => element.id===selectedValue)
+        if(currentElement!==undefined) setTotal(event.target.value*currentElement.price)
     }
     const handleTypeTicketsChange=(id)=>{
         console.log(id)
         setSelectedValue(id)
-        const currentElement=data.find(element => element.id==id)
-        if(currentElement!=undefined) setTotal(numberOfTickets*currentElement.price)
+        const currentElement=data.find(element => element.id===id)
+        if(currentElement!==undefined) setTotal(numberOfTickets*currentElement.price)
     }
 
     const handleAddToCatalogueModal = () => setAddToCatalogueModal(true);
@@ -93,7 +102,7 @@ function BuyTickets(props) {
                     handleTypeTicketsChange={handleTypeTicketsChange}
                     onAddElement={handleAddToCatalogueModal}
                 ></GenericTable>
-                {userRole!="admin" && <>
+                {userRole!=="admin" && <>
                 <Box sx={{ width: '90%' , mr:5, ml:5 }}>
                     <Paper sx={{ width: '100%', mb: 2 }}>
                         <Grid container

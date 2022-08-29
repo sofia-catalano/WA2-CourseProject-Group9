@@ -1,8 +1,8 @@
-import {useEffect, useState, Spinner} from 'react';
+import {useEffect, useState} from 'react';
 import * as React from 'react';
 import GenericTable from "../generic/Table/Table.js";
 import Typography from "@mui/material/Typography";
-import {CircularProgress, Menu, Modal, Tooltip} from "@mui/material";
+import {CircularProgress, Modal} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -11,7 +11,6 @@ import Grid from "@mui/material/Grid";
 import PaymentForm from "../PaymentForm/PaymentForm";
 import AddForm from './AddToCatalogue/AddToCatalogueForm.js';
 import {useUser} from "../UserProvider";
-import moment from 'moment';
 import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
 
 function BuyTravelcard(props) {
@@ -31,9 +30,19 @@ function BuyTravelcard(props) {
 
     const findType = (duration) => {
         switch (duration) {
-            case "60 min", "90 min", "120 min", "1 day", "2 day", "3 day", "1 week": return "ticket"
-            case "1 month", "1 year" : return "travelcard"
-            default : return  ""
+            case "60 min":
+            case "90 min":
+            case "120 min":
+            case "1 day":
+            case "2 day":
+            case "3 day":
+            case "1 week":
+                 return "ticket";
+            case "1 month":
+            case "1 year" :
+                return "travelcard";
+            default:
+                return "";
         }
     }
 
@@ -101,7 +110,7 @@ function BuyTravelcard(props) {
                     handleTypeTicketsChange={handleTypeTicketsChange}
                     onAddElement={handleAddToCatalogueModal}
                 ></GenericTable>
-                {userRole != "admin" && <>
+                {userRole !== "admin" && <>
                 <Box sx={{ width: '90%' , mr:5, ml:5 }}>
                     <Paper sx={{ width: '100%', mb: 2 }}>
                         <Typography
@@ -195,7 +204,7 @@ function BuyTravelcard(props) {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <PaymentForm total={data.find(element => element.id==selectedValue) ? data.find(element => element.id==selectedValue).price : 0}/>
+                    <PaymentForm total={data.find(element => element.id===selectedValue) ? data.find(element => element.id===selectedValue).price : 0}/>
                 </Modal>
                 </>
             }
