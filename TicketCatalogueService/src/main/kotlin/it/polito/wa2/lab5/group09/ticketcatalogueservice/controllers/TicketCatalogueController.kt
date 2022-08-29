@@ -159,6 +159,7 @@ class TicketCatalogueController(
                     Order(
                         status = Status.PENDING,
                         ticketCatalogueId = purchasingInfo.ticketId,
+                        duration = purchasingInfo.type
                         quantity = purchasingInfo.numberOfTickets,
                         customerUsername = username,
                         owner = purchasingInfo.owner
@@ -202,7 +203,7 @@ data class PaymentInfo(
     val cardHolder: String
 )
 
-data class PurchasingInfo(val numberOfTickets: Int, val ticketId: ObjectId, val paymentInfo: PaymentInfo, val owner: TravelcardOwnerDTO? = null)
+data class PurchasingInfo(val numberOfTickets: Int, val ticketId: ObjectId, val type: String, val paymentInfo: PaymentInfo, val owner: TravelcardOwnerDTO? = null)
 
 data class TransactionInfo(
     @JsonProperty("orderId")

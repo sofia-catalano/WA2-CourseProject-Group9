@@ -15,6 +15,7 @@ data class Order(
     val orderId: ObjectId = ObjectId.get(),
     var status: Status = Status.PENDING,
     val ticketCatalogueId: ObjectId,
+    val duration: String,
     val quantity: Int,
     val customerUsername: String,
     val owner: TravelcardOwnerDTO? = null

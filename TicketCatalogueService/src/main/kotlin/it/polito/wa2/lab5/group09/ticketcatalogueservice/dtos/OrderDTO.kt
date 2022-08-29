@@ -8,11 +8,12 @@ data class OrderDTO(
     val orderId: String,
     var status: Status,
     val ticketCatalogueId: String,
+    val duration: String
     val quantity: Int,
     val customerUsername: String,
     val owner: TravelcardOwnerDTO? = null
 )
 
 fun Order.toDTO(): OrderDTO {
-    return OrderDTO(orderId.toString(), status, ticketCatalogueId.toString(), quantity, customerUsername, owner)
+    return OrderDTO(orderId.toString(), status, ticketCatalogueId.toString(), duration, quantity, customerUsername, owner)
 }
