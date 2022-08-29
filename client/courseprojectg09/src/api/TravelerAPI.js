@@ -105,6 +105,26 @@ function getMyTicketsValid() {
         }).catch((err) => reject(err));
     });
 }
+function getMyTicketsExpired() {
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/my/tickets/expired', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
 function getTravelers() {
     return new Promise((resolve, reject) => {
         fetch(BASEURL+'/admin/travelers', {
@@ -212,6 +232,27 @@ function getTravelersTicketsValid(){
     });
 
 }
+function getTravelersTicketsExpired(){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/admin/travelers/tickets/expired', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
 function getTravelerProfile(userID){
     return new Promise((resolve, reject) => {
         fetch(BASEURL+`/admin/traveler/${userID}/profile`, {
@@ -296,7 +337,27 @@ function getTravelerTicketsValid(userID){
     });
 
 }
+function getTravelerTicketsExpired(userID){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+`/admin/traveler/${userID}/tickets/expired`, {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
 
+}
 function getTravelersTravelcardsExpired(){
     return new Promise((resolve, reject) => {
         fetch(BASEURL+'/admin/travelers/travelcards/expired', {
@@ -348,14 +409,17 @@ const travelerAPI = {
          getTravelersTicketsPurchased,
          getTravelersTicketsValidated,
          getTravelersTicketsValid,
+        getTravelersTicketsExpired,
          getTravelersTravelcardsPurchased,
          getTravelerProfile,
          getTravelerTicketPurchased,
          getTravelerTicketsValidated,
-        getTravelerTicketsValid,
+         getTravelerTicketsValid,
+         getTravelerTicketsExpired,
         updateMyProfile,
         getMyTickets,
         getMyTicketsValidated,
+        getMyTicketsExpired,
         getTravelersTravelcardsExpired,
         getTravelersTravelcardsValid,
         getMyTicketsValid};

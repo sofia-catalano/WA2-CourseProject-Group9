@@ -119,6 +119,8 @@ class MyController(val userDetailsService: UserDetailsService) {
             val body : Flow<TicketPurchasedDTO>
             if(startTime==null && endTime==null){
                 body =userDetailsService.getUserTicketsExpired(newToken)
+                println("body")
+                println(body)
             }
             else {
                 body =userDetailsService.getUserTicketsExpiredPeriodOfTime(newToken,startTime,endTime)

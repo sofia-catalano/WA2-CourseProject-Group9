@@ -32,6 +32,8 @@ import org.springframework.stereotype.Service
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
 
@@ -253,6 +255,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
             return ticketPurchasedRepository
                 .findAllValidByUserDetails(userDetails.username)
                 .map {
+                    println(it)
                     TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId,it.duration)
                 }
         }
@@ -285,9 +288,13 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
         if (userDetails == null)
             throw IllegalArgumentException("User doesn't exist!")
         else{
+            println(Timestamp.from(Instant.now()))
+            println(Instant.now())
+            println(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
             return ticketPurchasedRepository
                 .findAllExpiredByUserDetails(userDetails.username,Timestamp.from(Instant.now()) )
                 .map {
+                    println(it)
                     TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId,it.duration)
                 }
         }

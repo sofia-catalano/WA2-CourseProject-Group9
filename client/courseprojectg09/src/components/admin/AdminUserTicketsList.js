@@ -15,7 +15,9 @@ function AdminTicketsList(props) {
     const [data, setData]=useState([])
     const [typeTicketsSelected, setTypeTicketsSelected]=useState('all')
     const [nameTable, setNameTable]=useState('Tickets')
-
+    const [startDate, setStartDate]=useState()
+    const [endDate,setEndDate]=useState()
+    
     const handleTypeTicketsSelectedChange=(event)=>{
         console.log("Event "+ event.target.value)
         setTypeTicketsSelected(event.target.value)
@@ -41,6 +43,16 @@ function AdminTicketsList(props) {
                     .then(r => {
                         setTickets(r)
                         setNameTable('Valid tickets')
+                    })
+                    .catch(err => console.log(err))
+            }
+            else if(event.target.value == 'expired'){
+                console.log('expired')
+                setLoading(true)
+                travelerAPI.getTravelerTicketsExpired(user)
+                    .then(r => {
+                        setTickets(r)
+                        setNameTable('Expired tickets')
                     })
                     .catch(err => console.log(err))
             }
@@ -90,6 +102,10 @@ function AdminTicketsList(props) {
                 FilterMenu={TicketsFilterMenu}
                 typeSelected={typeTicketsSelected}
                 handleTypeSelectedChange={handleTypeTicketsSelectedChange}
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
             ></GenericTable>
         }
 

@@ -16,7 +16,9 @@ function UserTicketsList(props) {
     const [data, setData]=useState([])
     const [typeTicketsSelected, setTypeTicketsSelected]=useState('all')
     const [nameTable, setNameTable]=useState('Tickets')
-
+    const [startDate, setStartDate]=useState()
+    const [endDate,setEndDate]=useState()
+    
     const handleTypeTicketsSelectedChange=(event)=>{
         console.log("Event "+ event.target.value)
         setTypeTicketsSelected(event.target.value)
@@ -45,16 +47,27 @@ function UserTicketsList(props) {
                     })
                     .catch(err => console.log(err))
             }
+            else if(event.target.value == 'expired'){
+                console.log('expired')
+                setLoading(true)
+                travelerAPI.getMyTicketsExpired()
+                    .then(r => {
+                        setTickets(r)
+                        setNameTable('Expired tickets')
+                    })
+                    .catch(err => console.log(err))
+            }
         }
     }
     const setTickets= (result) => {
+        console.log(result)
         const tmp= result.map((element)=> {
             return {
                 id:element.sub,
                 zones:element.zid,
                 acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
                 validated: element.validated?  moment(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
-                expired: element.validated ?  moment(element.expired).format('YYYY-MM-DD HH:mm:ss') : '',
+                expired: element.validated ?  moment(element.exp).format('YYYY-MM-DD HH:mm:ss') : '',
                 username:element.userID,
                 type: element.duration
             }
@@ -108,6 +121,10 @@ function UserTicketsList(props) {
                 FilterMenu={TicketsFilterMenu}
                 typeSelected={typeTicketsSelected}
                 handleTypeSelectedChange={handleTypeTicketsSelectedChange}
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
             ></GenericTable>
         }
 
