@@ -61,12 +61,12 @@ function AllRoutes() {
             <Route exact path="/user/validate" element={<ValidationPage/>}/>
             <Route exact path="/user/login" element={<LoginPage/>}/>
             <Route exact path="/my/tickets" element={getCustomerComponent(<UserTicketsList/>)}/>
-            <Route exact path="/my/travelcards" element={<UserTravelCardsList/>}/>
+            <Route exact path="/my/travelcards" element={getCustomerComponent(<UserTravelCardsList/>)}/>
             <Route exact path="/my/profile" element={getCustomerComponent(<UserProfile/>)}/>
-            <Route exact path="/my/orders" element={<UserOrdersList/>}/>
+            <Route exact path="/my/orders" element={getCustomerComponent(<UserOrdersList/>)}/>
             <Route exact path="/catalogue/shop/tickets" element={<BuyTickets/>}/>
             <Route exact path="/catalogue/shop/travelcard" element={<BuyTravelcard/>}/>
-            <Route exact path="/my/transactions" element={<UserTransactionsList/>}/>
+            <Route exact path="/my/transactions" element={getCustomerComponent(<UserTransactionsList/>)}/>
             <Route exact path="/admin/admins" element={<AdminsList/>}/>
             <Route exact path="/admin/travelers" element={getAdminComponent(<UsersList/>)}/>
             <Route exact path="/admin/tickets" element={getAdminComponent(<AdminTicketsList/>)}/>
