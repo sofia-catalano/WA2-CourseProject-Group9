@@ -142,7 +142,7 @@ class MyController(val userDetailsService: UserDetailsService) {
         @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
         val newToken = jwt.replace("Bearer", "")
         return try {
-            val body : Flow<TicketPurchasedDTO>
+            val body : Flow<TravelcardPurchasedDTO>
             if(startTime==null && endTime==null){
                 body =userDetailsService.getUserTravelcardsValid(newToken)
             }
@@ -159,13 +159,13 @@ class MyController(val userDetailsService: UserDetailsService) {
     }
 
     @GetMapping("/traveler/my/travelcards/expired")
-    suspend fun getUserTravelcardsValid(
+    suspend fun getUserTravelcardsExpired(
         @RequestParam("start", required = false) startTime: String,
         @RequestParam("end", required = false) endTime: String,
         @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
         val newToken = jwt.replace("Bearer", "")
         return try {
-            val body : Flow<TicketPurchasedDTO>
+            val body : Flow<TravelcardPurchasedDTO>
             if(startTime==null && endTime==null){
                 body =userDetailsService.getUserTravelcardsExpired(newToken)
             }

@@ -8,7 +8,7 @@ data class OrderDTO(
     val orderId: String,
     var status: Status,
     val ticketCatalogueId: String,
-    val duration: String
+    val duration: String,
     val quantity: Int,
     val customerUsername: String,
     val owner: TravelcardOwnerDTO? = null
