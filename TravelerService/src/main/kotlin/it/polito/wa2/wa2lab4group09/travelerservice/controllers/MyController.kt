@@ -109,6 +109,26 @@ class MyController(val userDetailsService: UserDetailsService) {
             ResponseEntity(error, HttpStatus.BAD_REQUEST)
         }
     }
+    @GetMapping("/traveler/my/tickets/expired")
+    suspend fun getUserTicketsExpired(
+        @RequestParam("start", required = false) startTime: String,
+        @RequestParam("end", required = false) endTime: String,
+        @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
+        val newToken = jwt.replace("Bearer", "")
+        return try {
+            val body : Flow<TicketPurchasedDTO>
+            if(startTime==null && endTime==null){
+                body =userDetailsService.getUserTicketsExpired(newToken)
+            }
+            else {
+                body =userDetailsService.getUserTicketsExpiredPeriodOfTime(newToken,startTime,endTime)
+            }
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t: Throwable) {
+            val error = ErrorMessage(t.message)
+            ResponseEntity(error, HttpStatus.BAD_REQUEST)
+        }
+    }
 
     @PostMapping("/traveler/my/tickets")
     suspend fun buyTickets(@RequestHeader("Authorization") jwt:String, @RequestBody actionTicket: ActionTicket) : ResponseEntity<Any>{
