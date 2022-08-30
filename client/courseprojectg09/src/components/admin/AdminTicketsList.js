@@ -12,7 +12,7 @@ function AdminTicketsList(props) {
     const [nameTable, setNameTable]=useState('Tickets')
     const [startDate, setStartDate]=useState()
     const [endDate,setEndDate]=useState()
-    
+
     const handleTypeTicketsSelectedChange=(event)=>{
         console.log("Event "+ event.target.value)
         setTypeTicketsSelected(event.target.value)
@@ -45,7 +45,7 @@ function AdminTicketsList(props) {
             else if(event.target.value == 'expired'){
                 console.log('expired')
                 setLoading(true)
-                travelerAPI.getTicketsExpired()
+                travelerAPI.getTravelersTicketsExpired()
                     .then(r => {
                         setTickets(r)
                         setNameTable('Expired tickets')

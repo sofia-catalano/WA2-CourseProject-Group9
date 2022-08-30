@@ -19,8 +19,8 @@ import reactor.core.publisher.Flux
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 
 
 @Service
@@ -84,14 +84,15 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
                 TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId,it.duration)
             }
     }
-    fun getTicketsExpired(): Flow<TicketPurchasedDTO> {
+    suspend fun getTicketsExpired(): Flow<TicketPurchasedDTO> {
         return ticketPurchasedRepository
             .findByExpired(Timestamp.from(Instant.now()))
             .map {
+                println(it)
                 TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated, it.userId, it.duration)
             }
     }
-    fun getTicketsExpiredPeriodOfTime(startTime: String, endTime: String): Flow<TicketPurchasedDTO> {
+    suspend fun getTicketsExpiredPeriodOfTime(startTime: String, endTime: String): Flow<TicketPurchasedDTO> {
         return ticketPurchasedRepository
             .findByExpiredAndExpiredBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime),Timestamp.from(Instant.now()))
             .map {
@@ -187,7 +188,6 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
                     TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId, it.duration)
                 }
         }
-
     }
 
     suspend fun getTravelerTicketsExpiredPeriodOfTime(userID: String, startTime: String, endTime: String): Flow<TicketPurchasedDTO> {
@@ -349,6 +349,8 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
                 }
         }
     }
+
+
 
 
 }

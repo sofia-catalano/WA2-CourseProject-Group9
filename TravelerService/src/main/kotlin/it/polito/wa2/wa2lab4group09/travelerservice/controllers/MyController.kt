@@ -11,6 +11,7 @@ import org.bson.types.ObjectId
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.sql.Timestamp
 import java.util.*
 
 @RestController
@@ -234,5 +235,5 @@ data class ActionTicket(val cmd: String, val quantity: Int, val zones: String, v
 data class ErrorMessage(val error: String?)
 data class UserDetailsUpdate(val name : String?, val surname : String?, val address : String?, val date_of_birth : String?, val telephone_number : String?)
 data class ActionTravelcard(val cmd : String, val zones : String, val type : String, val typeId: ObjectId, val owner: TravelcardOwnerDTO)
-data class ValidationToTravelerService(val expiration : Date, val ticketId: String, val zid : String)
+data class ValidationToTravelerService(val expiration : Timestamp, val ticketId: String, val zid : String)
 

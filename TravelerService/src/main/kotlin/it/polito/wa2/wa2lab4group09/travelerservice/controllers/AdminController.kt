@@ -90,13 +90,14 @@ class AdminController(val adminService: AdminService) {
         return try {
             val body : Flow<TicketPurchasedDTO>
             if(startTime==null && endTime==null){
-                body =adminService.getTicketsExpired()
+                body = adminService.getTicketsExpired()
             }
             else {
-                body = adminService.getTicketsExpiredPeriodOfTime(startTime,endTime)
+                body = adminService.getTicketsExpiredPeriodOfTime(startTime, endTime)
             }
             ResponseEntity(body, HttpStatus.OK)
         } catch (t : Throwable){
+            println(t)
             ResponseEntity("${t.message}", HttpStatus.BAD_REQUEST)
         }
     }
@@ -282,14 +283,14 @@ class AdminController(val adminService: AdminService) {
         @RequestParam("end", required=false) endTime: String,
         @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
         return try {
-            val body : Flow<TravelcardPurchasedDTO>
-            if(startTime==null && endTime==null){
+            //val body : Flow<TravelcardPurchasedDTO>null
+            /*if(startTime==null && endTime==null){
                 body = adminService.getTravelerTravelcardsExpired(userID)
             }
             else {
                 body = adminService.getTravelerTravelcardsExpiredPeriodOfTime(userID, startTime, endTime)
-            }
-            ResponseEntity(body, HttpStatus.OK)
+            }*/
+            ResponseEntity(null, HttpStatus.OK)
         } catch (t : Throwable){
             ResponseEntity("${t.message}", HttpStatus.BAD_REQUEST)
         }
