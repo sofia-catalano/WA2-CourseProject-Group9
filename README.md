@@ -177,7 +177,7 @@ curl GET -v -i 'http://localhost:8100/catalogue/tickets'
 ```
 - POST /shop/ticketId → to buy tickets of a ticket type (this route will return the orderId if the payment has success, BAD REQUEST otherwise)
 ```
-curl --request POST -H "Authorization: {Bearer...}" -H "Content-Type: application/json" -H "Accept: application/json" -d '{"numberOfTickets":"3","ticketId":"6300dd325ef1cf365be57aee", type:"1 month", "paymentInfo":{"creditCardNumber":"1234568911111122","expirationDate":"10/22", "cvv":"123","cardHolder":"User" }}' -v -i 'http://localhost:8100/catalogue/shop/{ticketId}'
+curl --request POST -H "Authorization: {Bearer...}" -H "Content-Type: application/json" -H "Accept: application/json" -d '{"numberOfTickets":"3","ticketId":"6300dd325ef1cf365be57aee", "type":"1 month", "paymentInfo":{"creditCardNumber":"1234568911111122","expirationDate":"10/22", "cvv":"123","cardHolder":"User" }}' -v -i 'http://localhost:8100/catalogue/shop/{ticketId}'
 ```
 - GET /orders → return a list of all orders made by the customer
 ```

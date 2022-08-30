@@ -22,7 +22,7 @@ data class TicketPurchasedDTO(
     var jws: String,
     @JsonProperty("validated")
     var validated: Timestamp?,
-    @JsonProperty("userID")
+    @JsonProperty("userId")
     var userId: String,
     @JsonProperty("duration")
     var duration: String

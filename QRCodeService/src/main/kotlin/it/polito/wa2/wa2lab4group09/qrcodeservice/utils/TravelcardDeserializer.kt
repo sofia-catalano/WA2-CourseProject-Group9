@@ -5,42 +5,40 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import org.apache.kafka.common.errors.SerializationException
-import org.slf4j.LoggerFactory
 import org.apache.kafka.common.serialization.Deserializer
 import org.bson.types.ObjectId
-import java.util.*
-import kotlin.text.Charsets.UTF_8
+import org.slf4j.LoggerFactory
+import java.sql.Timestamp
 
-class TicketDeserializer : Deserializer<TicketPurchasedDTO> {
+class TravelcardDeserializer : Deserializer<TravelcardPurchasedDTO> {
     private val objectMapper = ObjectMapper()
     private val log = LoggerFactory.getLogger(javaClass)
 
-    override fun deserialize(topic: String?, data: ByteArray?): TicketPurchasedDTO? {
+    override fun deserialize(topic: String?, data: ByteArray?): TravelcardPurchasedDTO? {
         log.info("Deserializing...")
         return objectMapper.readValue(
             String(
-                data ?: throw SerializationException("Error when deserializing byte[] to Payment Result"), UTF_8
-            ), TicketPurchasedDTO::class.java
+                data ?: throw SerializationException("Error when deserializing byte[] to Payment Result"),
+                Charsets.UTF_8
+            ), TravelcardPurchasedDTO::class.java
         )
     }
 
     override fun close() {}
 }
 
-data class TicketPurchasedDTO(
+data class TravelcardPurchasedDTO(
     @JsonProperty("sub")
     @JsonSerialize(using = ToStringSerializer::class)
     var sub: ObjectId?,
     @JsonProperty("iat")
-    var iat: Date,
+    var iat: Timestamp,
     @JsonProperty("exp")
-    var exp: Date?,
+    var exp: Timestamp,
     @JsonProperty("zid")
     var zid: String,
     @JsonProperty("jws")
     var jws: String,
-    @JsonProperty("validated")
-    var validated: Date?,
     @JsonProperty("userId")
     var userId: String,
     @JsonProperty("duration")

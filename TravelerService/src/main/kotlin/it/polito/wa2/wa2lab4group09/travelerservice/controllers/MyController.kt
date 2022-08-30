@@ -208,6 +208,7 @@ class MyController(val userDetailsService: UserDetailsService) {
     @PostMapping("/traveler/my/travelcards")
     suspend fun buyTravelcard(@RequestHeader("Authorization") jwt:String, @RequestBody actionTravelcard: ActionTravelcard) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
+        println("arrivato")
         return try {
             val body = userDetailsService.buyTravelcards(newToken, actionTravelcard)
             ResponseEntity(body, HttpStatus.OK)

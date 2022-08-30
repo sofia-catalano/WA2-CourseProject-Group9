@@ -25,9 +25,6 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientRequestException
 import org.springframework.web.reactive.function.client.awaitBody
 import java.net.URI
-import java.time.Instant
-import java.time.temporal.ChronoUnit
-import java.util.*
 
 @Service
 class TicketCatalogueService(
