@@ -3,11 +3,15 @@ package it.polito.wa2.wa2lab4group09.qrcodeservice.utils
 import it.polito.wa2.wa2lab4group09.qrcodeservice.services.QRCodeService
 import kotlinx.coroutines.runBlocking
 import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.bson.types.ObjectId
 import org.slf4j.LoggerFactory
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets
+import java.sql.Timestamp
 
 @Component
 class KafkaConsumer(val qrCodeService: QRCodeService){
@@ -38,3 +42,4 @@ class KafkaConsumer(val qrCodeService: QRCodeService){
         ack.acknowledge()
     }
 }
+

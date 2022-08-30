@@ -3,7 +3,7 @@ package it.polito.wa2.wa2lab4group09.qrcodeservice
 import com.mongodb.reactivestreams.client.MongoClient
 import com.mongodb.reactivestreams.client.MongoClients
 import it.polito.wa2.wa2lab4group09.qrcodeservice.utils.TicketDeserializer
-import it.polito.wa2.wa2lab4group09.qrcodeservice.utils.TravelcardsDeserializer
+import it.polito.wa2.wa2lab4group09.qrcodeservice.utils.TravelcardDeserializer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.springframework.beans.factory.annotation.Value
@@ -71,7 +71,7 @@ class KafkaConsumerConfig(
         props[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = servers
         props[ConsumerConfig.GROUP_ID_CONFIG] = "ppr"
         props[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
-        props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = TravelcardsDeserializer::class.java
+        props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = TravelcardDeserializer::class.java
         props[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
         return DefaultKafkaConsumerFactory(props)
     }

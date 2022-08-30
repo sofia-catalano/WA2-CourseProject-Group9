@@ -35,11 +35,9 @@ class QRCodeService(val qrCodeRepository: QRCodeRepository, val appProperties: A
     private val travelerClient = WebClient.create("http://localhost:8081")
 
     @Cacheable(cacheNames = ["qr-code-cache"], sync = true)
-    suspend fun generateQRCode( ticket : TicketPurchasedDTO){
-        val token = ticket.jws
-//        token.replace("[\n\r\t]", "_")
+    suspend fun generateQRCode(jws : String, sub : ObjectId){
         try {
-            val qrCode : QrCode = QrCode.encodeText(token, QrCode.Ecc.MEDIUM)
+            val qrCode : QrCode = QrCode.encodeText(jws, QrCode.Ecc.MEDIUM)
             val img: BufferedImage = QRCodeGenerator().toImage(qrCode, 8, 5)
             val baos = ByteArrayOutputStream()
             withContext(Dispatchers.IO) {
@@ -47,7 +45,7 @@ class QRCodeService(val qrCodeRepository: QRCodeRepository, val appProperties: A
             }
             val qrCodeByteArray: ByteArray = baos.toByteArray()
             //save the qrCode just created in DB
-            val qrCodeEntity = QRCode(qrCodeImage = qrCodeByteArray, ticketId = ticket.sub!!, token = token)
+            val qrCodeEntity = QRCode(qrCodeImage = qrCodeByteArray, ticketId = sub, token = jws)
             qrCodeRepository.save(qrCodeEntity).subscribe()
         }catch(ex : IOException) {
             throw IllegalArgumentException(ex)
