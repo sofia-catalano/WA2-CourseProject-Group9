@@ -1,8 +1,8 @@
-import {useEffect, useState, Spinner} from 'react';
+import {useEffect, useState} from 'react';
 import * as React from 'react';
 import GenericTable from "../generic/Table/Table.js";
 import Typography from "@mui/material/Typography";
-import {CircularProgress, Menu, Modal, Tooltip} from "@mui/material";
+import {CircularProgress, Modal} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -11,13 +11,11 @@ import Grid from "@mui/material/Grid";
 import PaymentForm from "../PaymentForm/PaymentForm";
 import AddForm from './AddToCatalogue/AddToCatalogueForm.js';
 import {useUser} from "../UserProvider";
-import moment from 'moment';
 import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
-import typeTicket from '../../utils/TicketType.js';
 
 function BuyTravelcard(props) {
     const {loggedIn, userRole, setUserRole, setLoggedIn} = useUser()
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [selectedValue, setSelectedValue] = React.useState('');
     const [buyTravelcardModal, setBuyTravelcardModal] = React.useState(false);
     const [addToCatalogueModal, setAddToCatalogueModal] = React.useState(false);
@@ -30,35 +28,47 @@ function BuyTravelcard(props) {
     });
     const [data, setData] = React.useState([]);
 
-    const findType = (date1, date2) => {
-        let diff= moment(date1).diff(moment(date2), 'days')
-        if(diff<8){
-            return 'ticket'
-        }else
-            return 'travelcard' 
+    const findType = (duration) => {
+        switch (duration) {
+            case "60 min":
+            case "90 min":
+            case "120 min":
+            case "1 day":
+            case "2 day":
+            case "3 day":
+            case "1 week":
+                 return "ticket";
+            case "1 month":
+            case "1 year" :
+                return "travelcard";
+            default:
+                return "";
+        }
     }
 
-    catalogueAPI.getCatalogue().then(r => {
-        console.log(r)
-        const tmp = []
-        r.forEach(element => {
-            if(findType(element.exp, element.iat) === 'travelcard' ){
-                tmp.push({
-                    id: element.ticketId,
-                    type: typeTicket(element.exp, element.iat),
-                    price: element.price,
-                    zones: element.zones,
-                    minAge: element.minAge,
-                    maxAge: element.maxAge
-                })
-            }
-        })
-
-        setData(tmp);
-        setSelectedValue(tmp[0].id)
-    });
-
-
+    useEffect(() => {
+        catalogueAPI.getCatalogue().then(r => {
+            console.log(r)
+            const tmp = []
+            r.forEach(element => {
+                if(findType(element.duration) === 'travelcard' ){
+                    tmp.push({
+                        id: element.ticketId,
+                        type: element.duration,
+                        price: element.price,
+                        zones: element.zones,
+                        minAge: element.minAge,
+                        maxAge: element.maxAge
+                    })
+                }
+            })
+    
+            setData(tmp);
+            setSelectedValue(tmp[0].id)
+            setLoading(false)
+        });
+    }, [])
+    
     const handleChange = (prop) => (event) => {
         setHolder({ ...holder, [prop]: event.target.value });
     };
@@ -98,10 +108,9 @@ function BuyTravelcard(props) {
                     nameTable={userRole==="admin" ? "Travelcards list": "Buy travelcard"}
                     selectedValue={selectedValue}
                     handleTypeTicketsChange={handleTypeTicketsChange}
-                    filterMenu="AddCatalogue"
                     onAddElement={handleAddToCatalogueModal}
                 ></GenericTable>
-                {userRole != "admin" && <>
+                {userRole !== "admin" && <>
                 <Box sx={{ width: '90%' , mr:5, ml:5 }}>
                     <Paper sx={{ width: '100%', mb: 2 }}>
                         <Typography
@@ -195,7 +204,7 @@ function BuyTravelcard(props) {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <PaymentForm total={data.find(element => element.id==selectedValue).price}/>
+                    <PaymentForm total={data.find(element => element.id===selectedValue) ? data.find(element => element.id===selectedValue).price : 0}/>
                 </Modal>
                 </>
             }

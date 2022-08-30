@@ -16,6 +16,7 @@ import it.polito.wa2.wa2lab4group09.travelerservice.repositories.TravelcardPurch
 import it.polito.wa2.wa2lab4group09.travelerservice.repositories.UserDetailsRepository
 import it.polito.wa2.wa2lab4group09.travelerservice.security.JwtUtils
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
@@ -29,7 +30,10 @@ import org.springframework.messaging.Message
 import org.springframework.messaging.support.MessageBuilder
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
 
@@ -53,6 +57,12 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
 
     @Value("\${application.jwt.jwtSecretTicket}")
     lateinit var keyTicket : String
+
+    fun convertDateToTimestamp(date:String):Timestamp{
+        val formatter = SimpleDateFormat("dd/MM/yyyy")
+        val date2 = formatter.parse(date)
+        return Timestamp.from(date2.toInstant())
+    }
 
     suspend fun getUserDetails(jwt : String): UserDetails {
         val username = JwtUtils.getDetailsFromJwtToken(jwt, key).username
@@ -79,6 +89,11 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
     suspend fun getUserTickets(jwt:String): Flow<TicketPurchased> {
         val userDetails = getUserDetails(jwt)
         return ticketPurchasedRepository.findAllByUserIdOrderByIat(userDetails.username).asFlow()
+    }
+    suspend fun getUserTicketsPeriodOfTime(jwt:String, startTime:String, endTime:String): Flow<TicketPurchased> {
+        val userDetails = getUserDetails(jwt)
+        return ticketPurchasedRepository
+            .findByUserDetailsAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username )
     }
 
     suspend fun buyTickets(jwt: String, actionTicket: ActionTicket): List<TicketPurchasedDTO> {
@@ -136,6 +151,43 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
         return travelcardPurchasedRepository.findAllByUserIdOrderByIat(userDetails.username).asFlow()
     }
 
+    suspend fun getUserTravelcardsValid(token: String): Flow<TravelcardPurchasedDTO> {
+        val userDetails = getUserDetails(token)
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return travelcardPurchasedRepository
+                .findAllValidByUserDetails(userDetails.username, Timestamp.from(Instant.now()))
+                .map {
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                }
+        }
+    }
+    suspend fun getUserTravelcardsValidPeriodOfTime(jwt:String, startTime:String, endTime:String): Flow<TravelcardPurchased> {
+        val userDetails = getUserDetails(jwt)
+        return travelcardPurchasedRepository
+            .findAllValidByUserDetailsAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username, Timestamp.from(Instant.now()) )
+    }
+
+
+    suspend fun getUserTravelcardsExpired(token: String): Flow<TravelcardPurchasedDTO> {
+        val userDetails = getUserDetails(token)
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return travelcardPurchasedRepository
+                .findAllExpiredByUserDetails(userDetails.username, Timestamp.from(Instant.now()))
+                .map {
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                }
+        }
+    }
+    suspend fun getUserTravelcardsExpiredPeriodOfTime(jwt:String, startTime:String, endTime:String): Flow<TravelcardPurchased> {
+        val userDetails = getUserDetails(jwt)
+        return travelcardPurchasedRepository
+            .findAllExpiredByUserDetailsAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username, Timestamp.from(Instant.now()) )
+    }
+
     suspend fun buyTravelcards(jwt: String, actionTravelcard: ActionTravelcard): TravelcardPurchasedDTO {
         if (actionTravelcard.cmd == "buy_travelcard"){
             val userDetails = getUserDetails(jwt)
@@ -176,6 +228,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
                 exp = Timestamp.from(exp.toInstant()),
                 zid = actionTravelcard.zones,
                 jws = token,
+                duration = actionTravelcard.type,
                 typeId = actionTravelcard.typeId,
                 userId = userDetails.username,
                 ownerId = actionTravelcard.owner.fiscal_code
@@ -204,6 +257,71 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
             throw IllegalArgumentException("You are not allowed to use this ticket in this zone!")
         } else {
             throw IllegalArgumentException("Ticket expired at ${ticketPurchased.exp}")
+        }
+    }
+
+    suspend fun getUserTicketsValid(token: String): Flow<TicketPurchasedDTO> {
+        val userDetails = getUserDetails(token)
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return ticketPurchasedRepository
+                .findAllValidByUserDetails(userDetails.username)
+                .map {
+                    println(it)
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId,it.duration)
+                }
+        }
+    }
+    suspend fun getUserTicketsValidPeriodOfTime(jwt:String, startTime:String, endTime:String): Flow<TicketPurchased> {
+        val userDetails = getUserDetails(jwt)
+        return ticketPurchasedRepository
+            .findAllValidByUserDetailsAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username )
+    }
+    suspend fun getUserTicketsValidatedPeriodOfTime(jwt:String, startTime:String, endTime:String): Flow<TicketPurchased> {
+        val userDetails = getUserDetails(jwt)
+        return ticketPurchasedRepository
+            .findValidatedByUserDetailsAndPeriodOfTime(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username )
+    }
+    suspend fun getUserTicketsValidated(token: String): Flow<TicketPurchasedDTO> {
+        val userDetails = getUserDetails(token)
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return ticketPurchasedRepository
+                .findAllValidatedByUserDetails(userDetails.username)
+                .map {
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId,it.duration)
+                }
+        }
+    }
+
+    suspend fun getUserTicketsExpired(token: String): Flow<TicketPurchasedDTO> {
+        val userDetails = getUserDetails(token)
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            println(Timestamp.from(Instant.now()))
+            println(Instant.now())
+            println(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
+            return ticketPurchasedRepository
+                .findAllExpiredByUserDetails(userDetails.username,Timestamp.from(Instant.now()) )
+                .map {
+                    println(it)
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId,it.duration)
+                }
+        }
+    }
+    suspend fun getUserTicketsExpiredPeriodOfTime(token: String, startTime: String, endTime: String): Flow<TicketPurchasedDTO> {
+        val userDetails = getUserDetails(token)
+        if (userDetails == null)
+            throw IllegalArgumentException("User doesn't exist!")
+        else{
+            return ticketPurchasedRepository
+                .findAllExpiredByUserDetailsAndExpiredBetween(userDetails.username,convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), Timestamp.from(Instant.now()) )
+                .map {
+                    TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId,it.duration)
+                }
         }
     }
 

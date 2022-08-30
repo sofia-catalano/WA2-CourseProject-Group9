@@ -62,6 +62,17 @@ curl --request POST -H "Authorization: {Bearer...}" -H "Accept: application/json
 ```
 curl --request GET -H "Authorization: {Bearer...}" -v -i  http://localhost:8100/traveler/my/travelcards
 ```
+
+- GET "/my/travelcards/valid"
+```
+curl --request GET -H "Authorization: {Bearer...}" -v -i  http://localhost:8100/traveler/my/travelcards/valid
+```
+
+- GET "/my/travelcards/expired"
+```
+curl --request GET -H "Authorization: {Bearer...}" -v -i  http://localhost:8100/traveler/my/travelcards/expired
+```
+
 - POST "/my/travelcards"
 ```
 curl --request POST -H "Authorization: {Bearer...}" -H "Accept: application/json" -H "Content-Type:application/json" -d '{"cmd":"buy_travelcard","zones":"ABC","type":"8", "owner":{"fiscal_code":"DFGSGH89T56G2987D","name":"Mario","surname":"Rossi","address":"via dei test Torino","date_of_birth":"01/01/1990","telephone_number":"1231231231"} }' -v -i  http://localhost:8100/traveler/my/travelcards
@@ -166,7 +177,7 @@ curl GET -v -i 'http://localhost:8100/catalogue/tickets'
 ```
 - POST /shop/ticketId → to buy tickets of a ticket type (this route will return the orderId if the payment has success, BAD REQUEST otherwise)
 ```
-curl --request POST -H "Authorization: {Bearer...}" -H "Content-Type: application/json" -H "Accept: application/json" -d '{"numberOfTickets":"3","ticketId":"6300dd325ef1cf365be57aee", "paymentInfo":{"creditCardNumber":"1234568911111122","expirationDate":"10/22", "cvv":"123","cardHolder":"User" }}' -v -i 'http://localhost:8100/catalogue/shop/{ticketId}'
+curl --request POST -H "Authorization: {Bearer...}" -H "Content-Type: application/json" -H "Accept: application/json" -d '{"numberOfTickets":"3","ticketId":"6300dd325ef1cf365be57aee", type:"1 month", "paymentInfo":{"creditCardNumber":"1234568911111122","expirationDate":"10/22", "cvv":"123","cardHolder":"User" }}' -v -i 'http://localhost:8100/catalogue/shop/{ticketId}'
 ```
 - GET /orders → return a list of all orders made by the customer
 ```
@@ -189,16 +200,6 @@ curl GET -v -i 'http://localhost:8100/traveler/admin/travelers/travelcards/purch
 ```
 The endpoint returns a JSON list of travelcards purchased by any user in the period specified.
 
-- GET /admin/traveler/{userID}/travelcards/purchased → returns the travelcards purchased by userID.
-```
-curl GET -v -i 'http://localhost:8100/traveler/admin/traveler/USER1/travelcards/purchased' -H "Authorization:{Bearer...}"
-```
-
-- GET /admin/traveler/{userID}/travelcards/purchased → returns the travelcards purchased by userID in the period selected.
-```
-curl GET -v -i 'http://localhost:8100/traveler/admin/traveler/USER1/travelcards/purchased?start=10/06/2022&end=19/08/2022' -H "Authorization:{Bearer...}"
-```
-
 - GET /admin/travelers/travelcards/expired
 ```
 curl GET -v -i 'http://localhost:8100/traveler/admin/travelers/travelcards/expired' -H "Authorization:{Bearer...}"
@@ -211,6 +212,28 @@ curl GET -v -i 'http://localhost:8100/traveler/admin/travelers/travelcards/expir
 ```
 The endpoint returns a JSON list of expired travelcards purchased by any user in the period specified.
 
+- GET /admin/travelers/travelcards/valid
+```
+curl GET -v -i 'http://localhost:8100/traveler/admin/travelers/travelcards/valid' -H "Authorization:{Bearer...}"
+```
+The endpoint returns a JSON list of valid travelcards purchased by any user.
+
+GET /admin/travelers/travelcards/valid
+```
+curl GET -v -i 'http://localhost:8100/traveler/admin/travelers/travelcards/valid?start=10/06/2022&end=19/08/2022' -H "Authorization:{Bearer...}"
+```
+The endpoint returns a JSON list of valid travelcards purchased by any user in the period specified.
+
+- GET /admin/traveler/{userID}/travelcards/purchased → returns the travelcards purchased by userID.
+```
+curl GET -v -i 'http://localhost:8100/traveler/admin/traveler/USER1/travelcards/purchased' -H "Authorization:{Bearer...}"
+```
+
+- GET /admin/traveler/{userID}/travelcards/purchased → returns the travelcards purchased by userID in the period selected.
+```
+curl GET -v -i 'http://localhost:8100/traveler/admin/traveler/USER1/travelcards/purchased?start=10/06/2022&end=19/08/2022' -H "Authorization:{Bearer...}"
+```
+
 - GET /admin/traveler/{userID}/travelcards/expired → returns the expired travelcards purchased by userID.
 ```
 curl GET -v -i 'http://localhost:8100/traveler/admin/traveler/USER1/travelcards/expired' -H "Authorization:{Bearer...}"
@@ -220,6 +243,17 @@ curl GET -v -i 'http://localhost:8100/traveler/admin/traveler/USER1/travelcards/
 ```
 curl GET -v -i 'http://localhost:8100/traveler/admin/traveler/USER1/travelcards/expired?start=10/06/2022&end=19/08/2022' -H "Authorization:{Bearer...}"
 ```
+
+- GET /admin/traveler/{userID}/travelcards/valid → returns the valid travelcards purchased by userID.
+```
+curl GET -v -i 'http://localhost:8100/traveler/admin/traveler/USER1/travelcards/valid' -H "Authorization:{Bearer...}"
+```
+
+- GET /admin/traveler/{userID}/travelcards/valid → returns the valid travelcards purchased by userID in the period selected.
+```
+curl GET -v -i 'http://localhost:8100/traveler/admin/traveler/USER1/travelcards/valid?start=10/06/2022&end=19/08/2022' -H "Authorization:{Bearer...}"
+```
+
 In order to download a QRCode Ticket 
 
 - GET /QRCode/generateQRCode/{ticketId}

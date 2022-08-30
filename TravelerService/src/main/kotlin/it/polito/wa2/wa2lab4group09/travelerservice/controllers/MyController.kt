@@ -1,18 +1,16 @@
 package it.polito.wa2.wa2lab4group09.travelerservice.controllers
 
+import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TicketPurchasedDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TravelcardOwnerDTO
+import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TravelcardPurchasedDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.toDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.services.UserDetailsService
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.bson.types.ObjectId
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
@@ -44,14 +42,91 @@ class MyController(val userDetailsService: UserDetailsService) {
     }
 
     @GetMapping("/traveler/my/tickets")
-    suspend fun getUserTickets(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
+    suspend fun getUserTickets(
+        @RequestParam("start", required = false) startTime: String,
+        @RequestParam("end", required = false) endTime: String,
+        @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any>{
         val newToken = jwt.replace("Bearer", "")
         return try {
-            val body = userDetailsService.getUserTickets(newToken).map {
-                t-> t.toDTO()
+            val body : Flow<TicketPurchasedDTO>
+            if(startTime==null && endTime==null) {
+                 body = userDetailsService.getUserTickets(newToken).map { t ->
+                    t.toDTO()
+                }
+            }
+            else {
+                body = userDetailsService.getUserTicketsPeriodOfTime(newToken, startTime, endTime).map { t ->
+                    t.toDTO()
+                }
             }
             ResponseEntity(body, HttpStatus.OK)
         } catch (t : Throwable){
+            val error = ErrorMessage(t.message)
+            ResponseEntity(error, HttpStatus.BAD_REQUEST)
+        }
+    }
+    @GetMapping("/traveler/my/tickets/valid")
+    suspend fun getUserTicketsValid(
+        @RequestParam("start", required = false) startTime: String,
+        @RequestParam("end", required = false) endTime: String,
+        @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
+        val newToken = jwt.replace("Bearer", "")
+        return try {
+            val body : Flow<TicketPurchasedDTO>
+            if(startTime==null && endTime==null){
+                body =userDetailsService.getUserTicketsValid(newToken)
+            }
+            else {
+                body =userDetailsService.getUserTicketsValidPeriodOfTime(newToken, startTime,endTime).map { t ->
+                    t.toDTO()
+                }
+            }
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t: Throwable) {
+            val error = ErrorMessage(t.message)
+            ResponseEntity(error, HttpStatus.BAD_REQUEST)
+        }
+    }
+    @GetMapping("/traveler/my/tickets/validated")
+    suspend fun getUserTicketsValidated(
+        @RequestParam("start", required = false) startTime: String,
+        @RequestParam("end", required = false) endTime: String,
+        @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
+        val newToken = jwt.replace("Bearer", "")
+        return try {
+            val body : Flow<TicketPurchasedDTO>
+            if(startTime==null && endTime==null){
+                body =userDetailsService.getUserTicketsValidated(newToken)
+            }
+            else {
+                body =userDetailsService.getUserTicketsValidatedPeriodOfTime(newToken, startTime,endTime).map { t ->
+                    t.toDTO()
+                }
+            }
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t: Throwable) {
+            val error = ErrorMessage(t.message)
+            ResponseEntity(error, HttpStatus.BAD_REQUEST)
+        }
+    }
+    @GetMapping("/traveler/my/tickets/expired")
+    suspend fun getUserTicketsExpired(
+        @RequestParam("start", required = false) startTime: String,
+        @RequestParam("end", required = false) endTime: String,
+        @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
+        val newToken = jwt.replace("Bearer", "")
+        return try {
+            val body : Flow<TicketPurchasedDTO>
+            if(startTime==null && endTime==null){
+                body =userDetailsService.getUserTicketsExpired(newToken)
+                println("body")
+                println(body)
+            }
+            else {
+                body =userDetailsService.getUserTicketsExpiredPeriodOfTime(newToken,startTime,endTime)
+            }
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t: Throwable) {
             val error = ErrorMessage(t.message)
             ResponseEntity(error, HttpStatus.BAD_REQUEST)
         }
@@ -78,6 +153,52 @@ class MyController(val userDetailsService: UserDetailsService) {
             }
             ResponseEntity(body, HttpStatus.OK)
         } catch (t : Throwable){
+            val error = ErrorMessage(t.message)
+            ResponseEntity(error, HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @GetMapping("/traveler/my/travelcards/valid")
+    suspend fun getUserTravelcardsValid(
+        @RequestParam("start", required = false) startTime: String,
+        @RequestParam("end", required = false) endTime: String,
+        @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
+        val newToken = jwt.replace("Bearer", "")
+        return try {
+            val body : Flow<TravelcardPurchasedDTO>
+            if(startTime==null && endTime==null){
+                body =userDetailsService.getUserTravelcardsValid(newToken)
+            }
+            else {
+                body =userDetailsService.getUserTravelcardsValidPeriodOfTime(newToken, startTime,endTime).map { t ->
+                    t.toDTO()
+                }
+            }
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t: Throwable) {
+            val error = ErrorMessage(t.message)
+            ResponseEntity(error, HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @GetMapping("/traveler/my/travelcards/expired")
+    suspend fun getUserTravelcardsExpired(
+        @RequestParam("start", required = false) startTime: String,
+        @RequestParam("end", required = false) endTime: String,
+        @RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
+        val newToken = jwt.replace("Bearer", "")
+        return try {
+            val body : Flow<TravelcardPurchasedDTO>
+            if(startTime==null && endTime==null){
+                body =userDetailsService.getUserTravelcardsExpired(newToken)
+            }
+            else {
+                body =userDetailsService.getUserTravelcardsExpiredPeriodOfTime(newToken, startTime,endTime).map { t ->
+                    t.toDTO()
+                }
+            }
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t: Throwable) {
             val error = ErrorMessage(t.message)
             ResponseEntity(error, HttpStatus.BAD_REQUEST)
         }

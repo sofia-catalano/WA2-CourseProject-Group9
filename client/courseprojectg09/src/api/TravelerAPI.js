@@ -10,7 +10,6 @@ function getMyProfile() {
         }).then((response) => {
             if(response.ok){
                 response.json().then((json)=>{
-                    console.log(json)
                     resolve(json);
                 }).catch((err)=> {
                     reject(err)
@@ -33,7 +32,6 @@ function updateMyProfile(user) {
         }).then((response) => {
             if(response.ok){
                 response.json().then((json)=>{
-                    console.log(response)
                    resolve()
                 }).catch((err)=> {
                     reject(err)
@@ -56,7 +54,67 @@ function getMyTickets() {
         }).then((response) => {
             if(response.ok){
                 response.json().then((json)=>{
-                    console.log(json)
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
+function getMyTicketsValidated() {
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/my/tickets/validated', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+function getMyTicketsValid() {
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/my/tickets/valid', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+function getMyTicketsExpired() {
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/my/tickets/expired', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
                     resolve(json);
                 }).catch((err)=> {
                     reject(err)
@@ -77,7 +135,6 @@ function getTravelers() {
         }).then((response) => {
             if(response.ok){
                 response.json().then((json)=>{
-                    console.log(json)
                     resolve(json);
                 }).catch((err)=> {
                     reject(err)
@@ -97,10 +154,8 @@ function getTravelersTicketsPurchased(){
                 'Authorization' : sessionStorage.getItem('authorization')
             }
         }).then((response) => {
-            console.log(response)
             if(response.ok){
                 response.json().then((json)=>{
-                    console.log(json)
                     resolve(json);
                 }).catch((err)=> {
                     reject(err)
@@ -121,10 +176,8 @@ function getTravelersTravelcardsPurchased(){
                 'Authorization' : sessionStorage.getItem('authorization')
             }
         }).then((response) => {
-            console.log(response)
             if(response.ok){
                 response.json().then((json)=>{
-                    console.log(json)
                     resolve(json);
                 }).catch((err)=> {
                     reject(err)
@@ -145,10 +198,50 @@ function getTravelersTicketsValidated(){
                 'Authorization' : sessionStorage.getItem('authorization')
             }
         }).then((response) => {
-            console.log(response)
             if(response.ok){
                 response.json().then((json)=>{
-                    console.log(json)
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+function getTravelersTicketsValid(){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/admin/travelers/tickets/valid', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+function getTravelersTicketsExpired(){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/admin/travelers/tickets/expired', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
                     resolve(json);
                 }).catch((err)=> {
                     reject(err)
@@ -168,10 +261,8 @@ function getTravelerProfile(userID){
                 'Authorization' : sessionStorage.getItem('authorization')
             }
         }).then((response) => {
-            console.log(response)
             if(response.ok){
                 response.json().then((json)=>{
-                    console.log(json)
                     resolve(json);
                 }).catch((err)=> {
                     reject(err)
@@ -191,10 +282,8 @@ function getTravelerTicketPurchased(userID){
                 'Authorization' : sessionStorage.getItem('authorization')
             }
         }).then((response) => {
-            console.log(response)
             if(response.ok){
                 response.json().then((json)=>{
-                    console.log(json)
                     resolve(json);
                 }).catch((err)=> {
                     reject(err)
@@ -214,10 +303,8 @@ function getTravelerTicketsValidated(userID){
                 'Authorization' : sessionStorage.getItem('authorization')
             }
         }).then((response) => {
-            console.log(response)
             if(response.ok){
                 response.json().then((json)=>{
-                    console.log(json)
                     resolve(json);
                 }).catch((err)=> {
                     reject(err)
@@ -229,16 +316,112 @@ function getTravelerTicketsValidated(userID){
     });
 
 }
+function getTravelerTicketsValid(userID){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+`/admin/traveler/${userID}/tickets/valid`, {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+function getTravelerTicketsExpired(userID){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+`/admin/traveler/${userID}/tickets/expired`, {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+function getTravelersTravelcardsExpired(){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/admin/travelers/travelcards/expired', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+
+
+function getTravelersTravelcardsValid(){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/admin/travelers/travelcards/valid', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+
 const travelerAPI = {
         getMyProfile,
          getTravelers,
          getTravelersTicketsPurchased,
          getTravelersTicketsValidated,
+         getTravelersTicketsValid,
+        getTravelersTicketsExpired,
          getTravelersTravelcardsPurchased,
          getTravelerProfile,
          getTravelerTicketPurchased,
          getTravelerTicketsValidated,
-         updateMyProfile,
-        getMyTickets};
+         getTravelerTicketsValid,
+         getTravelerTicketsExpired,
+        updateMyProfile,
+        getMyTickets,
+        getMyTicketsValidated,
+        getMyTicketsExpired,
+        getTravelersTravelcardsExpired,
+        getTravelersTravelcardsValid,
+        getMyTicketsValid};
 
 export default travelerAPI;

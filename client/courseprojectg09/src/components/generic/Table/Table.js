@@ -18,6 +18,12 @@ import IconButton from "@mui/material/IconButton";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useLocation } from 'react-router-dom';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import TextField from '@mui/material/TextField';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -97,18 +103,19 @@ GenericTableHead.propTypes = {
 
 
 const EnhancedTableToolbar = (props) => {
-    const {nameTable, FilterMenu, onAddElement} = props
+    const {nameTable, FilterMenu, onAddElement, handleTypeSelectedChange, typeSelected} = props
+    const {startDate, setStartDate, endDate, setEndDate}=props
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const location = useLocation();
-    
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
-    
+
 
     return (
         <Toolbar
@@ -128,15 +135,36 @@ const EnhancedTableToolbar = (props) => {
             </Typography>
 
             {FilterMenu &&
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                        label="Start date"
+                        value={startDate}
+                        onChange={(newValue) => {
+                            setStartDate(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                    />
+                    <DatePicker
+                        label="End date"
+                        value={endDate}
+                        onChange={(newValue) => {
+                            setEndDate(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                    />
+                </LocalizationProvider>
+            }
+
+            {
             location.pathname==="/catalogue/admin/tickets" || location.pathname==="/catalogue/admin/travelcard" ?
                 <Tooltip title="Add to list">
                     <IconButton onClick={ onAddElement }>
                         <AddCircleOutlineIcon/>
                     </IconButton>
                 </Tooltip>
-                    
+
                 :
-                <>
+                FilterMenu && <>
                     <Tooltip title="Filter list">
                         <IconButton onClick={handleClick}>
                             <FilterListIcon/>
@@ -146,6 +174,8 @@ const EnhancedTableToolbar = (props) => {
                     open={open}
                     handleClose={handleClose}
                     anchorEl={anchorEl}
+                    typeSelected={typeSelected}
+                    handleTypeSelectedChange={handleTypeSelectedChange}
                     />
                 </>
             }
@@ -158,14 +188,14 @@ const EnhancedTableToolbar = (props) => {
 
 export default function GenericTable(props) {
     const {headCells, rows, nameTable, FilterMenu, onClickElement, onAddElement} = props
+    const {typeSelected, handleTypeSelectedChange } = props //for filter menu
     const {selectedValue, handleTypeTicketsChange}=props //only for buy ticket form
+    const {startDate, setStartDate, endDate, setEndDate}=props
 
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-
 
 
     const handleRequestSort = (event, property) => {
@@ -190,7 +220,15 @@ export default function GenericTable(props) {
     return (
         <Box sx={{ width: '90%', mt:2 , mr:5, ml:5 }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
-                <EnhancedTableToolbar nameTable={nameTable} FilterMenu={FilterMenu} onAddElement={onAddElement}/>
+                <EnhancedTableToolbar nameTable={nameTable}
+                                      FilterMenu={FilterMenu}
+                                      onAddElement={onAddElement}
+                                      typeSelected={typeSelected}
+                                      handleTypeSelectedChange={handleTypeSelectedChange}
+                                      startDate={startDate}
+                                      endDate={endDate}
+                                      setStartDate={setStartDate}
+                                      setEndDate={setEndDate}/>
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}
@@ -204,6 +242,7 @@ export default function GenericTable(props) {
                             onRequestSort={handleRequestSort}
                             rowCount={rows.length}
                             onSelectAllClick={()=>{}}/>
+
                         {<TableBody>
                             {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy))*/}

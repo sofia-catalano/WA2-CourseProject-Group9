@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import it.polito.wa2.wa2lab4group09.travelerservice.entities.TravelcardPurchased
 import org.bson.types.ObjectId
 import java.sql.Timestamp
-import java.util.*
 
 data class TravelcardPurchasedDTO(
     @JsonProperty("sub")
@@ -21,9 +20,11 @@ data class TravelcardPurchasedDTO(
     @JsonProperty("jws")
     var jws: String,
     @JsonProperty("userId")
-    var userId: String
+    var userId: String,
+    @JsonProperty("duration")
+    var duration: String
 )
 
 fun TravelcardPurchased.toDTO(): TravelcardPurchasedDTO {
-    return TravelcardPurchasedDTO(sub, iat, exp, zid, jws, userId)
+    return TravelcardPurchasedDTO(sub, iat, exp, zid, jws, userId, duration)
 }

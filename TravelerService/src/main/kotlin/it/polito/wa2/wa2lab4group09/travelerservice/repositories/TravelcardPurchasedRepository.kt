@@ -30,14 +30,32 @@ interface TravelcardPurchasedRepository: ReactiveMongoRepository<TravelcardPurch
     @Query("{'exp' : { \$lt: ?0 },'userId' : { \$eq: ?1}}")
     fun findByUserAndExp(end: Timestamp, userId : String): Flow<TravelcardPurchased>
 
-    @Query("{'exp' : { \$gte: ?0, \$lte: ?1 }, 'userId' : { \$eq: ?2}}")
-    fun findByUserAndExpBetween(start:Timestamp, end: Timestamp, userId : String): Flow<TravelcardPurchased>
+    @Query("{'iat' : { \$gte: ?0, \$lte: ?1 }, 'userId' : { \$eq: ?2}, 'exp' : { \$lt: ?3}}")
+    fun findExpiredByUserAndIatBetween(start:Timestamp, end: Timestamp, userId : String, now:Timestamp): Flow<TravelcardPurchased>
 
     @Query("{'exp' : { \$lt : ?0 }}")
     fun findExpired(end: Timestamp): Flow<TravelcardPurchased>
 
-    @Query("{'exp' : { \$gte: ?0, \$lte: ?1}}")
-    fun findByExpBetween(start: Timestamp, end: Timestamp): Flow<TravelcardPurchased>
+    @Query("{ 'exp' : { \$lt : ?2 }, 'iat' : { \$gte: ?0, \$lte: ?1}}")
+    fun findExpiredByIatBetween(start: Timestamp, end: Timestamp, now:Timestamp): Flow<TravelcardPurchased>
+
+    @Query("{'exp' : { \$gt : ?0 }}")
+    fun findValid(end: Timestamp): Flow<TravelcardPurchased>
+
+    @Query("{ 'exp' : { \$gt : ?2 }, 'iat' : { \$gte: ?0, \$lte: ?1}}")
+    fun findValidByIatBetween(start: Timestamp, end: Timestamp, now: Timestamp): Flow<TravelcardPurchased>
+
+    @Query("{ 'exp' : { \$gt : ?1}, 'userId' : { \$eq: ?0}}")
+    fun findAllValidByUserDetails( userId: String, now: Timestamp): Flow<TravelcardPurchased>
+
+    @Query("{ 'iat' : { \$gte: ?0, \$lte: ?1 },'userId' : { \$eq: ?2}, 'exp' : { \$gt : ?3}}")
+    fun findAllValidByUserDetailsAndIatBetween( start:Timestamp, end: Timestamp, userId : String, now: Timestamp): Flow<TravelcardPurchased>
+
+    @Query("{ 'exp' : { \$lt : ?1}, 'userId' : { \$eq: ?0}}")
+    fun findAllExpiredByUserDetails( userId: String, now: Timestamp): Flow<TravelcardPurchased>
+
+    @Query("{ 'iat' : { \$gte: ?0, \$lte: ?1 },'userId' : { \$eq: ?2}, 'exp' : { \$lt : ?3}}")
+    fun findAllExpiredByUserDetailsAndIatBetween( start:Timestamp, end: Timestamp, userId : String, now: Timestamp): Flow<TravelcardPurchased>
 
 
 }

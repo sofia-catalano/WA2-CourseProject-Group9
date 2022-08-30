@@ -20,10 +20,22 @@ interface TicketPurchasedRepository: ReactiveMongoRepository<TicketPurchased, Ob
     fun findAllByUserIdOrderByIat(userId: String) : Flux<TicketPurchased>
 
     @Query("{'validated' : { \$ne : null}}")
-    fun findByValidate(): Flow<TicketPurchased>
+    fun findByValidated(): Flow<TicketPurchased>
+
+    @Query("{'validated' : { \$eq : null}}")
+    fun findByValid(): Flow<TicketPurchased>
+
+    @Query("{'expired' : { \$lt:?0}")
+    fun findByExpired(now:Timestamp): Flow<TicketPurchased>
+
+    @Query("{'expired' : {\$lt : ?2, \$gt:?0, \$lt:?1}}")
+    fun findByExpiredAndExpiredBetween(start:Timestamp, end: Timestamp,now:Timestamp): Flow<TicketPurchased>
 
     @Query("{'iat' : { \$gte: ?0, \$lte: ?1}}")
     fun findByIatBetween(start:Timestamp, end: Timestamp): Flow<TicketPurchased>
+
+    @Query("{'validated' : {\$eq : null}, 'iat' : { \$gte: ?0, \$lte: ?1}}")
+    fun findByValidAndIatBetween(start:Timestamp, end: Timestamp): Flow<TicketPurchased>
 
     @Query("{'validated' : {\$ne : null, \$gte: ?0, \$lte: ?1}}")
     fun findByValidateAndPeriodOfTime(start:Timestamp, end: Timestamp): Flow<TicketPurchased>
@@ -34,7 +46,19 @@ interface TicketPurchasedRepository: ReactiveMongoRepository<TicketPurchased, Ob
     @Query("{'validated' : { \$ne : null},'userId' : { \$eq: ?0}}")
     fun findAllValidatedByUserDetails( userId: String): Flow<TicketPurchased>
 
-    @Query("{'validated' : {\$ne : null, \$gte: ?0, \$lte: ?1},'userId' : { \$eq: ?2}}")
-    fun findAllValidatedByUserDetailsAndPeriodOfTime(start:Timestamp, end: Timestamp, userId : String): Flow<TicketPurchased>
+    @Query("{'validated' : { \$ne : null, \$gte: ?0,\$lte: ?1},'userId' : { \$eq: ?2}}")
+    fun findValidatedByUserDetailsAndPeriodOfTime(start:Timestamp, end: Timestamp, userId : String): Flow<TicketPurchased>
+
+    @Query("{'validated' : { \$eq : null},'userId' : { \$eq: ?0}}")
+    fun findAllValidByUserDetails( userId: String): Flow<TicketPurchased>
+
+    @Query("{'validated' : { \$eq : null},'iat' : { \$gte: ?0, \$lte: ?1 },'userId' : { \$eq: ?2}}")
+    fun findAllValidByUserDetailsAndIatBetween( start:Timestamp, end: Timestamp, userId : String): Flow<TicketPurchased>
+
+    @Query("{'expired' : { \$lt : ?1},'userId' : { \$eq: ?0}}")
+    fun findAllExpiredByUserDetails(username: String, now: Timestamp?): Flow<TicketPurchased>
+
+    @Query("{'expired' : { \$lt : ?3, \$gt:?1, \$lt:?2 },'userId' : { \$eq: ?0}}")
+    fun findAllExpiredByUserDetailsAndExpiredBetween(username: String, start:Timestamp, end: Timestamp, now: Timestamp?): Flow<TicketPurchased>
 }
 

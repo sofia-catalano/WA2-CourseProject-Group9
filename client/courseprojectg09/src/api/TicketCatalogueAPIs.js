@@ -1,3 +1,5 @@
+import Orders from "../model/Order";
+
 const BASEURL = '/catalogue';
 
 function getCatalogue() {
@@ -28,7 +30,9 @@ function getAllOrders() {
         }).then((response) => {
             if (response.ok) {
                 response.json().then((json) => {
-                    resolve(json);
+                    console.log(json)
+                    const orders = json.map((ordersJson) => Orders.from(ordersJson));
+                    resolve(orders);
                 }).catch((err) => {
                     reject(err)
                 });
@@ -44,6 +48,32 @@ function getAllOrders() {
 function getUserOrders(userId) {
     return new Promise((resolve, reject) => {
         fetch(`${BASEURL}/admin/orders/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    console.log(json)
+                    const orders = json.map((ordersJson) => Orders.from(ordersJson));
+                    resolve(orders);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => {
+            reject(err)
+        });
+    });
+}
+
+//ista di tutti gli ordini effettuati da un utente
+function getTravelerOrders() {
+    return new Promise((resolve, reject) => {
+        fetch(`${BASEURL}/orders`, {
             method: 'GET',
             headers: {
                 'Authorization': sessionStorage.getItem('authorization')
@@ -121,6 +151,6 @@ function buyTickets(quantity, ticketId, paymentInfo) {
     });
 }
 
-const catalogueAPI = {getCatalogue, getAllOrders, getUserOrders, addNewTicketToCatalogue, buyTickets};
+const catalogueAPI = {getCatalogue, getAllOrders, getUserOrders, getTravelerOrders, addNewTicketToCatalogue, buyTickets};
 
 export default catalogueAPI;
