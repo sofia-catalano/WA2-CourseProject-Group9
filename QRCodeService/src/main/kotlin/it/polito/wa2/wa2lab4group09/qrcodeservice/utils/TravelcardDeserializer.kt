@@ -40,5 +40,7 @@ data class TravelcardPurchasedDTO(
     @JsonProperty("jws")
     var jws: String,
     @JsonProperty("userId")
-    var userId: String
+    var userId: String,
+    @JsonProperty("duration")
+    var duration: String
 )
