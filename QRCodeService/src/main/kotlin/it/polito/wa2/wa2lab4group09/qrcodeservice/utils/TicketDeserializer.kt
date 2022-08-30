@@ -40,5 +40,7 @@ data class TicketPurchasedDTO(
     @JsonProperty("jws")
     var jws: String,
     @JsonProperty("validated")
-    var validated: Date?
+    var validated: Date?,
+    @JsonProperty("userId")
+    var userId: String,
 )
