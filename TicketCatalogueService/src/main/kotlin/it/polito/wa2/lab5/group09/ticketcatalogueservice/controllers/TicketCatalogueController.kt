@@ -12,7 +12,6 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.security.Role
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.services.TicketCatalogueService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactor.awaitSingle
 import org.bson.types.ObjectId
@@ -85,7 +84,9 @@ class TicketCatalogueController(
     @GetMapping("/catalogue/tickets")
     suspend fun getTickets(): ResponseEntity<Any> {
         return try {
-            val ticketCatalogue = ticketCatalogueService.getCatalogue().map{it.toDTO()}
+            val ticketCatalogue = ticketCatalogueService.getCatalogue().map{
+                t -> t.toDTO()
+            }
             ResponseEntity(ticketCatalogue, HttpStatus.OK)
         } catch (t: Throwable) {
             val error = ErrorMessage(t.message)
