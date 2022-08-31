@@ -19,21 +19,15 @@ const style = {
     p: 4,
 };
 
-function UserOrdersList(props) {
+function UserOrdersList() {
     const [loading, setLoading] = useState(true);
-    const [openTicketsModal, setOpenTicketsModal] = useState(false);
-    const [openTravelerCardsModal, setOpenTravelerCardsModal] = useState(false);
-    const [ticketOrders, setTIcketOrders] = useState([])
+    const [ticketOrders, setTicketOrders] = useState([])
     const [travelcardOrders, setTravelcardOrders] = useState([])
-    const handleOpenTicketsDetailsModal = () => setOpenTicketsModal(true);
-    const handleCloseTicketsDetailsModal = () => setOpenTicketsModal(false);
-    const handleOpenTravelerCardsDetailsModal = () => setOpenTravelerCardsModal(true);
-    const handleCloseTravelerCardsDetailsModal = () => setOpenTravelerCardsModal(false);
 
     React.useEffect(() => {
         catalogueAPI.getTravelerOrders().then(r => {
-            console.log(r)
-            let tmp1, tmp2 = []
+            let tmp1 = []
+            let tmp2 = []
             r.forEach(element => {
                 if(element.owner === null ){
                     tmp1.push({
@@ -51,12 +45,11 @@ function UserOrdersList(props) {
                     })
                 }
             })
-    
-            setTIcketOrders(tmp1);
+            setTicketOrders(tmp1);
             setTravelcardOrders(tmp2);
             setLoading(false)
         });
-    })
+    }, [])
 
     return (
         <>{loading
@@ -69,52 +62,14 @@ function UserOrdersList(props) {
                         headCells={headCellsTickets}
                         rows={ticketOrders}
                         nameTable={"My Orders (Tickets)"}
-                        onClickElement={handleOpenTicketsDetailsModal}
                     />
-                    <Modal
-                        open={openTicketsModal}
-                        onClose={handleCloseTicketsDetailsModal}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Order Tickets Details:
-                            </Typography>
-                            <Typography id="modal-modal-description" sx={{mt: 2}}
-                                        onClick={() => console.log("Vai alla pagina my tickets a questo ticket")}>
-                                TicketID1
-                            </Typography>
-                        </Box>
-                    </Modal>
                 </Grid>
                 <Grid item xs={12}>
                     <GenericTable
                         headCells={headCellsTravelerCards}
                         rows={travelcardOrders}
                         nameTable={"My Orders (Travelcards)"}
-                        onClickElement={handleOpenTravelerCardsDetailsModal}
                     />
-                    <Modal
-                        open={openTravelerCardsModal}
-                        onClose={handleCloseTravelerCardsDetailsModal}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Order Travelcard Details:
-                            </Typography>
-                            <Typography id="modal-modal-description" sx={{mt: 2}}>
-                                TravelerCardID1
-                            </Typography>
-                        </Box>
-                    </Modal>
-                </Grid>
-                <Grid item xs={12} style={{marginLeft: "3vw"}}>
-                    <Typography>
-                        Click an element to see further details.
-                    </Typography>
                 </Grid>
             </Grid>
         }
