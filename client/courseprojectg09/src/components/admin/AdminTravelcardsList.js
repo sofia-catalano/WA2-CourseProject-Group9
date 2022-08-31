@@ -4,16 +4,20 @@ import GenericTable from "../generic/Table/Table";
 import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 import travelerAPI from "../../api/TravelerAPI";
 import moment from "moment";
+import * as dayjs from "dayjs";
 
 function AdminTravelcardsList(props) {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     const [typeTravelcardsSelected, setTypeTravelcardsSelected]=useState('all')
     const [nameTable, setNameTable] = useState('Travelcards')
-    
+    const [startDate, setStartDate] = useState(dayjs())
+    const [endDate, setEndDate] = useState(dayjs().add(1,'day'))
+    const [rangeDate, setRangeDate] = useState(false)
+
     const getAllTravelersTravelcardsPurchased = () => {
         setLoading(true)
-        travelerAPI.getTravelersTravelcardsPurchased()
+        travelerAPI.getTravelersTravelcardsPurchased(rangeDate, startDate.toISOString(), endDate.toISOString())
             .then(r => {
                 console.log(r)
                 setTravelcards(r)
@@ -27,9 +31,9 @@ function AdminTravelcardsList(props) {
             return {
                 id:element.sub,
                 type:  element.duration,
-                acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
-                expired: moment(element.expired).format('YYYY-MM-DD HH:mm:ss'),
-                status:  (moment(element.expired)).diff(moment(), 'days') > 0 ? 'VALID' : 'EXPIRED',
+                acquired: dayjs(element.iat).format('YYYY-MM-DD HH:mm:ss'),
+                expired: dayjs(element.exp).format('YYYY-MM-DD HH:mm:ss'),
+                status:  (moment(element.exp)).diff(moment(), 'days') > 0 ? 'VALID' : 'EXPIRED',
                 zones:element.zid,
                 username:element.userId,
             }
@@ -43,33 +47,27 @@ function AdminTravelcardsList(props) {
     },[])
 
 
-    const handleTypeTravelcardsSelectedChange=(event)=>{
-        console.log("Event "+ event.target.value)
-        setTypeTravelcardsSelected(event.target.value)
-        if(event.target.value!= typeTravelcardsSelected){
-            if(event.target.value == 'all'){
-                getAllTravelersTravelcardsPurchased()
-            }
-            else if(event.target.value == 'valid'){
-                setLoading(true)
-                travelerAPI.getTravelersTravelcardsValid()
-                    .then(r => {
-                        setTravelcards(r)
-                        setNameTable('Valid travelcards')
-                    })
-                    .catch(err => console.log(err))
-
-            }
-            else if(event.target.value == 'expired'){
-                setLoading(true)
-                travelerAPI.getTravelersTravelcardsExpired()
-                    .then(r => {
-                        setTravelcards(r)
-                        setNameTable('Expired travelcards')
-                    })
-                    .catch(err => console.log(err))
-
-            }
+    const searchTravelcards = () => {
+        if(typeTravelcardsSelected === 'all') {
+            getAllTravelersTravelcardsPurchased()
+        }
+        else if(typeTravelcardsSelected === 'valid'){
+            setLoading(true)
+            travelerAPI.getTravelersTravelcardsValid(rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTravelcards(r)
+                    setNameTable('Valid travelcards')
+                })
+                .catch(err => console.log(err))
+        }
+        else if(typeTravelcardsSelected === 'expired'){
+            setLoading(true)
+            travelerAPI.getTravelersTravelcardsExpired(rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTravelcards(r)
+                    setNameTable('Expired travelcards')
+                })
+                .catch(err => console.log(err))
         }
     }
 
@@ -84,13 +82,19 @@ function AdminTravelcardsList(props) {
                 nameTable={nameTable}
                 FilterMenu={TravelcardsFilterMenu}
                 typeSelected={typeTravelcardsSelected}
-                handleTypeSelectedChange={handleTypeTravelcardsSelectedChange}
+                setTypeSelected={setTypeTravelcardsSelected}
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+                searchTickets={searchTravelcards}
+                rangeDate={rangeDate}
+                setRangeDate={setRangeDate}
             ></GenericTable>
         }
 
         </>
-    );
-}
+    )}
 
 const headCells = [
     {

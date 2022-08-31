@@ -105,12 +105,12 @@ function BuyTravelcard(props) {
                 <GenericTable
                     headCells={headCells}
                     rows={data}
-                    nameTable={userRole==="admin" ? "Travelcards list": "Buy travelcard"}
+                    nameTable={userRole==="ADMIN" ? "Travelcards list": "Buy travelcard"}
                     selectedValue={selectedValue}
                     handleTypeTicketsChange={handleTypeTicketsChange}
                     onAddElement={handleAddToCatalogueModal}
                 ></GenericTable>
-                {userRole !== "admin" && <>
+                {userRole !== "ADMIN" && <>
                 <Box sx={{ width: '90%' , mr:5, ml:5 }}>
                     <Paper sx={{ width: '100%', mb: 2 }}>
                         <Typography

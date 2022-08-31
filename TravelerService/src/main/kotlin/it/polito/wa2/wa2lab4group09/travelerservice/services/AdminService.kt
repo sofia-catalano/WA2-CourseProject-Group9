@@ -234,9 +234,6 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
         if (convertDateToTimestamp(end) < convertDateToTimestamp(start) )
             throw IllegalArgumentException("End date should be greater than start date!")
 
-        if (convertDateToTimestamp(start) > Timestamp.from(Instant.now()) || convertDateToTimestamp(end) > Timestamp.from(Instant.now()))
-            throw IllegalArgumentException("Selected period of time should be less than today!")
-
         return travelcardPurchasedRepository
             .findExpiredByIatBetween(convertDateToTimestamp(start), convertDateToTimestamp(end), Timestamp.from(Instant.now()))
             .map {
@@ -255,9 +252,6 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
     suspend fun getTravelcardsValidPeriodOfTime(start: String, end:String): Flow<TravelcardPurchasedDTO> {
         if (convertDateToTimestamp(end) < convertDateToTimestamp(start) )
             throw IllegalArgumentException("End date should be greater than start date!")
-
-        if (convertDateToTimestamp(end) < Timestamp.from(Instant.now()))
-            throw IllegalArgumentException("Selected period of time should be greater than today!")
 
         return travelcardPurchasedRepository
             .findValidByIatBetween(convertDateToTimestamp(start), convertDateToTimestamp(end), Timestamp.from(Instant.now()))
