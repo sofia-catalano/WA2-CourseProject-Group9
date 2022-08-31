@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {useState} from "react";
 import MenuItem from "@mui/material/MenuItem";
-import { IoTicketOutline } from "react-icons/io5";
+import { IoTicketSharp } from "react-icons/io5";
 import './AddToCatalogueForm.css'
 import ticketCatalogueAPIs from "../../../api/TicketCatalogueAPIs";
 import TicketCatalogue from "../../../model/TicketCatalogue";
@@ -121,7 +121,7 @@ function AddForm(props) {
                     <CssBaseline />
                     <Box id="formStyle">
                         <Avatar id="iconFormStyle" sx={{ width: 60, height: 60, mb: 1, bgcolor: '#1976d2' }}>
-                            <IoTicketOutline fontSize="large" sx={{color: '#ffeb3b' }}/>
+                            <IoTicketSharp fontSize="35px" style={{ color: '#ffeb3b' }}/>
                         </Avatar>
                         <Box component="form" onSubmit={handleSubmit} sx={{p: 2}}>
                             <TextField
