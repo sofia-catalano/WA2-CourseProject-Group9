@@ -125,6 +125,10 @@ class TicketCatalogueController(
                 throw IllegalArgumentException("Travelcard owner cannot be null!")
             }
 
+            if((ticketCatalogue.type == "1 month" || ticketCatalogue.type == "1 year") && purchasingInfo.numberOfTickets > 1){
+                throw IllegalArgumentException("Travelcard quantity cannot be more than 1!")
+            }
+
             if(ticketCatalogue.type != "1 month" && ticketCatalogue.type != "1 year" && purchasingInfo.owner != null){
                 throw IllegalArgumentException("Travelcard owner should be null!")
             }
