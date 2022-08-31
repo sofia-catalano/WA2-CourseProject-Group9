@@ -96,7 +96,7 @@ function AddForm(props) {
         },
     ];
 
-    const [ticketsType, setTicketsType] = useState('60 min');
+    const [ticketsType, setTicketsType] = useState(props.type==='ticket' ? '60 min' : '1 month');
     const [allowedZones, setAllowedZones] = useState('A');
     const [minAge, setMinAge]=useState();
     const [maxAge, setMaxAge]=useState();
