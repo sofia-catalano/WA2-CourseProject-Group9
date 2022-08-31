@@ -15,6 +15,7 @@ import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
 
 function BuyTickets(props) {
     const [loading, setLoading] = useState(true);
+    const [dirty, setDirty] = useState(false);
     const [selectedValue, setSelectedValue] = React.useState('');
     const [numberOfTickets, setNumberOfTickets]=useState(1)
     const [buyTicketsModal, setBuyTicketsModal] = React.useState(false);
@@ -63,9 +64,10 @@ function BuyTickets(props) {
             setSelectedValue(tmp[0].id)
             setTotal(tmp[0].price*numberOfTickets)
             setLoading(false)
+            setDirty(false)
         });
 
-    }, [])
+    }, [dirty])
 
 
     const handleSubmit = (event) => {
@@ -98,11 +100,11 @@ function BuyTickets(props) {
                 <GenericTable
                     headCells={headCells}
                     rows={data}
-                    nameTable={userRole==="ADMIN" ? "Tickets list": "Buy tickets"}
+                    nameTable={userRole === "ADMIN" ? "Tickets list" : "Buy tickets"}
                     selectedValue={selectedValue}
                     handleTypeTicketsChange={handleTypeTicketsChange}
                     onAddElement={handleAddToCatalogueModal}
-                ></GenericTable>
+                />
                 {userRole!=="ADMIN" && <>
                 <Box sx={{ width: '90%' , mr:5, ml:5 }}>
                     <Paper sx={{ width: '100%', mb: 2 }}>
@@ -162,7 +164,7 @@ function BuyTickets(props) {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                  <AddForm type="ticket"/>
+                  <AddForm type="ticket" setDirty={setDirty} setAddToCatalogueModal={setAddToCatalogueModal}/>
                 </Modal>
             </Box>
 

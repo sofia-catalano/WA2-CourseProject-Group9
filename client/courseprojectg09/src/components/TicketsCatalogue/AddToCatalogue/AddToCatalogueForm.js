@@ -9,6 +9,8 @@ import {useState} from "react";
 import MenuItem from "@mui/material/MenuItem";
 import { IoTicketOutline } from "react-icons/io5";
 import './AddToCatalogueForm.css'
+import ticketCatalogueAPIs from "../../../api/TicketCatalogueAPIs";
+import TicketCatalogue from "../../../model/TicketCatalogue";
 const style = {
     position: 'absolute',
     top: '50%',
@@ -96,16 +98,22 @@ function AddForm(props) {
 
     const [ticketsType, setTicketsType] = useState('60 min');
     const [allowedZones, setAllowedZones] = useState('A');
-    const [minAge, setMinAge]=useState(0);
-    const [maxAge, setMaxAge]=useState(100);
+    const [minAge, setMinAge]=useState();
+    const [maxAge, setMaxAge]=useState();
     const [price, setPrice] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log(data)
-
+        console.log({ticketsType, allowedZones, price, minAge, maxAge})
+        const ticketCatalogue = new TicketCatalogue(0, ticketsType, price, allowedZones, maxAge, minAge)
+        ticketCatalogueAPIs.addNewTicketToCatalogue(ticketCatalogue).then(r => {
+                console.log(r);
+                props.setDirty(true);
+                props.setAddToCatalogueModal(false);
+            }
+        );
     };
+
     return (
         <Box sx={style}>
             <ThemeProvider theme={theme}>
@@ -120,6 +128,7 @@ function AddForm(props) {
                                 margin="normal"
                                 required
                                 id="typeTickets"
+                                autoFocus
                                 select
                                 fullWidth
                                 label={`Type ${props.type}`}
@@ -162,7 +171,6 @@ function AddForm(props) {
                                 id="price"
                                 label="Price"
                                 type="number"
-                                autoFocus
                                 margin="normal"
                                 required
                                 fullWidth
@@ -174,7 +182,6 @@ function AddForm(props) {
                                 id="minAge"
                                 label="min Age"
                                 type="number"
-                                autoFocus
                                 margin="normal"
                                 fullWidth
                                 InputProps={{ inputProps: { min: 1, max: 100} }}
@@ -185,7 +192,6 @@ function AddForm(props) {
                                 id="maxAge"
                                 label="max Age"
                                 type="number"
-                                autoFocus
                                 margin="normal"
                                 fullWidth
                                 InputProps={{ inputProps: { min: 1, max: 100} }}
