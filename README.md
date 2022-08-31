@@ -181,7 +181,7 @@ curl --request POST -H "Authorization: {Bearer...}" -H "Content-Type: applicatio
 ```
 - POST /shop/ticketId → to buy travelcard of a travelcard type (this route will return the orderId if the payment has success, BAD REQUEST otherwise)
 ```
-curl --request POST -H "Authorization: {Bearer...}" -H "Content-Type: application/json" -H "Accept: application/json" -d '{"numberOfTickets":"3","ticketId":"{ticketId}", "type":"1 month", "paymentInfo":{"creditCardNumber":"1234568911111122","expirationDate":"10/22", "cvv":"123","cardHolder":"User" }, "owner":{"fiscal_code":"DFGSGH89T56G2987D","name":"Mario","surname":"Rossi","address":"via dei test Torino","date_of_birth":"01/01/1990","telephone_number":"1231231231"}}' -v -i 'http://localhost:8100/catalogue/shop/{ticketId}'
+curl --request POST -H "Authorization: {Bearer...}" -H "Content-Type: application/json" -H "Accept: application/json" -d '{"numberOfTickets":"1","ticketId":"{ticketId}", "type":"1 month", "paymentInfo":{"creditCardNumber":"1234568911111122","expirationDate":"10/22", "cvv":"123","cardHolder":"User" }, "owner":{"fiscal_code":"DFGSGH89T56G2987D","name":"Mario","surname":"Rossi","address":"via dei test Torino","date_of_birth":"01/01/1990","telephone_number":"1231231231"}}' -v -i 'http://localhost:8100/catalogue/shop/{ticketId}'
 ```
 - GET /orders → return a list of all orders made by the customer
 ```
