@@ -100,12 +100,13 @@ function AddForm(props) {
     const [allowedZones, setAllowedZones] = useState('A');
     const [minAge, setMinAge]=useState();
     const [maxAge, setMaxAge]=useState();
-    const [price, setPrice] = useState('');
+    const [price, setPrice] = useState("");
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log({ticketsType, allowedZones, price, minAge, maxAge})
-        const ticketCatalogue = new TicketCatalogue(0, ticketsType, price, allowedZones, maxAge, minAge)
+        const priceString = `${parseFloat(price).toFixed(2)}`
+        console.log({ticketsType, allowedZones, priceString, minAge, maxAge})
+        const ticketCatalogue = new TicketCatalogue(0, ticketsType, priceString, allowedZones, maxAge, minAge)
         ticketCatalogueAPIs.addNewTicketToCatalogue(ticketCatalogue).then(r => {
                 console.log(r);
                 props.setDirty(true);
@@ -170,13 +171,13 @@ function AddForm(props) {
                             <TextField
                                 id="price"
                                 label="Price"
-                                type="number"
+                                type="Number"
                                 margin="normal"
                                 required
                                 fullWidth
-                                InputProps={{ inputProps: { min: 1, max: 500} }}
+                                inputProps={{ inputMode: 'numeric', pattern: /^\d+(\.\d{0,2})?$/, min: 1, max: 500, step:"any" }}
                                 value={price}
-                                onChange={(event)=>setPrice(parseFloat(event.target.value))}
+                                onChange={(event)=>setPrice(event.target.value)}
                             />
                             <TextField
                                 id="minAge"
