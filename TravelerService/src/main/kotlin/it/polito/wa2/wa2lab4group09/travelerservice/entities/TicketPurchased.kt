@@ -33,12 +33,12 @@ data class TicketPurchased(
     @Id
     @Indexed
     var sub : ObjectId = ObjectId.get(),
-    var iat: Date,
-    var exp: Date? = null,
+    var iat: Timestamp,
+    var exp: Timestamp? = null,
     var zid: String,
     var jws: String,
     var duration : String,
     var typeId : ObjectId,
     var userId : String,
-    var validated:Date ? = null
+    var validated:Timestamp ? = null
 )

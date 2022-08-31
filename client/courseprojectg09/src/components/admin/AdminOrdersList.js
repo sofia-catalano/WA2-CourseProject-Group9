@@ -20,7 +20,7 @@ const style = {
     p: 4,
 };
 
-function AdminOrdersList(props){
+function AdminOrdersList(props) {
     const [loading, setLoading] = useState(false);
     const [openTicketsModal, setOpenTicketsModal] = useState(false);
     const [openTravelerCardsModal, setOpenTravelerCardsModal] = useState(false);
@@ -29,43 +29,53 @@ function AdminOrdersList(props){
     const handleOpenTravelerCardsDetailsModal = () => setOpenTravelerCardsModal(true);
     const handleCloseTravelerCardsDetailsModal = () => setOpenTravelerCardsModal(false);
 
-    const [ticketsOrders, setTicketsOrders] = useState([])
-    const [travelcardsOrders, setTravelcardsOrders] = useState([])
+    const [ticketOrders, setTicketOrders] = useState([])
+    const [travelcardOrders, setTravelcardOrders] = useState([])
 
     useEffect(() => {
+        let tmp1 = [];
+        let tmp2 = [];
         //fill ticket orders table
         ticketCatalogueAPIs.getAllOrders()
-            .then((fetchedTicketsOrders) => {
-                fetchedTicketsOrders.forEach(function (obj) {
-                    obj['owner'] == null && delete obj['owner'];
+            .then(r => {
+                console.log(r)
+                r.forEach(element => {
+                    if (element.owner === null) {
+                        tmp1.push({
+                            id: element.orderId,
+                            status: element.status,
+                            type_of_purchase: element.duration,
+                            quantity: element.quantity,
+                            username: element.customerUsername,
+                        })
+                    } else {
+                        tmp2.push({
+                            id: element.orderId,
+                            status: element.status,
+                            type_of_purchase: element.duration,
+                            owner: `${element.owner.name} ${element.owner.surname}`,
+                            username: element.customerUsername,
+                        })
+                    }
                 })
 
-                setTicketsOrders(fetchedTicketsOrders);
+                setTicketOrders(tmp1);
+                setTravelcardOrders(tmp2);
+                setLoading(false)
             });
-
-        //fill travelcard orders table
-        ticketCatalogueAPIs.getAllOrders()
-            .then((fetchedTicketsOrders) => {
-                fetchedTicketsOrders.filter(o => !o['owner'].isNull()).forEach(function (obj) {
-                    obj['quantity'] && delete obj['quantity'];
-                })
-
-                setTravelcardsOrders(fetchedTicketsOrders)
-            });
-
     }, []);
 
 
     return (
         <>{loading
             ?
-            <CircularProgress />
+            <CircularProgress/>
             :
             <Grid container>
                 <Grid item xs={12}>
                     <GenericTable
                         headCells={headCellsTickets}
-                        rows={ticketsOrders}
+                        rows={ticketOrders}
                         nameTable={"All Orders (Tickets)"}
                         onClickElement={handleOpenTicketsDetailsModal}
                     />
@@ -79,7 +89,8 @@ function AdminOrdersList(props){
                             <Typography id="modal-modal-title" variant="h6" component="h2">
                                 Order Tickets Details:
                             </Typography>
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }} onClick={()=>console.log("Vai alla pagina my tickets a questo ticket")}>
+                            <Typography id="modal-modal-description" sx={{mt: 2}}
+                                        onClick={() => console.log("Vai alla pagina my tickets a questo ticket")}>
                                 TicketID1
                             </Typography>
                         </Box>
@@ -88,7 +99,7 @@ function AdminOrdersList(props){
                 <Grid item xs={12}>
                     <GenericTable
                         headCells={headCellsTravelerCards}
-                        rows={travelcardsOrders}
+                        rows={travelcardOrders}
                         nameTable={"All Orders (Travelcards)"}
                         onClickElement={handleOpenTravelerCardsDetailsModal}
                     />
@@ -102,13 +113,13 @@ function AdminOrdersList(props){
                             <Typography id="modal-modal-title" variant="h6" component="h2">
                                 Order Travelcard Details:
                             </Typography>
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <Typography id="modal-modal-description" sx={{mt: 2}}>
                                 TravelerCardID1
                             </Typography>
                         </Box>
                     </Modal>
                 </Grid>
-                <Grid item xs={12} style={{marginLeft : "3vw"}}>
+                <Grid item xs={12} style={{marginLeft: "3vw"}}>
                     <Typography>
                         Click an element to see further details.
                     </Typography>
@@ -118,7 +129,7 @@ function AdminOrdersList(props){
 
         </>
     );
-}
+};
 
 const headCellsTickets = [
     {

@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
 import java.sql.Timestamp
+import java.time.Instant
+import java.time.LocalDateTime
 import java.util.*
 
 @Repository
@@ -25,10 +27,10 @@ interface TicketPurchasedRepository: ReactiveMongoRepository<TicketPurchased, Ob
     @Query("{'validated' : { \$eq : null}}")
     fun findByValid(): Flow<TicketPurchased>
 
-    @Query("{'expired' : { \$lt:?0}")
+    @Query("{'exp' : { \$lte : ?0}}")
     fun findByExpired(now:Timestamp): Flow<TicketPurchased>
 
-    @Query("{'expired' : {\$lt : ?2, \$gt:?0, \$lt:?1}}")
+    @Query("{'exp' : {\$lt : ?2, \$gt:?0, \$lt:?1}}")
     fun findByExpiredAndExpiredBetween(start:Timestamp, end: Timestamp,now:Timestamp): Flow<TicketPurchased>
 
     @Query("{'iat' : { \$gte: ?0, \$lte: ?1}}")
@@ -55,10 +57,11 @@ interface TicketPurchasedRepository: ReactiveMongoRepository<TicketPurchased, Ob
     @Query("{'validated' : { \$eq : null},'iat' : { \$gte: ?0, \$lte: ?1 },'userId' : { \$eq: ?2}}")
     fun findAllValidByUserDetailsAndIatBetween( start:Timestamp, end: Timestamp, userId : String): Flow<TicketPurchased>
 
-    @Query("{'expired' : { \$lt : ?1},'userId' : { \$eq: ?0}}")
+    @Query("{'exp' : { \$lte : ?1}, 'userId' : { \$eq: ?0}}")
     fun findAllExpiredByUserDetails(username: String, now: Timestamp?): Flow<TicketPurchased>
+    //{ “$gte” : { “$date” : 1566345601049 }
 
-    @Query("{'expired' : { \$lt : ?3, \$gt:?1, \$lt:?2 },'userId' : { \$eq: ?0}}")
+    @Query("{'exp' : { \$lt : ?3, \$gt:?1, \$lt:?2 },'userId' : { \$eq: ?0}}")
     fun findAllExpiredByUserDetailsAndExpiredBetween(username: String, start:Timestamp, end: Timestamp, now: Timestamp?): Flow<TicketPurchased>
 }
 

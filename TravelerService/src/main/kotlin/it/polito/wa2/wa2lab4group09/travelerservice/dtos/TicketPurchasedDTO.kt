@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import it.polito.wa2.wa2lab4group09.travelerservice.entities.TicketPurchased
 import org.bson.types.ObjectId
+import java.sql.Timestamp
 import java.util.Date
 
 data class TicketPurchasedDTO(
@@ -12,15 +13,15 @@ data class TicketPurchasedDTO(
     @JsonSerialize(using = ToStringSerializer::class)
     var sub: ObjectId?,
     @JsonProperty("iat")
-    var iat: Date,
+    var iat: Timestamp,
     @JsonProperty("exp")
-    var exp: Date?,
+    var exp: Timestamp?,
     @JsonProperty("zid")
     var zid: String,
     @JsonProperty("jws")
     var jws: String,
     @JsonProperty("validated")
-    var validated: Date?,
+    var validated: Timestamp?,
     @JsonProperty("userId")
     var userId: String,
     @JsonProperty("duration")
