@@ -10,6 +10,12 @@ import MenuItem from "@mui/material/MenuItem";
 import ShoppingCartSharpIcon from '@mui/icons-material/ShoppingCartSharp';
 import './PaymentForm.css'
 import Typography from "@mui/material/Typography";
+import ticketCatalogueAPIs from "../../api/TicketCatalogueAPIs";
+import PaymentInfo from "../../model/PaymentInfo";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from "dayjs";
 
 const style = {
     position: 'absolute',
@@ -52,16 +58,29 @@ const typeTickets=[
     },
 ];
 function PaymentForm(props) {
+
+    const {total, ticketId, numberOfTickets, selectedType} = props;
     const [creditCardNumber, setCreditCardNumber] = useState('');
     const [cardHolder, setCardHolder] = useState('');
-    const [expirationDate, setExpirationDate] = useState(new Date().toISOString().substring(0,10));
+    const [expirationDate, setExpirationDate] = useState(dayjs());
     const [cvv,setCvv]=useState('')
-    const {total}=props
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
+        let expDate = "";
+        if(expirationDate.month().toString().length === 1){
+            expDate = `0${expirationDate.month() + 1}/${expirationDate.year().toString().slice(-2)}`
+        }else{
+            expDate = `${expirationDate.month() + 1}/${expirationDate.year().toString().slice(-2)}`
+        }
+        console.log(expDate)
+        const paymentInfo = new PaymentInfo(creditCardNumber, expDate, cvv, cardHolder)
+        ticketCatalogueAPIs.buyTickets(numberOfTickets, ticketId, selectedType, paymentInfo).then( r =>{
+            console.log(r)
+        })
 
     };
+
     return (
         <Box sx={style}>
             <ThemeProvider theme={theme}>
@@ -89,20 +108,24 @@ function PaymentForm(props) {
                                 value={creditCardNumber}
                                 onChange={(event)=>setCreditCardNumber(event.target.value)}
                             />
-                            <TextField
-                                id="expirationDate"
-                                label="Expiration date"
-                                autoFocus
-                                margin="normal"
-                                required
-                                fullWidth
-                                type="date"
-                                inputProps={{
-                                    min: new Date().toISOString().substring(0,10),
-                                }}
-                                value={expirationDate}
-                                onChange={(event)=>setExpirationDate(event.target.value)}
-                            />
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                    views={['month', 'year']}
+                                    label="Expiration date"
+                                    minDate={dayjs()}
+                                    maxDate={dayjs('2029-01-01')}
+                                    value={expirationDate}
+                                    onChange={(newValue) => {
+                                        setExpirationDate(newValue);
+                                    }}
+                                    renderInput={(params) =>
+                                        <TextField {...params}
+                                                   helperText={null}
+                                                   required
+                                                   margin="normal"
+                                                   fullWidth/>}
+                                />
+                            </LocalizationProvider>
                             <TextField
                                 id="cvv"
                                 label="Cvv"

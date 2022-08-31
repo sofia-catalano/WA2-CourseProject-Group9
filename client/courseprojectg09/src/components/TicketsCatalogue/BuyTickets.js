@@ -17,6 +17,7 @@ function BuyTickets(props) {
     const [loading, setLoading] = useState(true);
     const [dirty, setDirty] = useState(false);
     const [selectedValue, setSelectedValue] = React.useState('');
+    const [selectedType, setSelectedType] = React.useState('');
     const [numberOfTickets, setNumberOfTickets]=useState(1)
     const [buyTicketsModal, setBuyTicketsModal] = React.useState(false);
     const [addToCatalogueModal, setAddToCatalogueModal] = React.useState(false);
@@ -72,9 +73,7 @@ function BuyTickets(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
         setBuyTicketsModal(true)
-        console.log(selectedValue)
 
     };
     const handleNumberOfTicketsChange=(event)=>{
@@ -86,7 +85,10 @@ function BuyTickets(props) {
         console.log(id)
         setSelectedValue(id)
         const currentElement=data.find(element => element.id===id)
-        if(currentElement!==undefined) setTotal(numberOfTickets*currentElement.price)
+        if(currentElement!==undefined) {
+            setSelectedType(currentElement.type);
+            setTotal(numberOfTickets * currentElement.price);
+        }
     }
 
     const handleAddToCatalogueModal = () => setAddToCatalogueModal(true);
@@ -155,7 +157,7 @@ function BuyTickets(props) {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <PaymentForm total={total}/>
+                    <PaymentForm total={total} ticketId={selectedValue} numberOfTickets={numberOfTickets} selectedType={selectedType}/>
                 </Modal>
                 </>}
                 <Modal

@@ -121,7 +121,7 @@ function addNewTicketToCatalogue(ticketCatalogue) {
     });
 }
 
-function buyTickets(quantity, ticketId, paymentInfo) {
+function buyTickets(numberOfTickets, ticketId, type, paymentInfo) {
     return new Promise((resolve, reject) => {
         fetch(`${BASEURL}/shop/${ticketId}`, {
             method: 'POST',
@@ -131,8 +131,9 @@ function buyTickets(quantity, ticketId, paymentInfo) {
                 'Authorization': sessionStorage.getItem('authorization')
             },
             body: JSON.stringify({
-                quantity: quantity,
+                numberOfTickets: numberOfTickets,
                 ticketId: ticketId,
+                type: type,
                 paymentInfo: {
                     creditCardNumber: paymentInfo.creditCardNumber,
                     expirationDate: paymentInfo.expirationDate,
