@@ -49,7 +49,8 @@ class AdminController(val adminService: AdminService) {
             adminService.enrollAdmin(username, admin)
             ResponseEntity(HttpStatus.OK)
         } catch (t : Throwable){
-            ResponseEntity("${t.message}", HttpStatus.BAD_REQUEST)
+            val body = ErrorMessage("Something went wrong. Please retry later.")
+            ResponseEntity(body, HttpStatus.BAD_REQUEST)
         }
     }
 
