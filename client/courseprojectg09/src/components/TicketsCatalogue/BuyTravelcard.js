@@ -51,10 +51,10 @@ function BuyTravelcard(props) {
             console.log(r)
             const tmp = []
             r.forEach(element => {
-                if(findType(element.duration) === 'travelcard' ){
+                if(findType(element.type) === 'travelcard' ){
                     tmp.push({
                         id: element.ticketId,
-                        type: element.duration,
+                        type: element.type,
                         price: element.price,
                         zones: element.zones,
                         minAge: element.minAge,

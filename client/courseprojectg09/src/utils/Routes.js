@@ -57,6 +57,12 @@ function AllRoutes() {
             <Route exact path="/admin/traveler/:user/profile" element={getAdminComponent(<UserProfile/>)}/>
             <Route exact path="/admin/traveler/:user/tickets" element={getAdminComponent(<AdminUserTicketsList/>)}/>
             <Route exact path="/admin/traveler/:user/travelcards" element={<AdminUserTravelcardsList/>}/>
+            <Route exact path="/admin/admins" element={getAdminComponent(<AdminsList/>)}/>
+            <Route exact path="/admin/travelers" element={getAdminComponent(<UsersList/>)}/>
+            <Route exact path="/admin/tickets" element={getAdminComponent(<AdminTicketsList/>)}/>
+            <Route exact path="/admin/travelcards" element={<AdminTravelcardsList/>}/>
+            <Route exact path="/admin/orders" element={<AdminOrdersList/>}/>
+            <Route exact path="/admin/transactions" element={<AdminTransactionsList/>}/>
             <Route exact path="/user/register" element={<RegistrationPage/>}/>
             <Route exact path="/user/validate" element={<ValidationPage/>}/>
             <Route exact path="/user/login" element={<LoginPage/>}/>
@@ -67,12 +73,6 @@ function AllRoutes() {
             <Route exact path="/catalogue/shop/tickets" element={<BuyTickets/>}/>
             <Route exact path="/catalogue/shop/travelcard" element={<BuyTravelcard/>}/>
             <Route exact path="/my/transactions" element={getCustomerComponent(<UserTransactionsList/>)}/>
-            <Route exact path="/admin/admins" element={<AdminsList/>}/>
-            <Route exact path="/admin/travelers" element={getAdminComponent(<UsersList/>)}/>
-            <Route exact path="/admin/tickets" element={getAdminComponent(<AdminTicketsList/>)}/>
-            <Route exact path="/admin/travelcards" element={<AdminTravelcardsList/>}/>
-            <Route exact path="/admin/orders" element={<AdminOrdersList/>}/>
-            <Route exact path="/admin/transactions" element={<AdminTransactionsList/>}/>
             <Route exact path="/catalogue" element={<TicketsCatalogue/>}/>
             <Route exact path="/validateTicket" element={<ValidateTicketPage/>}/>
             <Route exact path="/catalogue/admin/tickets" element={<BuyTickets/>}/>
