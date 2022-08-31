@@ -57,7 +57,7 @@ function BuyTickets(props) {
                     })
                 }
             })
-    
+
             setData(tmp);
             console.log(tmp)
             setSelectedValue(tmp[0].id)
@@ -149,7 +149,7 @@ function BuyTickets(props) {
                 </Box>
                 <Modal
                     open={buyTicketsModal}
-                    onClose={()=>setBuyTicketsModal((false))}
+                    onClose={()=>setBuyTicketsModal(false)}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
@@ -158,7 +158,7 @@ function BuyTickets(props) {
                 </>}
                 <Modal
                         open={addToCatalogueModal}
-                        onClose={()=>setAddToCatalogueModal((false))}
+                        onClose={()=>setAddToCatalogueModal(false)}
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >

@@ -98,6 +98,7 @@ function TicketsFilterMenu(props) {
 
 function TravelcardsFilterMenu(props) {
     const {open, anchorEl, handleClose, typeSelected, setTypeSelected} = props
+    const {startDate, setStartDate, endDate, setEndDate, searchTickets, rangeDate, setRangeDate} = props
 
     return (
         <Menu
@@ -114,10 +115,10 @@ function TravelcardsFilterMenu(props) {
                     <FormLabel id="demo-radio-buttons-group-label">Type travelcards</FormLabel>
                 </MenuItem>
                 <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
+                    aria-labelledby="type-travelcards"
                     value={typeSelected}
                     name="radio-buttons-group"
-                    onChange={setTypeSelected}
+                    onChange={(event) => setTypeSelected(event.target.value)}
                 >
                     <MenuItem>
                         <FormControlLabel value="all" control={<Radio/>} label="Purchased travelcards(All)"/>
@@ -129,6 +130,47 @@ function TravelcardsFilterMenu(props) {
                         <FormControlLabel value="expired" control={<Radio/>} label="Expired travelcards"/>
                     </MenuItem>
                 </RadioGroup>
+
+                <MenuItem>
+                    <FormLabel id="range-travelcards">
+                        {typeSelected.charAt(0).toUpperCase() + typeSelected.slice(1)} tickets between:
+                    </FormLabel>
+                </MenuItem>
+                <RadioGroup
+                    aria-labelledby="range-travelcards-label"
+                    value={rangeDate ? 'range' : 'all'}
+                    name="radio-buttons-group"
+                    onChange={(event) => event.target.value == 'all' ? setRangeDate(false) : setRangeDate(true)}
+                >
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <MenuItem>
+                            <FormControlLabel value="range" control={<Radio/>} label="Range dates"/>
+                            <DatePicker
+                                label="Start date"
+                                value={startDate}
+                                onChange={(newValue) => {
+                                    setStartDate(newValue);
+                                }}
+
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                            <DatePicker
+                                label="End date"
+                                value={endDate}
+                                onChange={(newValue) => {
+                                    setEndDate(newValue);
+                                }}
+                                minDate={startDate}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </MenuItem>
+                        <MenuItem>
+                            <FormControlLabel value="all" control={<Radio/>} label="All dates"/>
+                        </MenuItem>
+                    </LocalizationProvider>
+                </RadioGroup>
+                <Button onClick={searchTickets}>Filter travelcards</Button>
+
             </FormControl>
         </Menu>
     );
