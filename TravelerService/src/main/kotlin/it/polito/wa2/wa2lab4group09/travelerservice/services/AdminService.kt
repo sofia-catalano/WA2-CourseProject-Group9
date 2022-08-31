@@ -2,6 +2,7 @@ package it.polito.wa2.wa2lab4group09.travelerservice.services
 
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TicketPurchasedDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TravelcardPurchasedDTO
+import it.polito.wa2.wa2lab4group09.travelerservice.entities.Role
 import it.polito.wa2.wa2lab4group09.travelerservice.entities.TicketPurchased
 import it.polito.wa2.wa2lab4group09.travelerservice.entities.TravelcardPurchased
 import it.polito.wa2.wa2lab4group09.travelerservice.entities.UserDetails
@@ -39,7 +40,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
     }
 
     suspend fun getTravelers(): Flow<Username> {
-        return userDetailsRepository.findAll().asFlow().map {
+        return userDetailsRepository.findAllByRole(Role.CUSTOMER).asFlow().map {
             Username(it.username)
         }
     }
