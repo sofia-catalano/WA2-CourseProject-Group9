@@ -13,35 +13,56 @@ import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import {RiUserStarFill} from "react-icons/ri";
 import AdminRegistrationForm from "./AdminRegistrationForm/AdminRegistrationForm";
+import {useEffect} from "react";
+import loginAPI from "../../api/LoginAPI";
+import ConfirmationModal from "../generic/ConfirmationModal/ConfirmationModal";
 
 function AdminsList(props) {
-    const [loading, setLoading] = useState(false);
-    let data = [
-        {
-            username: "admin2",
-            email: "admin2@gmail.com",
-            isEnrolled: false
-        },
-        {
-            username: "admin3",
-            email: "admin3@gmail.com",
-            isEnrolled: true
-        }, {
-            username: "admin4",
-            email: "admin4@gmail.com",
-            isEnrolled: false
-        }]
-
+    const [loading, setLoading] = useState(true);
+    const [admins, setAdmins] = useState([]);
+    const [dirty, setDirty] = useState(true);
     const [open, setOpen] = React.useState(false);
+    const [adminUsername, setAdminUsername] = useState('');
+    const [showError, setShowError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [openModalCapability, setOpenModalCapability] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const handleCloseModalCapability = () => setOpenModalCapability(false);
+
+    useEffect(() => {
+        if(dirty){
+            loginAPI.getAllAdmins()
+                .then((fetchedAdmins) => {
+                    fetchedAdmins.forEach(function (obj) {
+                        obj['isActive'] && delete obj['isActive'];
+                    })
+                    setAdmins(fetchedAdmins);
+                    setLoading(false);
+                    setDirty(false);
+                });
+        }
+    }, [dirty]);
 
     const handleClick = (userName) => {
-        // data.find(userName === username).isEnrolled = !data.find(userName === username).isEnrolled
-        const i = data.findIndex(admin => {
+        admins.findIndex(admin => {
+            setAdminUsername(admin.username)
             return admin.username === userName
         });
-        data[i].isEnrolled = !data[i].isEnrolled
+        setOpenModalCapability(true);
+    }
+
+    function handleConfirmationModal(adminUsername){
+        loginAPI.enrollAdmin(adminUsername)
+            .then(r => {
+                if(r["error"]){
+                    setErrorMessage(r["error"]);
+                    setShowError(true)
+                }else {
+                    setDirty(true);
+                    handleCloseModalCapability();
+                }
+            })
     }
 
     return (
@@ -67,14 +88,14 @@ function AdminsList(props) {
                                     align={'center'}
                                     padding={'normal'}
                                 >
-                                    <TableCell align="center">Username</TableCell>
-                                    <TableCell align="center">Email</TableCell>
-                                    <TableCell align="center">Enrolling Capability</TableCell>
-                                    <TableCell align="center">Action</TableCell>
+                                    <TableCell align="center"><b>Username</b></TableCell>
+                                    <TableCell align="center"><b>Email</b></TableCell>
+                                    <TableCell align="center"><b>Enrolling Capability</b></TableCell>
+                                    <TableCell align="center"><b>Action</b></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {data.map(row => {
+                                {admins.map(row => {
                                     return (
                                         <TableRow key={row.username} align="center">
                                             <TableCell component="th" scope="row" align="center">
@@ -83,7 +104,7 @@ function AdminsList(props) {
                                             <TableCell align="center" >{row.email}</TableCell>
                                             <TableCell align="center">
                                                 {
-                                                    row.isEnrolled ? (
+                                                    row.enroll ? (
                                                         <FiberManualRecordIcon sx={{color:"green"}}/>
                                                     ) : (
                                                         <FiberManualRecordIcon sx={{color:"red"}}/>
@@ -91,7 +112,7 @@ function AdminsList(props) {
                                                 }
                                             </TableCell>
                                             <TableCell align="center">
-                                                <Button variant="contained" disabled={row.isEnrolled} click={() => handleClick(row.username)} startIcon={<StarRoundedIcon fontSize="small" />}>
+                                                <Button variant="contained" disabled={row.enroll} onClick={() => handleClick(row.username)} startIcon={<StarRoundedIcon fontSize="small" />}>
                                                     Give Enroll Capability
                                                 </Button>
                                             </TableCell>
@@ -112,7 +133,22 @@ function AdminsList(props) {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <AdminRegistrationForm handleClose={handleClose}/>
+                        <AdminRegistrationForm handleClose={handleClose} setDirty={setDirty}/>
+                    </Modal>
+                    <Modal
+                        open={openModalCapability}
+                        onClose={handleCloseModalCapability}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <ConfirmationModal
+                            question={"Do you really want to give to the admin: "+adminUsername+" the enrolling capability?"}
+                            confirmationText={"Confirm"}
+                            cancelText={"Cancel"}
+                            handleConfirmation={() => handleConfirmationModal(adminUsername)}
+                            handleCancel={handleCloseModalCapability}
+                            showError={showError}
+                            errorMessage={errorMessage}/>
                     </Modal>
                 </Box>
 

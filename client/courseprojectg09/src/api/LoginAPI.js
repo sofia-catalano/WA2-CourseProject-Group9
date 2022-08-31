@@ -1,3 +1,5 @@
+
+
 const BASEURL = '/login';
 
 function logIn(username, password) {
@@ -72,12 +74,78 @@ function validateUser(activationCode) {
     });
 }
 
+function registerAdmin(username, email, password) {
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/admin/registerAdmin', {
+            method: 'POST',
+            headers : {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': sessionStorage.getItem('authorization')
+            },
+            body: JSON.stringify({ username, email, password }),
+        }).then((response) => {
+            if(response.ok){
+                resolve("New Admin correctly registered!");
+            } else{
+                response.json().then((error) =>{
+                    resolve(error)
+                })
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
+function getAllAdmins(){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL + '/admin/admins', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
+function enrollAdmin(adminUsername){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL + '/admin/enrollAdmin/' + adminUsername, {
+            method: 'GET',
+            headers: {
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                resolve("Set enrolling capability correctly");
+            } else {
+                response.json().then((error) =>{
+                    resolve(error)
+                })
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
 
 
 const loginAPI = {
     logIn,
     registerUser,
-    validateUser
+    validateUser,
+    registerAdmin,
+    getAllAdmins,
+    enrollAdmin
 };
 
 export default loginAPI;
