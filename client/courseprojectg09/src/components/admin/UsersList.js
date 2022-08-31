@@ -12,6 +12,7 @@ import travelerAPI from "../../api/TravelerAPI";
 function UsersList(props) {
     const [loading, setLoading] = useState(true);
     const [data, setData]=useState([])
+
     const style = {
         width: '100%',
         maxWidth: 850,
@@ -50,7 +51,7 @@ function UsersList(props) {
                         <List sx={style} aria-label="user-list">
                         {data.map( user => {
                             return(
-                                <Box textAlign="center">
+                                <Box textAlign="center" key={user}>
                                     <ListItem key={user}>
                                         <Stack spacing={10} direction="row">
                                             <Typography sx={{mr: 5}} variant="subtitle1" gutterBottom>
@@ -59,8 +60,11 @@ function UsersList(props) {
                                             <Link component={RouterLink} to={{pathname: `/admin/traveler/${user.username}/profile`}}>
                                                 <Button variant="outlined">Profile</Button>
                                             </Link>
-                                            <Link component={RouterLink} to={{pathname: `/admin/traveler/${user.username}/orders`}}>
-                                                <Button variant="outlined">Orders</Button>
+                                            <Link component={RouterLink}
+                                                  to={`/admin/traveler/${user.username}/orders`}
+                                                  state={user.username}
+                                            >
+                                                <Button variant="outlined" >Orders</Button>
                                             </Link>
                                             <Link component={RouterLink} to={{pathname: `/admin/traveler/${user.username}/tickets`}}>
                                                 <Button variant="outlined">Tickets</Button>
