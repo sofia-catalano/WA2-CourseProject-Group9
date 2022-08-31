@@ -85,7 +85,7 @@ class TicketCatalogueController(
     @GetMapping("/catalogue/tickets")
     suspend fun getTickets(): ResponseEntity<Any> {
         return try {
-            val ticketCatalogue = ticketCatalogueService.getCatalogue()
+            val ticketCatalogue = ticketCatalogueService.getCatalogue().map{it.toDTO()}
             ResponseEntity(ticketCatalogue, HttpStatus.OK)
         } catch (t: Throwable) {
             val error = ErrorMessage(t.message)
