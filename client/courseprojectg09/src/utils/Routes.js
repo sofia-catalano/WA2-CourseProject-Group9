@@ -52,9 +52,16 @@ function AllRoutes() {
             <Navigate to="/user/login" replace={true} />
     }
 
+    const getProtectedComponent=(component)=>{
+        return loggedIn ?
+            component
+            :
+            <Navigate to="/user/login" replace={true} />
+    }
+
     return (
         <Routes>
-            {/*OPEN ROUTES*/}
+            {/*-----------------------------------OPEN ROUTES----------------------------------*/}
             <Route exact path="/" element={<Homepage/>}/>
 
             <Route exact path="/user/register" element={<RegistrationPage/>}/>
@@ -63,17 +70,22 @@ function AllRoutes() {
 
             <Route exact path="/catalogue" element={<TicketsCatalogue/>}/>
             <Route exact path="/validateTicket" element={<ValidateTicketPage/>}/>
+            {/*--------------------------------------------------------------------------------*/}
 
-            {/*CUSTOMER ROUTES*/}
+            {/*------------------------------ADMIN/CUSTOMER ROUTES-----------------------------*/}
+            <Route exact path="/my/profile" element={getProtectedComponent(<UserProfile/>)}/>
+            {/*--------------------------------------------------------------------------------*/}
+
+            {/*--------------------------------CUSTOMER ROUTES---------------------------------*/}
             <Route exact path="/catalogue/shop/tickets" element={<BuyTickets/>}/>
             <Route exact path="/catalogue/shop/travelcard" element={<BuyTravelcard/>}/>
             <Route exact path="/my/tickets" element={getCustomerComponent(<UserTicketsList/>)}/>
             <Route exact path="/my/travelcards" element={getCustomerComponent(<UserTravelCardsList/>)}/>
-            <Route exact path="/my/profile" element={getCustomerComponent(<UserProfile/>)}/>
             <Route exact path="/my/orders" element={getCustomerComponent(<UserOrdersList/>)}/>
             <Route exact path="/my/transactions" element={getCustomerComponent(<UserTransactionsList/>)}/>
+            {/*--------------------------------------------------------------------------------*/}
 
-            {/*ADMIN ROUTES*/}
+            {/*----------------------------------ADMIN ROUTES----------------------------------*/}
             <Route exact path="/admin/admins" element={getAdminComponent(<AdminsList/>)}/>
             <Route exact path="/admin/travelers" element={getAdminComponent(<UsersList/>)}/>
             <Route exact path="/admin/tickets" element={getAdminComponent(<AdminTicketsList/>)}/>
@@ -88,6 +100,7 @@ function AllRoutes() {
 
             <Route exact path="/catalogue/admin/tickets" element={<BuyTickets/>}/>
             <Route exact path="/catalogue/admin/travelcard" element={<BuyTravelcard/>}/>
+            {/*--------------------------------------------------------------------------------*/}
 
         </Routes>
     );
