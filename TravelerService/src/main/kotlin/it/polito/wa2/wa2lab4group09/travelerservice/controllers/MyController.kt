@@ -50,12 +50,15 @@ class MyController(val userDetailsService: UserDetailsService) {
         val newToken = jwt.replace("Bearer", "")
         return try {
             val body : Flow<TicketPurchasedDTO>
+
             if(startTime==null && endTime==null) {
+                println("IF")
                  body = userDetailsService.getUserTickets(newToken).map { t ->
                     t.toDTO()
                 }
             }
             else {
+                println("ELSE")
                 body = userDetailsService.getUserTicketsPeriodOfTime(newToken, startTime, endTime).map { t ->
                     t.toDTO()
                 }
@@ -63,6 +66,7 @@ class MyController(val userDetailsService: UserDetailsService) {
             ResponseEntity(body, HttpStatus.OK)
         } catch (t : Throwable){
             val error = ErrorMessage(t.message)
+            println(t)
             ResponseEntity(error, HttpStatus.BAD_REQUEST)
         }
     }

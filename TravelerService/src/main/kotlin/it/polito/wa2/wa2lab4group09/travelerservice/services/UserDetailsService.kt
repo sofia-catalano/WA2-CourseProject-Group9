@@ -31,9 +31,7 @@ import org.springframework.messaging.support.MessageBuilder
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
+import java.time.*
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -60,9 +58,11 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
     lateinit var keyTicket : String
 
     fun convertDateToTimestamp(date:String):Timestamp{
-        val formatter = SimpleDateFormat("dd/MM/yyyy")
-        val date2 = formatter.parse(date)
-        return Timestamp.from(date2.toInstant())
+        val tmp = LocalDateTime.parse(
+            date,
+            DateTimeFormatter.ofPattern( "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" )
+        ).toInstant( ZoneOffset.UTC)
+        return Timestamp.from(tmp)
     }
 
     suspend fun getUserDetails(jwt : String): UserDetails {
@@ -291,10 +291,6 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
             return ticketPurchasedRepository
                 .findAllValidatedByUserDetails(userDetails.username)
                 .map {
-                    println("***********")
-                    println("validated")
-                    println(it.exp)
-                    println("***********")
                     TicketPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.validated,it.userId,it.duration)
                 }
         }

@@ -3,67 +3,58 @@ import {useState, useEffect} from "react";
 import GenericTable from "../generic/Table/Table";
 import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 import travelerAPI from "../../api/TravelerAPI";
-import moment from "moment";
+import * as dayjs from 'dayjs'
 
 function AdminTicketsList(props) {
     const [loading, setLoading] = useState(true);
-    const [data, setData]=useState([]);
-    const [typeTicketsSelected, setTypeTicketsSelected]=useState('all')
-    const [nameTable, setNameTable]=useState('Tickets')
-    const [startDate, setStartDate]=useState()
-    const [endDate,setEndDate]=useState()
+    const [data, setData] = useState([]);
+    const [typeTicketsSelected, setTypeTicketsSelected] = useState('all')
+    const [nameTable, setNameTable] = useState('Tickets')
+    const [startDate, setStartDate] = useState(dayjs())
+    const [endDate, setEndDate] = useState(dayjs().add(1,'day'))
+    const [rangeDate, setRangeDate] = useState(false)
 
-    const handleTypeTicketsSelectedChange=(event)=>{
-        console.log("Event "+ event.target.value)
-        setTypeTicketsSelected(event.target.value)
-        if(event.target.value!= typeTicketsSelected){
-            if(event.target.value== 'all'){
-                console.log('all')
-                getAllTravelersTicketPurchased()
-            }
-            else if(event.target.value == 'validated'){
-                console.log('validated')
-                setLoading(true)
-                travelerAPI.getTravelersTicketsValidated()
-                    .then(r => {
-                        setTickets(r)
-                        setNameTable('Validated tickets')
-                    })
-                    .catch(err => console.log(err))
-            }
-            else if(event.target.value == 'valid'){
-                console.log('validated')
-                setLoading(true)
-                travelerAPI.getTravelersTicketsValid()
-                    .then(r => {
-                        setTickets(r)
-                        setNameTable('Valid tickets')
-                    })
-                    .catch(err => console.log(err))
+    const searchTickets = () => {
+        if (typeTicketsSelected == 'all') {
+            getAllTravelersTicketPurchased()
+        } else if (typeTicketsSelected == 'validated') {
+            setLoading(true)
+            travelerAPI.getTravelersTicketsValidated(rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTickets(r)
+                    setNameTable('Validated tickets')
+                })
+                .catch(err => console.log(err))
+        } else if (typeTicketsSelected == 'valid') {
+            setLoading(true)
+            travelerAPI.getTravelersTicketsValid(rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTickets(r)
+                    setNameTable('Valid tickets')
+                })
+                .catch(err => console.log(err))
 
-            }
-            else if(event.target.value == 'expired'){
-                console.log('expired')
-                setLoading(true)
-                travelerAPI.getTravelersTicketsExpired()
-                    .then(r => {
-                        setTickets(r)
-                        setNameTable('Expired tickets')
-                    })
-                    .catch(err => console.log(err))
-            }
+        } else if (typeTicketsSelected == 'expired') {
+            setLoading(true)
+            travelerAPI.getTravelersTicketsExpired(rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTickets(r)
+                    setNameTable('Expired tickets')
+                })
+                .catch(err => console.log(err))
         }
     }
 
-    const setTickets= (result) => {
-        const tmp= result.map((element)=> {
+
+    const setTickets = (result) => {
+        const tmp = result.map((element) => {
             return {
-                id:element.sub,
-                zones:element.zid,
-                acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
-                validated: element.validated?  moment(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
-                expired: element.validated ?  moment(element.expired).format('YYYY-MM-DD HH:mm:ss') : '',
-                username:element.userID,
+                id: element.sub,
+                zones: element.zid,
+                acquired: dayjs(element.iat).format('YYYY-MM-DD HH:mm:ss'),
+                validated: element.validated ? dayjs(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
+                expired: element.validated ? dayjs(element.expired).format('YYYY-MM-DD HH:mm:ss') : '',
+                username: element.userId,
                 type: element.duration
             }
         })
@@ -72,7 +63,7 @@ function AdminTicketsList(props) {
     }
     const getAllTravelersTicketPurchased = () => {
         setLoading(true)
-        travelerAPI.getTravelersTicketsPurchased()
+        travelerAPI.getTravelersTicketsPurchased(rangeDate, startDate.toISOString(), endDate.toISOString())
             .then(r => {
                 setTickets(r)
                 setNameTable('All tickets')
@@ -80,14 +71,14 @@ function AdminTicketsList(props) {
             .catch(err => console.log(err))
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getAllTravelersTicketPurchased()
-    },[])
+    }, [])
 
     return (
         <>{loading
             ?
-            <CircularProgress />
+            <CircularProgress/>
             :
             <GenericTable
                 headCells={headCells}
@@ -95,11 +86,14 @@ function AdminTicketsList(props) {
                 nameTable={nameTable}
                 FilterMenu={TicketsFilterMenu}
                 typeSelected={typeTicketsSelected}
-                handleTypeSelectedChange={handleTypeTicketsSelectedChange}
+                setTypeSelected={setTypeTicketsSelected}
                 startDate={startDate}
                 endDate={endDate}
                 setStartDate={setStartDate}
                 setEndDate={setEndDate}
+                searchTickets={searchTickets}
+                rangeDate={rangeDate}
+                setRangeDate={setRangeDate}
             ></GenericTable>
         }
 
