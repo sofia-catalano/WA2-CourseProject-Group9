@@ -8,67 +8,30 @@ import IconButton from "@mui/material/IconButton";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import MenuItem from "@mui/material/MenuItem";
 import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
-import moment from "moment";
 import travelerAPI from "../../api/TravelerAPI";
+import * as dayjs from 'dayjs'
 
 function UserTicketsList(props) {
     const [loading, setLoading] = useState(false);
-    const [data, setData]=useState([])
-    const [typeTicketsSelected, setTypeTicketsSelected]=useState('all')
-    const [nameTable, setNameTable]=useState('Tickets')
-    const [startDate, setStartDate]=useState()
-    const [endDate,setEndDate]=useState()
-    
-    const handleTypeTicketsSelectedChange=(event)=>{
-        console.log("Event "+ event.target.value)
-        setTypeTicketsSelected(event.target.value)
-        if(event.target.value!= typeTicketsSelected){
-            if(event.target.value== 'all'){
-                console.log('all')
-                getAllTicketsPurchased()
-            }
-            else if(event.target.value == 'validated'){
-                console.log('validated')
-                setLoading(true)
-                travelerAPI.getMyTicketsValidated()
-                    .then(r => {
-                        setTickets(r)
-                        setNameTable('Validated tickets')
-                    })
-                    .catch(err => console.log(err))
-            }
-            else if(event.target.value == 'valid'){
-                console.log('valid')
-                setLoading(true)
-                travelerAPI.getMyTicketsValid()
-                    .then(r => {
-                        setTickets(r)
-                        setNameTable('Valid tickets')
-                    })
-                    .catch(err => console.log(err))
-            }
-            else if(event.target.value == 'expired'){
-                console.log('expired')
-                setLoading(true)
-                travelerAPI.getMyTicketsExpired()
-                    .then(r => {
-                        setTickets(r)
-                        setNameTable('Expired tickets')
-                    })
-                    .catch(err => console.log(err))
-            }
-        }
-    }
-    const setTickets= (result) => {
-        console.log(result)
-        const tmp= result.map((element)=> {
+    const [data, setData] = useState([])
+    const [typeTicketsSelected, setTypeTicketsSelected] = useState('all')
+    const [nameTable, setNameTable] = useState('Tickets')
+    const [startDate, setStartDate] = useState(dayjs())
+    const [endDate, setEndDate] = useState(dayjs().add(1,'day'))
+    const [rangeDate, setRangeDate] = useState(false)
+
+    useEffect(() => {
+        getAllTicketsPurchased()
+    }, [])
+
+    const setTickets = (result) => {
+        const tmp = result.map((element) => {
             return {
-                id:element.sub,
-                zones:element.zid,
-                acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
-                validated: element.validated?  moment(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
-                expired: element.validated ?  moment(element.exp).format('YYYY-MM-DD HH:mm:ss') : '',
-                username:element.userID,
+                id: element.sub,
+                zones: element.zid,
+                acquired: dayjs(element.iat).format('YYYY-MM-DD HH:mm:ss'),
+                validated: element.validated ? dayjs(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
+                expired: element.validated ? dayjs(element.exp).format('YYYY-MM-DD HH:mm:ss') : '',
                 type: element.duration
             }
         })
@@ -78,41 +41,50 @@ function UserTicketsList(props) {
 
     const getAllTicketsPurchased = () => {
         setLoading(true)
-        travelerAPI.getMyTickets()
+        travelerAPI.getMyTickets(rangeDate, startDate && startDate.toISOString(), endDate && endDate.toISOString())
             .then(r => {
                 setTickets(r)
                 setNameTable('All tickets')
             })
             .catch(err => console.log(err))
     }
-    useEffect(()=>{
-        getAllTicketsPurchased()
-    },[])
 
-
-    useEffect(()=>{
-        travelerAPI.getMyTickets()
-            .then(r => {
-                console.log(r)
-                const tmp= r.map((element)=> {
-                    return {
-                        id:element.sub,
-                        zones:element.zid,
-                        acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
-                        validated: element.validated?  moment(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
-                        expired: element.validated ?  moment(element.expired).format('YYYY-MM-DD HH:mm:ss') : '',
-                        type: element.duration
-                    }
+    const searchTickets = () => {
+        if (typeTicketsSelected == 'all') {
+            getAllTicketsPurchased()
+        } else if (typeTicketsSelected == 'validated') {
+            setLoading(true)
+            travelerAPI.getMyTicketsValidated(rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTickets(r)
+                    setNameTable('Validated tickets')
                 })
-                setData(tmp)
-                setLoading(false)
-            })
-            .catch(err => console.log(err))
-    },[])
+                .catch(err => console.log(err))
+        } else if (typeTicketsSelected == 'valid') {
+            setLoading(true)
+            travelerAPI.getMyTicketsValid(rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTickets(r)
+                    setNameTable('Valid tickets')
+                })
+                .catch(err => console.log(err))
+        } else if (typeTicketsSelected == 'expired') {
+            setLoading(true)
+            travelerAPI.getMyTicketsExpired(rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTickets(r)
+                    setNameTable('Expired tickets')
+                })
+                .catch(err => console.log(err))
+        }
+
+    }
+
+
     return (
         <>{loading
             ?
-            <CircularProgress />
+            <CircularProgress/>
             :
             <GenericTable
                 headCells={headCells}
@@ -120,19 +92,20 @@ function UserTicketsList(props) {
                 nameTable={nameTable}
                 FilterMenu={TicketsFilterMenu}
                 typeSelected={typeTicketsSelected}
-                handleTypeSelectedChange={handleTypeTicketsSelectedChange}
+                setTypeSelected={setTypeTicketsSelected}
                 startDate={startDate}
                 endDate={endDate}
                 setStartDate={setStartDate}
                 setEndDate={setEndDate}
+                searchTickets={searchTickets}
+                rangeDate={rangeDate}
+                setRangeDate={setRangeDate}
             ></GenericTable>
         }
 
         </>
     );
 }
-
-
 
 
 const headCells = [

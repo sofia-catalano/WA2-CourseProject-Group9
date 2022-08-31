@@ -14,6 +14,7 @@ import VisibilityOffTwoToneIcon from "@mui/icons-material/VisibilityOffTwoTone";
 import VisibilityTwoToneIcon from "@mui/icons-material/VisibilityTwoTone";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
+import loginAPI from "../../../api/LoginAPI";
 
 const style = {
     position: 'absolute',
@@ -31,10 +32,11 @@ const theme = createTheme();
 
 function AdminRegistrationForm(props) {
 
-    const {handleClose} = props;
+    const {handleClose, setDirty} = props;
     const navigate = useNavigate();
     const [hidePassword, setHidePassword] = useState(true);
-    const [showError, setShowError] = useState(false)
+    const [showError, setShowError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const regex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\$@!%*?&])(?!.*[\\s-]).*\$")
     const tipText = "● Password must not contain any whitespace\n" +
         "● It must be at least 8 characters long\n" +
@@ -54,17 +56,23 @@ function AdminRegistrationForm(props) {
         const username = data.get('username');
         const email = data.get('email');
         const password = data.get('password');
-        console.log({
-            username: username,
-            email: email,
-            password: password,
-        });
         setShowError(false)
         if(username.length > 0 && email.length > 0 && regex.test(password.toString())){
+            loginAPI.registerAdmin(username,email,password).then(
+                r =>{
+                    if(r["error"]){
+                        setErrorMessage(r["error"]);
+                        setShowError(true)
+                    }else {
+                        setDirty(true);
+                        handleClose();
+                        navigate("/admin/admins");
+                    }
+                }
+            )
             //redirect to validate page
-            handleClose()
-            navigate("/admin/admins")
         }else{
+            setErrorMessage('Invalid Fields!');
             setShowError(true)
         }
     };
@@ -150,13 +158,9 @@ function AdminRegistrationForm(props) {
                             {showError ?
                                 (
                                     <Typography sx={{display: "block", color:"red", textAlign:"center"}}>
-                                        Invalid data inserted!
+                                        {errorMessage}
                                     </Typography>
-                                ) : (
-                                    <Typography sx={{display: "none", color:"red", textAlign:"center"}}>
-                                        Invalid data inserted!
-                                    </Typography>
-                                )
+                                ) : ''
                             }
                         </Box>
                     </Box>

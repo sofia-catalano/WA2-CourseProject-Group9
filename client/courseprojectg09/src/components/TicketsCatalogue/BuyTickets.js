@@ -46,10 +46,10 @@ function BuyTickets(props) {
             console.log(r)
             const tmp = []
             r.forEach(element => {
-                if(findType(element.duration) === 'ticket' ){
+                if(findType(element.type) === 'ticket' ){
                     tmp.push({
                         id: element.ticketId,
-                        type: element.duration,
+                        type: element.type,
                         price: element.price,
                         zones: element.zones,
                         minAge: element.minAge,
@@ -59,12 +59,13 @@ function BuyTickets(props) {
             })
     
             setData(tmp);
+            console.log(tmp)
             setSelectedValue(tmp[0].id)
             setTotal(tmp[0].price*numberOfTickets)
             setLoading(false)
         });
 
-    })
+    }, [])
 
 
     const handleSubmit = (event) => {

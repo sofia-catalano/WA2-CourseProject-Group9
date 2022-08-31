@@ -12,6 +12,7 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
 import Toolbar from "@mui/material/Toolbar";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import {Radio, Tooltip} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -103,8 +104,8 @@ GenericTableHead.propTypes = {
 
 
 const EnhancedTableToolbar = (props) => {
-    const {nameTable, FilterMenu, onAddElement, handleTypeSelectedChange, typeSelected} = props
-    const {startDate, setStartDate, endDate, setEndDate}=props
+    const {nameTable, FilterMenu, onAddElement, setTypeSelected, typeSelected} = props
+    const {startDate, setStartDate, endDate, setEndDate, searchTickets, rangeDate, setRangeDate}=props
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const location = useLocation();
@@ -134,27 +135,6 @@ const EnhancedTableToolbar = (props) => {
                 {nameTable}
             </Typography>
 
-            {FilterMenu &&
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                        label="Start date"
-                        value={startDate}
-                        onChange={(newValue) => {
-                            setStartDate(newValue);
-                        }}
-                        renderInput={(params) => <TextField {...params} />}
-                    />
-                    <DatePicker
-                        label="End date"
-                        value={endDate}
-                        onChange={(newValue) => {
-                            setEndDate(newValue);
-                        }}
-                        renderInput={(params) => <TextField {...params} />}
-                    />
-                </LocalizationProvider>
-            }
-
             {
             location.pathname==="/catalogue/admin/tickets" || location.pathname==="/catalogue/admin/travelcard" ?
                 <Tooltip title="Add to list">
@@ -171,11 +151,18 @@ const EnhancedTableToolbar = (props) => {
                         </IconButton>
                     </Tooltip>
                     <FilterMenu
-                    open={open}
-                    handleClose={handleClose}
-                    anchorEl={anchorEl}
-                    typeSelected={typeSelected}
-                    handleTypeSelectedChange={handleTypeSelectedChange}
+                        open={open}
+                        handleClose={handleClose}
+                        anchorEl={anchorEl}
+                        typeSelected={typeSelected}
+                        setTypeSelected={setTypeSelected}
+                        startDate={startDate}
+                        endDate={endDate}
+                        setStartDate={setStartDate}
+                        setEndDate={setEndDate}
+                        searchTickets={searchTickets}
+                        rangeDate={rangeDate}
+                        setRangeDate={setRangeDate}
                     />
                 </>
             }
@@ -188,10 +175,9 @@ const EnhancedTableToolbar = (props) => {
 
 export default function GenericTable(props) {
     const {headCells, rows, nameTable, FilterMenu, onClickElement, onAddElement} = props
-    const {typeSelected, handleTypeSelectedChange } = props //for filter menu
+    const {typeSelected, setTypeSelected } = props //for filter menu
     const {selectedValue, handleTypeTicketsChange}=props //only for buy ticket form
-    const {startDate, setStartDate, endDate, setEndDate}=props
-
+    const {startDate, setStartDate, endDate, setEndDate, searchTickets, rangeDate, setRangeDate}=props
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
     const [page, setPage] = React.useState(0);
@@ -224,11 +210,15 @@ export default function GenericTable(props) {
                                       FilterMenu={FilterMenu}
                                       onAddElement={onAddElement}
                                       typeSelected={typeSelected}
-                                      handleTypeSelectedChange={handleTypeSelectedChange}
+                                      setTypeSelected={setTypeSelected}
                                       startDate={startDate}
                                       endDate={endDate}
                                       setStartDate={setStartDate}
-                                      setEndDate={setEndDate}/>
+                                      setEndDate={setEndDate}
+                                      searchTickets={searchTickets}
+                                      rangeDate={rangeDate}
+                                      setRangeDate={setRangeDate}
+                />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}

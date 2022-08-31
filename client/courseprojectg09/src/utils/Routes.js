@@ -74,7 +74,7 @@ function AllRoutes() {
             <Route exact path="/my/transactions" element={getCustomerComponent(<UserTransactionsList/>)}/>
 
             {/*ADMIN ROUTES*/}
-            <Route exact path="/admin/admins" element={<AdminsList/>}/>
+            <Route exact path="/admin/admins" element={getAdminComponent(<AdminsList/>)}/>
             <Route exact path="/admin/travelers" element={getAdminComponent(<UsersList/>)}/>
             <Route exact path="/admin/tickets" element={getAdminComponent(<AdminTicketsList/>)}/>
             <Route exact path="/admin/travelcards" element={<AdminTravelcardsList/>}/>

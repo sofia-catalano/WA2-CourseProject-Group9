@@ -6,68 +6,62 @@ import {useParams} from "react-router-dom";
 import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 import {useUser} from "../UserProvider";
 import travelerAPI from "../../api/TravelerAPI";
-import moment from "moment";
+import * as dayjs from 'dayjs'
+
 
 function AdminTicketsList(props) {
-    const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
+    const {loggedIn, userRole, setUserRole, setLoggedIn} = useUser()
     const [loading, setLoading] = useState(false);
     const {user} = useParams();
-    const [data, setData]=useState([])
-    const [typeTicketsSelected, setTypeTicketsSelected]=useState('all')
-    const [nameTable, setNameTable]=useState('Tickets')
-    const [startDate, setStartDate]=useState()
-    const [endDate,setEndDate]=useState()
-    
-    const handleTypeTicketsSelectedChange=(event)=>{
-        console.log("Event "+ event.target.value)
-        setTypeTicketsSelected(event.target.value)
-        if(event.target.value!= typeTicketsSelected){
-            if(event.target.value== 'all'){
-                console.log('all')
-                getAllTravelerTicketsPurchased()
-            }
-            else if(event.target.value == 'validated'){
-                console.log('validated')
-                setLoading(true)
-                travelerAPI.getTravelerTicketsValidated(user)
-                    .then(r => {
-                        setTickets(r)
-                        setNameTable('Validated tickets')
-                    })
-                    .catch(err => console.log(err))
-            }
-            else if(event.target.value == 'valid'){
-                console.log('valid')
-                setLoading(true)
-                travelerAPI.getTravelerTicketsValid(user)
-                    .then(r => {
-                        setTickets(r)
-                        setNameTable('Valid tickets')
-                    })
-                    .catch(err => console.log(err))
-            }
-            else if(event.target.value == 'expired'){
-                console.log('expired')
-                setLoading(true)
-                travelerAPI.getTravelerTicketsExpired(user)
-                    .then(r => {
-                        setTickets(r)
-                        setNameTable('Expired tickets')
-                    })
-                    .catch(err => console.log(err))
-            }
+    const [data, setData] = useState([])
+    const [typeTicketsSelected, setTypeTicketsSelected] = useState('all')
+    const [nameTable, setNameTable] = useState('Tickets')
+    const [startDate, setStartDate] = useState(dayjs())
+    const [endDate, setEndDate] = useState(dayjs().add(1,'day'))
+    const [rangeDate, setRangeDate] = useState(false)
+
+    const searchTickets = () => {
+        if (typeTicketsSelected == 'all') {
+            getAllTravelerTicketsPurchased()
+        } else if (typeTicketsSelected == 'validated') {
+            setLoading(true)
+            travelerAPI.getTravelerTicketsValidated(user,
+                rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTickets(r)
+                    setNameTable('Validated tickets')
+                })
+                .catch(err => console.log(err))
+        } else if (typeTicketsSelected == 'valid') {
+            setLoading(true)
+            travelerAPI.getTravelerTicketsValid(user,
+                rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTickets(r)
+                    setNameTable('Valid tickets')
+                })
+                .catch(err => console.log(err))
+        } else if (typeTicketsSelected == 'expired') {
+            setLoading(true)
+            travelerAPI.getTravelerTicketsExpired(user,
+                rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTickets(r)
+                    setNameTable('Expired tickets')
+                })
+                .catch(err => console.log(err))
         }
     }
 
-    const setTickets= (result) => {
-        const tmp= result.map((element)=> {
+
+    const setTickets = (result) => {
+        const tmp = result.map((element) => {
             return {
-                id:element.sub,
-                zones:element.zid,
-                acquired:  moment(element.iat).format('YYYY-MM-DD HH:mm:ss'),
-                validated: element.validated?  moment(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
-                expired: element.validated ?  moment(element.expired).format('YYYY-MM-DD HH:mm:ss') : '',
-                username:element.userID,
+                id: element.sub,
+                zones: element.zid,
+                acquired: dayjs(element.iat).format('YYYY-MM-DD HH:mm:ss'),
+                validated: element.validated ? dayjs(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
+                expired: element.validated ? dayjs(element.expired).format('YYYY-MM-DD HH:mm:ss') : '',
                 type: element.duration
             }
         })
@@ -76,7 +70,9 @@ function AdminTicketsList(props) {
     }
     const getAllTravelerTicketsPurchased = () => {
         setLoading(true)
-        travelerAPI.getTravelerTicketPurchased(user)
+        travelerAPI.getTravelerTicketPurchased(user,
+            rangeDate, startDate.toISOString(), endDate.toISOString()
+        )
             .then(r => {
                 setTickets(r)
                 setNameTable('All tickets')
@@ -84,30 +80,35 @@ function AdminTicketsList(props) {
             .catch(err => console.log(err))
     }
 
-    useEffect(()=>{
-        getAllTravelerTicketsPurchased()
-    },[])
+    useEffect(() => {
+        getAllTravelerTicketsPurchased(rangeDate,
+            startDate.toISOString(),
+            endDate.toISOString())
+    }, [])
 
     return (
 
         <>
             {loading
-            ?
-            <CircularProgress />
-            :
-            <GenericTable
-                headCells={headCells}
-                rows={data}
-                nameTable={`${user} 's ${nameTable}`}
-                FilterMenu={TicketsFilterMenu}
-                typeSelected={typeTicketsSelected}
-                handleTypeSelectedChange={handleTypeTicketsSelectedChange}
-                startDate={startDate}
-                endDate={endDate}
-                setStartDate={setStartDate}
-                setEndDate={setEndDate}
-            ></GenericTable>
-        }
+                ?
+                <CircularProgress/>
+                :
+                <GenericTable
+                    headCells={headCells}
+                    rows={data}
+                    nameTable={`${user} 's ${nameTable}`}
+                    FilterMenu={TicketsFilterMenu}
+                    typeSelected={typeTicketsSelected}
+                    setTypeSelected={setTypeTicketsSelected}
+                    startDate={startDate}
+                    endDate={endDate}
+                    setStartDate={setStartDate}
+                    setEndDate={setEndDate}
+                    searchTickets={searchTickets}
+                    rangeDate={rangeDate}
+                    setRangeDate={setRangeDate}
+                ></GenericTable>
+            }
 
         </>
     );

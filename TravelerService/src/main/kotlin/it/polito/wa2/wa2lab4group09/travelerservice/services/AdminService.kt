@@ -17,9 +17,9 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import java.sql.Timestamp
-import java.text.SimpleDateFormat
 import java.time.Instant
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 
@@ -31,9 +31,11 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
     lateinit var key: String
 
     fun convertDateToTimestamp(date:String):Timestamp{
-        val formatter = SimpleDateFormat("dd/MM/yyyy")
-        val date2 = formatter.parse(date)
-        return Timestamp.from(date2.toInstant())
+        val tmp = LocalDateTime.parse(
+            date,
+            DateTimeFormatter.ofPattern( "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" )
+        ).toInstant( ZoneOffset.UTC)
+        return Timestamp.from(tmp)
     }
 
     suspend fun getTravelers(): Flow<Username> {
