@@ -98,12 +98,12 @@ function BuyTickets(props) {
                 <GenericTable
                     headCells={headCells}
                     rows={data}
-                    nameTable={userRole==="admin" ? "Tickets list": "Buy tickets"}
+                    nameTable={userRole==="ADMIN" ? "Tickets list": "Buy tickets"}
                     selectedValue={selectedValue}
                     handleTypeTicketsChange={handleTypeTicketsChange}
                     onAddElement={handleAddToCatalogueModal}
                 ></GenericTable>
-                {userRole!=="admin" && <>
+                {userRole!=="ADMIN" && <>
                 <Box sx={{ width: '90%' , mr:5, ml:5 }}>
                     <Paper sx={{ width: '100%', mb: 2 }}>
                         <Grid container

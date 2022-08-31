@@ -20,9 +20,11 @@ const catalogueTypes = ["Tickets", "Travelcard"]
 export default function TicketsCatalogue() {
     const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
     const findUrl = (type) => {
-        if(userRole==="admin" && type==="Tickets" )
+        console.log("userRole" + userRole)
+        console.log(type)
+        if(userRole==="ADMIN" && type==="Tickets" )
             return "/catalogue/admin/tickets"  
-        else if(userRole==="admin" && type==="Travelcard" )
+        else if(userRole==="ADMIN" && type==="Travelcard" )
             return "/catalogue/admin/travelcard"
         else if (type==="Tickets")
             return "/catalogue/shop/tickets"
