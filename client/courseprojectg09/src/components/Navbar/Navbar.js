@@ -103,7 +103,12 @@ function Navbar(){
                             }}
                         >
                             {pages.map((page) => (
-                                <MenuItem key={page} id={page} onClick={handleCloseNavMenu}>
+                                <MenuItem
+                                    key={page}
+                                    id={page}
+                                    component={RouterLink}
+                                    to={url[pages.indexOf(page)]}
+                                    onClick={handleCloseNavMenu}>
                                     <Typography textAlign="center">{page}</Typography>
                                 </MenuItem>
                             ))}
