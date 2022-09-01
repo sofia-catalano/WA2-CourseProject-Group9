@@ -16,6 +16,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from "dayjs";
+import Owner from "../../model/Owner";
 
 const style = {
     position: 'absolute',
@@ -59,7 +60,7 @@ const typeTickets=[
 ];
 function PaymentForm(props) {
 
-    const {total, ticketId, numberOfTickets, selectedType} = props;
+    const {total, ticketId, numberOfTickets, selectedType, holder} = props;
     const [creditCardNumber, setCreditCardNumber] = useState('');
     const [cardHolder, setCardHolder] = useState('');
     const [expirationDate, setExpirationDate] = useState(dayjs());
@@ -67,7 +68,7 @@ function PaymentForm(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        let expDate = "";
+        let expDate;
         if(expirationDate.month().toString().length === 1){
             expDate = `0${expirationDate.month() + 1}/${expirationDate.year().toString().slice(-2)}`
         }else{
@@ -75,9 +76,17 @@ function PaymentForm(props) {
         }
         console.log(expDate)
         const paymentInfo = new PaymentInfo(creditCardNumber, expDate, cvv, cardHolder)
-        ticketCatalogueAPIs.buyTickets(numberOfTickets, ticketId, selectedType, paymentInfo).then( r =>{
-            console.log(r)
-        })
+
+        if(holder){
+            const owner = new Owner(holder.fiscal_code, holder.name, holder.surname, holder.address, `${holder.birthday}`, holder.telephone)
+            ticketCatalogueAPIs.buyTravelcard(ticketId, selectedType, paymentInfo, owner).then( r =>{
+                console.log(r)
+            })
+        }else{
+            ticketCatalogueAPIs.buyTickets(numberOfTickets, ticketId, selectedType, paymentInfo).then( r =>{
+                console.log(r)
+            })
+        }
 
     };
 
