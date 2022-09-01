@@ -210,7 +210,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
         return travelcardPurchasedRepository
             .findAll()
             .map {
-                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration, it.ownerId)
             }
     }
 
@@ -218,7 +218,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
         return travelcardPurchasedRepository
             .findByIatBetween(convertDateToTimestamp(start),convertDateToTimestamp(end))
             .map {
-                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration, it.ownerId)
             }
     }
 
@@ -226,7 +226,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
         return travelcardPurchasedRepository
             .findExpired(Timestamp.from(Instant.now()))
             .map {
-                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration, it.ownerId)
             }
     }
 
@@ -237,7 +237,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
         return travelcardPurchasedRepository
             .findExpiredByIatBetween(convertDateToTimestamp(start), convertDateToTimestamp(end), Timestamp.from(Instant.now()))
             .map {
-                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration, it.ownerId)
             }
     }
 
@@ -245,7 +245,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
         return travelcardPurchasedRepository
             .findValid(Timestamp.from(Instant.now()))
             .map {
-                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration, it.ownerId)
             }
     }
 
@@ -256,7 +256,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
         return travelcardPurchasedRepository
             .findValidByIatBetween(convertDateToTimestamp(start), convertDateToTimestamp(end), Timestamp.from(Instant.now()))
             .map {
-                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration, it.ownerId)
             }
     }
 
@@ -277,7 +277,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
             return travelcardPurchasedRepository
                 .findByUserAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username)
                 .map {
-                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration, it.ownerId)
                 }
         }
     }
@@ -290,7 +290,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
             return travelcardPurchasedRepository
                 .findByUserAndExp(Timestamp.from(Instant.now()), userDetails.username)
                 .map {
-                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration, it.ownerId)
                 }
         }
     }
@@ -309,7 +309,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
             return travelcardPurchasedRepository
                 .findExpiredByUserAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username, Timestamp.from(Instant.now()))
                 .map {
-                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration, it.ownerId)
                 }
         }
     }
@@ -328,7 +328,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
             return travelcardPurchasedRepository
                 .findAllValidByUserDetailsAndIatBetween(convertDateToTimestamp(startTime),convertDateToTimestamp(endTime), userDetails.username, Timestamp.from(Instant.now()))
                 .map {
-                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration, it.ownerId)
                 }
         }
     }
@@ -342,7 +342,7 @@ class AdminService(val userDetailsRepository: UserDetailsRepository,
             return travelcardPurchasedRepository
                 .findAllValidByUserDetails(userDetails.username, Timestamp.from(Instant.now()))
                 .map {
-                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration, it.ownerId)
                 }
         }
     }

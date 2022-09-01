@@ -22,9 +22,11 @@ data class TravelcardPurchasedDTO(
     @JsonProperty("userId")
     var userId: String,
     @JsonProperty("duration")
-    var duration: String
+    var duration: String,
+    @JsonProperty("ownerId")
+    var ownerId: String,
 )
 
 fun TravelcardPurchased.toDTO(): TravelcardPurchasedDTO {
-    return TravelcardPurchasedDTO(sub, iat, exp, zid, jws, userId, duration)
+    return TravelcardPurchasedDTO(sub, iat, exp, zid, jws, userId, duration, ownerId)
 }

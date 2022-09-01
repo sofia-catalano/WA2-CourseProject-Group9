@@ -134,6 +134,28 @@ function getMyTicketsExpired(rangeDate, startDate, endDate) {
     });
 }
 
+function getMyTravelcards(){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/my/travelcards', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    console.log(json)
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
 function getTravelers() {
     return new Promise((resolve, reject) => {
         fetch(BASEURL + '/admin/travelers', {
@@ -470,9 +492,9 @@ const travelerAPI = {
     getMyTickets,
     getMyTicketsValidated,
     getMyTicketsExpired,
+    getMyTravelcards,
     getTravelersTravelcardsExpired,
     getTravelersTravelcardsValid,
-    getMyTicketsValid
-};
+    getMyTicketsValid};
 
 export default travelerAPI;

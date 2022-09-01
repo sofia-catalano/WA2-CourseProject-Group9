@@ -21,6 +21,23 @@ function validateTicket(jwt) {
     });
 }
 
-const qrCodeAPI = {validateTicket};
+function downloadQRCode(id){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/generateQRCode/' +id, {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response) {
+                console.log(response)
+                resolve();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
+
+const qrCodeAPI = {validateTicket, downloadQRCode};
 
 export default qrCodeAPI;
