@@ -65,11 +65,11 @@ function UserTravelCardsList(props) {
             <CircularProgress />
             :
             <GenericTable
-                headCells={headCells}
-                rows={data}
-                nameTable={nameTable}
-                onDownloadQRCode={downloadQRCode}
-            ></GenericTable>
+            headCells={headCells}
+            rows={data}
+            nameTable={nameTable}
+            onDownloadQRCode={downloadQRCode}
+            />
         }
 
         </>
