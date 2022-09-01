@@ -152,6 +152,53 @@ function buyTickets(numberOfTickets, ticketId, type, paymentInfo) {
     });
 }
 
-const catalogueAPI = {getCatalogue, getAllOrders, getUserOrders, getTravelerOrders, addNewTicketToCatalogue, buyTickets};
+function buyTravelcard( ticketId, type, paymentInfo, owner) {
+    return new Promise((resolve, reject) => {
+        fetch(`${BASEURL}/shop/${ticketId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': sessionStorage.getItem('authorization')
+            },
+            body: JSON.stringify({
+                numberOfTickets: 1,
+                ticketId: ticketId,
+                type: type,
+                paymentInfo: {
+                    creditCardNumber: paymentInfo.creditCardNumber,
+                    expirationDate: paymentInfo.expirationDate,
+                    cvv: paymentInfo.cvv,
+                    cardHolder: paymentInfo.cardHolder,
+                },
+                owner: {
+                    fiscal_code: owner.fiscal_code,
+                    name: owner.name,
+                    surname: owner.surname,
+                    address: owner.address,
+                    date_of_birth: owner.date_of_birth,
+                    telephone_number: owner.telephone_number,
+                },
+            }),
+        }).then((response) => {
+            if (response.ok) {
+                console.log(response)
+                resolve();
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
+const catalogueAPI = {
+    getCatalogue,
+    getAllOrders,
+    getUserOrders,
+    getTravelerOrders,
+    addNewTicketToCatalogue,
+    buyTickets,
+    buyTravelcard
+};
 
 export default catalogueAPI;

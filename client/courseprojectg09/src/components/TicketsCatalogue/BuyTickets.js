@@ -62,8 +62,11 @@ function BuyTickets(props) {
 
             setData(tmp);
             console.log(tmp)
-            setSelectedValue(tmp[0].id)
-            setTotal(tmp[0].price*numberOfTickets)
+            if(tmp.length){
+                setSelectedValue(tmp[0].id);
+                setSelectedType(tmp[0].type);
+                setTotal(tmp[0].price*numberOfTickets);
+            }
             setLoading(false)
             setDirty(false)
         });

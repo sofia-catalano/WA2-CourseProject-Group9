@@ -18,13 +18,15 @@ function BuyTravelcard(props) {
     const [loading, setLoading] = useState(true);
     const [dirty, setDirty] = useState(false);
     const [selectedValue, setSelectedValue] = React.useState('');
+    const [selectedType, setSelectedType] = React.useState('');
     const [buyTravelcardModal, setBuyTravelcardModal] = React.useState(false);
     const [addToCatalogueModal, setAddToCatalogueModal] = React.useState(false);
     const [holder, setHolder] = React.useState({
-        name: 'Mario',
-        surname: 'Rossi',
+        fiscal_code: '',
+        name: '',
+        surname: '',
         address: '',
-        birthday: '04/08/2020',
+        birthday: '',
         telephone: ''
     });
     const [data, setData] = React.useState([]);
@@ -65,7 +67,10 @@ function BuyTravelcard(props) {
             })
 
             setData(tmp);
-            setSelectedValue(tmp[0].id)
+            if(tmp.length){
+                setSelectedType(tmp[0].type)
+                setSelectedValue(tmp[0].id)
+            }
             setLoading(false)
             setDirty(false)
         });
@@ -97,7 +102,12 @@ function BuyTravelcard(props) {
     const handleTypeTicketsChange=(id)=>{
         console.log(id)
         setSelectedValue(id)
+        const currentElement=data.find(element => element.id===id)
+        if(currentElement!==undefined) {
+            setSelectedType(currentElement.type);
+        }
     }
+
     return (
         <>{loading
             ?
@@ -130,14 +140,22 @@ function BuyTravelcard(props) {
                               >
                             <Grid item xs={4} >
                                 <TextField
+                                    id="fiscal_code"
+                                    label="Fiscal Code"
+                                    defaultValue={holder.fiscal_code}
+                                    variant="standard"
+                                    required
+                                    onChange={handleChange("fiscal_code")}
+                                />
+                            </Grid>
+                            <Grid item xs={4} >
+                                <TextField
                                     id="name"
                                     label="Name"
                                     defaultValue={holder.name}
                                     variant="standard"
                                     required
                                     onChange={handleChange("name")}
-                                    error={holder.name === ""}
-                                    //helperText="Required"
                                 />
                             </Grid>
                             <Grid item xs={4}>
@@ -148,27 +166,17 @@ function BuyTravelcard(props) {
                                     variant="standard"
                                     required
                                     onChange={handleChange("surname")}
-                                    error={holder.surname === ""}
-                                    //helperText="Required"
-                                />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <TextField
-                                    id="address"
-                                    label="Address"
-                                    defaultValue={holder.address}
-                                    variant="standard"
-                                    onChange={handleChange("address")}
                                 />
                             </Grid>
                             <Grid item xs={4}>
                                 <TextField
                                     id="birthday"
                                     label="Birthday"
+                                    InputLabelProps={{ shrink: true }}
+                                    type="date"
                                     defaultValue={holder.birthday}
                                     variant="standard"
                                     required
-                                    error={holder.birthday === ""}
                                     onChange={handleChange("birthday")}
                                 />
                             </Grid>
@@ -180,6 +188,15 @@ function BuyTravelcard(props) {
                                     type="tel"
                                     variant="standard"
                                     onChange={handleChange("telephone")}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextField
+                                    id="address"
+                                    label="Address"
+                                    defaultValue={holder.address}
+                                    variant="standard"
+                                    onChange={handleChange("address")}
                                 />
                             </Grid>
                         </Grid>
@@ -206,7 +223,7 @@ function BuyTravelcard(props) {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <PaymentForm total={data.find(element => element.id===selectedValue) ? data.find(element => element.id===selectedValue).price : 0}/>
+                    <PaymentForm total={data.find(element => element.id===selectedValue) ? data.find(element => element.id===selectedValue).price : 0} ticketId={selectedValue} selectedType={selectedType} holder={holder}/>
                 </Modal>
                 </>
             }
