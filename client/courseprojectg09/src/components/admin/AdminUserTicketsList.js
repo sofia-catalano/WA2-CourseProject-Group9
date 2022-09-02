@@ -21,9 +21,9 @@ function AdminTicketsList(props) {
     const [rangeDate, setRangeDate] = useState(false)
 
     const searchTickets = () => {
-        if (typeTicketsSelected == 'all') {
+        if (typeTicketsSelected === 'all') {
             getAllTravelerTicketsPurchased()
-        } else if (typeTicketsSelected == 'validated') {
+        } else if (typeTicketsSelected === 'validated') {
             setLoading(true)
             travelerAPI.getTravelerTicketsValidated(user,
                 rangeDate, startDate.toISOString(), endDate.toISOString())
@@ -32,7 +32,7 @@ function AdminTicketsList(props) {
                     setNameTable('Validated tickets')
                 })
                 .catch(err => console.log(err))
-        } else if (typeTicketsSelected == 'valid') {
+        } else if (typeTicketsSelected === 'valid') {
             setLoading(true)
             travelerAPI.getTravelerTicketsValid(user,
                 rangeDate, startDate.toISOString(), endDate.toISOString())
@@ -41,7 +41,7 @@ function AdminTicketsList(props) {
                     setNameTable('Valid tickets')
                 })
                 .catch(err => console.log(err))
-        } else if (typeTicketsSelected == 'expired') {
+        } else if (typeTicketsSelected === 'expired') {
             setLoading(true)
             travelerAPI.getTravelerTicketsExpired(user,
                 rangeDate, startDate.toISOString(), endDate.toISOString())

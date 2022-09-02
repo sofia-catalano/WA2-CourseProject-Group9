@@ -521,6 +521,81 @@ function getTravelersTravelcardsValid(rangeDate, startDate, endDate) {
 
 }
 
+function getTravelerTravelcardPurchased(userID, rangeDate, startDate, endDate) {
+    return new Promise((resolve, reject) => {
+        const url = rangeDate ?
+            BASEURL + `/admin/traveler/${userID}/travelcards/purchased?start=${startDate}&end=${endDate}` :
+            BASEURL + `/admin/traveler/${userID}/travelcards/purchased`
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+
+function getTravelerTravelcardExpired(userID, rangeDate, startDate, endDate) {
+    return new Promise((resolve, reject) => {
+        const url = rangeDate ?
+            BASEURL + `/admin/traveler/${userID}/travelcards/expired?start=${startDate}&end=${endDate}` :
+            BASEURL + `/admin/traveler/${userID}/travelcards/expired`
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+
+function getTravelerTravelcardValid(userID, rangeDate, startDate, endDate) {
+    return new Promise((resolve, reject) => {
+        const url = rangeDate ?
+            BASEURL + `/admin/traveler/${userID}/travelcards/valid?start=${startDate}&end=${endDate}` :
+            BASEURL + `/admin/traveler/${userID}/travelcards/valid`
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+
 const travelerAPI = {
     getMyProfile,
     getTravelers,
@@ -543,7 +618,10 @@ const travelerAPI = {
     getMyTravelcardsExpired,
     getTravelersTravelcardsExpired,
     getTravelersTravelcardsValid,
-    getMyTicketsValid
+    getMyTicketsValid,
+    getTravelerTravelcardPurchased,
+    getTravelerTravelcardExpired,
+    getTravelerTravelcardValid
 };
 
 export default travelerAPI;

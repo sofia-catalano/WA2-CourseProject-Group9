@@ -57,6 +57,7 @@ class QRCodeService(val qrCodeRepository: QRCodeRepository, val appProperties: A
         return qrCodeRepository.findByTicketId(ticketId).awaitSingle().qrCodeImage
     }
 
+    //TODO GESTIRE LA VALIDATE DI UNA TRAVELCARD
     suspend fun validateTicket(validationInfo: ValidationInfo): TicketPurchasedDTO = coroutineScope {
         val jwt = Jwts.parserBuilder().setSigningKey(appProperties.keyTicket.toByteArray()).build().parseClaimsJws(validationInfo.jwt)
         val ticketId = qrCodeRepository.findByToken(validationInfo.jwt).awaitSingle().ticketId
