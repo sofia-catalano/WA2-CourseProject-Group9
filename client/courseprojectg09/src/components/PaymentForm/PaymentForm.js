@@ -17,6 +17,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from "dayjs";
 import Owner from "../../model/Owner";
+import {useNavigate} from "react-router-dom";
 
 const style = {
     position: 'absolute',
@@ -65,6 +66,7 @@ function PaymentForm(props) {
     const [cardHolder, setCardHolder] = useState('');
     const [expirationDate, setExpirationDate] = useState(dayjs());
     const [cvv,setCvv]=useState('')
+    const navigate=useNavigate()
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -81,10 +83,13 @@ function PaymentForm(props) {
             const owner = new Owner(holder.fiscal_code, holder.name, holder.surname, holder.address, `${holder.birthday}`, holder.telephone)
             ticketCatalogueAPIs.buyTravelcard(ticketId, selectedType, paymentInfo, owner).then( r =>{
                 console.log(r)
+                navigate('/my/travelcards')
+
             })
         }else{
             ticketCatalogueAPIs.buyTickets(numberOfTickets, ticketId, selectedType, paymentInfo).then( r =>{
                 console.log(r)
+                navigate('my/tickets')
             })
         }
 
@@ -101,7 +106,7 @@ function PaymentForm(props) {
                         </Avatar>
                         <Box component="form" onSubmit={handleSubmit} sx={{p: 2}}>
                             <Typography variant="h3" sx={{ textAlign: 'center', color:'#1976d2' }}>
-                                {total} €
+                                {parseFloat(total).toFixed(2)} €
                             </Typography>
                             <Typography variant="subtitle1" sx={{ textAlign: 'center'}} >
                                 Insert data and proceed with payment
