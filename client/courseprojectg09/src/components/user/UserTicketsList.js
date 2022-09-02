@@ -10,6 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 import travelerAPI from "../../api/TravelerAPI";
 import * as dayjs from 'dayjs'
+import qrCodeAPI from "../../api/QRCodeAPI";
 
 function UserTicketsList(props) {
     const [loading, setLoading] = useState(false);
@@ -32,7 +33,8 @@ function UserTicketsList(props) {
                 acquired: dayjs(element.iat).format('YYYY-MM-DD HH:mm:ss'),
                 validated: element.validated ? dayjs(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
                 expired: element.validated ? dayjs(element.exp).format('YYYY-MM-DD HH:mm:ss') : '',
-                type: element.duration
+                type: element.duration,
+                jws : element.jws,
             }
         })
         setData(tmp)
@@ -80,6 +82,21 @@ function UserTicketsList(props) {
 
     }
 
+    const downloadQRCode = (id) =>{
+        console.log("scaricando")
+        console.log(id)
+        qrCodeAPI.downloadQRCode(id).then(
+            (qrcode)=>{
+                qrcode.blob().then(
+                    image => {
+                        const image_url = URL.createObjectURL(image)
+                        const item = document.getElementById('container')
+                        item.src = image_url
+                    }
+                )
+            }
+        )
+    }
 
     return (
         <>{loading
@@ -100,6 +117,7 @@ function UserTicketsList(props) {
                 searchTickets={searchTickets}
                 rangeDate={rangeDate}
                 setRangeDate={setRangeDate}
+                onDownloadQRCode={downloadQRCode}
             ></GenericTable>
         }
 
@@ -138,6 +156,11 @@ const headCells = [
         id: 'type',
         numeric: false,
         label: 'Type',
+    },
+    {
+        id: 'download',
+        numeric: false,
+        label: 'Download Tickets QR Code',
     },
 ];
 

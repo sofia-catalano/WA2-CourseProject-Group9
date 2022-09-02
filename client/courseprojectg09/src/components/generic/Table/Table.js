@@ -21,8 +21,6 @@ import { useLocation } from 'react-router-dom';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
-
-
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -180,7 +178,6 @@ export default function GenericTable(props) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
@@ -257,7 +254,14 @@ export default function GenericTable(props) {
                                             }
 
                                             {Object.keys(row).map(function(key) {
-                                                return key === "jws" ? <TableCell key={key} align="center"><ArrowCircleDownIcon onClick={onDownloadQRCode(row.id)} fontSize="small"/> </TableCell> : <TableCell key={key} align="center">{row[key]}</TableCell>
+                                                return key === "jws" ?
+                                                    <TableCell key={key} align="center">
+                                                        <IconButton aria-label="delete" onClick={()=>onDownloadQRCode(row.id)}>
+                                                            <ArrowCircleDownIcon
+                                                                fontSize="small"/>
+                                                        </IconButton>
+                                                    </TableCell> :
+                                                    <TableCell key={key} align="center">{row[key]}</TableCell>
                                             })
                                             }
                                         </TableRow>
