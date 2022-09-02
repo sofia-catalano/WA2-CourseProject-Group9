@@ -88,10 +88,16 @@ function UserTicketsList(props) {
         qrCodeAPI.downloadQRCode(id).then(
             (qrcode)=>{
                 qrcode.blob().then(
-                    image => {
-                        const image_url = URL.createObjectURL(image)
-                        const item = document.getElementById('container')
-                        item.src = image_url
+                    blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = `ticket-${id}.png`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
                     }
                 )
             }

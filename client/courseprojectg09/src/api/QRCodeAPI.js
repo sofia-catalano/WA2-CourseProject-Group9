@@ -31,7 +31,7 @@ function downloadQRCode(id){
         }).then((response) => {
             if (response) {
                 console.log(response)
-                resolve();
+                resolve(response);
             }
         }).catch((err) => reject(err));
     });
