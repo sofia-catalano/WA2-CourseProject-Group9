@@ -27,7 +27,7 @@ function Navbar(){
     const {loggedIn, userRole, setUserRole, setLoggedIn}= useUser()
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+    const {setUserRole, setLoggedIn}=useUser()
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -48,6 +48,8 @@ function Navbar(){
     const logOut = () => {
         sessionStorage.clear()
         navigate('/')
+        setLoggedIn(false)
+        setUserRole('')
     };
 
     return(
