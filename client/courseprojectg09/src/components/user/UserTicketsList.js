@@ -14,12 +14,12 @@ import qrCodeAPI from "../../api/QRCodeAPI";
 
 function UserTicketsList(props) {
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState([])
-    const [typeTicketsSelected, setTypeTicketsSelected] = useState('all')
-    const [nameTable, setNameTable] = useState('Tickets')
-    const [startDate, setStartDate] = useState(dayjs())
-    const [endDate, setEndDate] = useState(dayjs().add(1,'day'))
-    const [rangeDate, setRangeDate] = useState(false)
+    const [data, setData] = useState([]);
+    const [typeTicketsSelected, setTypeTicketsSelected] = useState('all');
+    const [nameTable, setNameTable] = useState('Tickets');
+    const [startDate, setStartDate] = useState(dayjs());
+    const [endDate, setEndDate] = useState(dayjs().add(1,'day'));
+    const [rangeDate, setRangeDate] = useState(false);
 
     useEffect(() => {
         getAllTicketsPurchased()
@@ -52,9 +52,9 @@ function UserTicketsList(props) {
     }
 
     const searchTickets = () => {
-        if (typeTicketsSelected == 'all') {
+        if (typeTicketsSelected === 'all') {
             getAllTicketsPurchased()
-        } else if (typeTicketsSelected == 'validated') {
+        } else if (typeTicketsSelected === 'validated') {
             setLoading(true)
             travelerAPI.getMyTicketsValidated(rangeDate, startDate.toISOString(), endDate.toISOString())
                 .then(r => {
@@ -62,7 +62,7 @@ function UserTicketsList(props) {
                     setNameTable('Validated tickets')
                 })
                 .catch(err => console.log(err))
-        } else if (typeTicketsSelected == 'valid') {
+        } else if (typeTicketsSelected === 'valid') {
             setLoading(true)
             travelerAPI.getMyTicketsValid(rangeDate, startDate.toISOString(), endDate.toISOString())
                 .then(r => {
@@ -70,7 +70,7 @@ function UserTicketsList(props) {
                     setNameTable('Valid tickets')
                 })
                 .catch(err => console.log(err))
-        } else if (typeTicketsSelected == 'expired') {
+        } else if (typeTicketsSelected === 'expired') {
             setLoading(true)
             travelerAPI.getMyTicketsExpired(rangeDate, startDate.toISOString(), endDate.toISOString())
                 .then(r => {

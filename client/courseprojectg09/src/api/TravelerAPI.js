@@ -156,6 +156,50 @@ function getMyTravelcards(){
     });
 }
 
+function getMyTravelcardsValid(rangeDate, startDate, endDate) {
+    return new Promise((resolve, reject) => {
+        const url = rangeDate ? BASEURL + `/my/travelcards/valid?start=${startDate}&end=${endDate}` : BASEURL + '/my/travelcards/valid'
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
+function getMyTravelcardsExpired(rangeDate, startDate, endDate) {
+    return new Promise((resolve, reject) => {
+        const url = rangeDate ? BASEURL + `/my/travelcards/expired?start=${startDate}&end=${endDate}` : BASEURL + '/my/travelcards/expired'
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
 function getTravelers() {
     return new Promise((resolve, reject) => {
         fetch(BASEURL + '/admin/travelers', {
@@ -412,8 +456,10 @@ function getTravelerTicketsExpired(userID, rangeDate, startDate, endDate) {
         }).then((response) => {
             if (response.ok) {
                 response.json().then((json) => {
+                    console.log(json)
                     resolve(json);
                 }).catch((err) => {
+                    console.log(err)
                     reject(err)
                 });
             } else {
@@ -493,8 +539,11 @@ const travelerAPI = {
     getMyTicketsValidated,
     getMyTicketsExpired,
     getMyTravelcards,
+    getMyTravelcardsValid,
+    getMyTravelcardsExpired,
     getTravelersTravelcardsExpired,
     getTravelersTravelcardsValid,
-    getMyTicketsValid};
+    getMyTicketsValid
+};
 
 export default travelerAPI;

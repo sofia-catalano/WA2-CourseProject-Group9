@@ -5,11 +5,16 @@ import {CircularProgress, Menu, TableCell, Tooltip} from "@mui/material";
 import travelerAPI from "../../api/TravelerAPI";
 import * as dayjs from "dayjs";
 import qrCodeAPI from "../../api/QRCodeAPI";
+import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 
 function UserTravelCardsList(props) {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
-    const [nameTable, setNameTable] = useState('Travelcards')
+    const [nameTable, setNameTable] = useState('Travelcards');
+    const [startDate, setStartDate] = useState(dayjs());
+    const [endDate, setEndDate] = useState(dayjs().add(1,'day'));
+    const [rangeDate, setRangeDate] = useState(false);
+    const [typeTravelcardsSelected, setTypeTravelcardsSelected] = useState('all');
 
 
     useEffect(() => {
@@ -22,10 +27,16 @@ function UserTravelCardsList(props) {
         qrCodeAPI.downloadQRCode(id).then(
             (qrcode)=>{
                 qrcode.blob().then(
-                    image => {
-                        const image_url = URL.createObjectURL(image)
-                        const item = document.getElementById('container')
-                        item.src = image_url
+                    blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = `travelcard-${id}.png`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
                     }
                 )
             }
@@ -49,6 +60,29 @@ function UserTravelCardsList(props) {
         setLoading(false)
     }
 
+    const searchTravelcards = () => {
+        if (typeTravelcardsSelected === 'all') {
+            getAllTravelcardsPurchased()
+        } else if (typeTravelcardsSelected === 'valid') {
+            setLoading(true)
+            travelerAPI.getMyTravelcardsValid(rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTravelcards(r)
+                    setNameTable('Valid Travelcards')
+                })
+                .catch(err => console.log(err))
+        } else if (typeTravelcardsSelected === 'expired') {
+            setLoading(true)
+            travelerAPI.getMyTravelcardsExpired(rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTravelcards(r)
+                    setNameTable('Expired Travelcards')
+                })
+                .catch(err => console.log(err))
+        }
+
+    }
+
     const getAllTravelcardsPurchased = () => {
         setLoading(true);
         travelerAPI.getMyTravelcards()
@@ -68,6 +102,16 @@ function UserTravelCardsList(props) {
             headCells={headCells}
             rows={data}
             nameTable={nameTable}
+            FilterMenu={TravelcardsFilterMenu}
+            typeSelected={typeTravelcardsSelected}
+            setTypeSelected={setTypeTravelcardsSelected}
+            startDate={startDate}
+            endDate={endDate}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
+            searchTickets={searchTravelcards}
+            rangeDate={rangeDate}
+            setRangeDate={setRangeDate}
             onDownloadQRCode={downloadQRCode}
             />
         }
