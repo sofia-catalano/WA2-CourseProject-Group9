@@ -95,8 +95,13 @@ function PaymentForm(props) {
         setCancelText('← Catalogue');
         switch (status){
             case 'ACCEPTED':
-                setConfirmationText('My Tickets →');
-                setDestination('/my/tickets');
+                if(holder){
+                    setConfirmationText('My Travelcards →');
+                    setDestination('/my/travelcards');
+                }else{
+                    setConfirmationText('My Tickets →');
+                    setDestination('/my/tickets');
+                }
                 break;
             case 'CANCELED':
                 setConfirmationText('Retry ↩');
