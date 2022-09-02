@@ -134,6 +134,72 @@ function getMyTicketsExpired(rangeDate, startDate, endDate) {
     });
 }
 
+function getMyTravelcards(){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL+'/my/travelcards', {
+            method: 'GET',
+            headers : {
+                'Authorization' : sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if(response.ok){
+                response.json().then((json)=>{
+                    console.log(json)
+                    resolve(json);
+                }).catch((err)=> {
+                    reject(err)
+                });
+            } else{
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
+function getMyTravelcardsValid(rangeDate, startDate, endDate) {
+    return new Promise((resolve, reject) => {
+        const url = rangeDate ? BASEURL + `/my/travelcards/valid?start=${startDate}&end=${endDate}` : BASEURL + '/my/travelcards/valid'
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
+function getMyTravelcardsExpired(rangeDate, startDate, endDate) {
+    return new Promise((resolve, reject) => {
+        const url = rangeDate ? BASEURL + `/my/travelcards/expired?start=${startDate}&end=${endDate}` : BASEURL + '/my/travelcards/expired'
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
 function getTravelers() {
     return new Promise((resolve, reject) => {
         fetch(BASEURL + '/admin/travelers', {
@@ -390,8 +456,10 @@ function getTravelerTicketsExpired(userID, rangeDate, startDate, endDate) {
         }).then((response) => {
             if (response.ok) {
                 response.json().then((json) => {
+                    console.log(json)
                     resolve(json);
                 }).catch((err) => {
+                    console.log(err)
                     reject(err)
                 });
             } else {
@@ -453,6 +521,81 @@ function getTravelersTravelcardsValid(rangeDate, startDate, endDate) {
 
 }
 
+function getTravelerTravelcardPurchased(userID, rangeDate, startDate, endDate) {
+    return new Promise((resolve, reject) => {
+        const url = rangeDate ?
+            BASEURL + `/admin/traveler/${userID}/travelcards/purchased?start=${startDate}&end=${endDate}` :
+            BASEURL + `/admin/traveler/${userID}/travelcards/purchased`
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+
+function getTravelerTravelcardExpired(userID, rangeDate, startDate, endDate) {
+    return new Promise((resolve, reject) => {
+        const url = rangeDate ?
+            BASEURL + `/admin/traveler/${userID}/travelcards/expired?start=${startDate}&end=${endDate}` :
+            BASEURL + `/admin/traveler/${userID}/travelcards/expired`
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+
+function getTravelerTravelcardValid(userID, rangeDate, startDate, endDate) {
+    return new Promise((resolve, reject) => {
+        const url = rangeDate ?
+            BASEURL + `/admin/traveler/${userID}/travelcards/valid?start=${startDate}&end=${endDate}` :
+            BASEURL + `/admin/traveler/${userID}/travelcards/valid`
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+
+}
+
 const travelerAPI = {
     getMyProfile,
     getTravelers,
@@ -470,9 +613,15 @@ const travelerAPI = {
     getMyTickets,
     getMyTicketsValidated,
     getMyTicketsExpired,
+    getMyTravelcards,
+    getMyTravelcardsValid,
+    getMyTravelcardsExpired,
     getTravelersTravelcardsExpired,
     getTravelersTravelcardsValid,
-    getMyTicketsValid
+    getMyTicketsValid,
+    getTravelerTravelcardPurchased,
+    getTravelerTravelcardExpired,
+    getTravelerTravelcardValid
 };
 
 export default travelerAPI;

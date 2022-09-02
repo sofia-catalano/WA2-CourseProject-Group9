@@ -33,6 +33,7 @@ class QRCodeController(val qrCodeService: QRCodeService) {
             .body(resource)
     }
 
+    //TODO GESTIRE LA VALIDATE DI UNA TRAVELCARD
     @PostMapping("/QRCode/validateQRCode")
     suspend fun validateQRCode(@RequestBody validationInfo: ValidationInfo) : ResponseEntity<Any>{
         return try {

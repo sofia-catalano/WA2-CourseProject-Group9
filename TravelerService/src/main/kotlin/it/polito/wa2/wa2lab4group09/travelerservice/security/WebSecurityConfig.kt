@@ -42,6 +42,7 @@ class WebSecurityConfig{
             .pathMatchers("/traveler/my/tickets").hasAuthority("ROLE_CUSTOMER")
             .pathMatchers("/traveler/my/tickets/**").hasAuthority("ROLE_CUSTOMER")
             .pathMatchers("/traveler/my/travelcards").hasAuthority("ROLE_CUSTOMER")
+            .pathMatchers("/traveler/my/travelcards/**").hasAuthority("ROLE_CUSTOMER")
             .pathMatchers("/traveler/admin/**").hasAuthority("ROLE_ADMIN")
             .and()
             .exceptionHandling()

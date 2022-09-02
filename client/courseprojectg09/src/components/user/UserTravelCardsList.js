@@ -1,51 +1,134 @@
 import {useEffect, useState, Spinner} from 'react';
 import * as React from 'react';
 import GenericTable from "../generic/Table/Table.js";
-import {CircularProgress, Menu, Tooltip} from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import FilterListIcon from '@mui/icons-material/FilterList';
-import MenuItem from "@mui/material/MenuItem";
+import {CircularProgress, Menu, TableCell, Tooltip} from "@mui/material";
+import travelerAPI from "../../api/TravelerAPI";
+import * as dayjs from "dayjs";
+import qrCodeAPI from "../../api/QRCodeAPI";
 import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 
 function UserTravelCardsList(props) {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState([]);
+    const [nameTable, setNameTable] = useState('Travelcards');
+    const [startDate, setStartDate] = useState(dayjs());
+    const [endDate, setEndDate] = useState(dayjs().add(1,'day'));
+    const [rangeDate, setRangeDate] = useState(false);
+    const [typeTravelcardsSelected, setTypeTravelcardsSelected] = useState('all');
+
+
+    useEffect(() => {
+        getAllTravelcardsPurchased()
+    }, [])
+
+    const downloadQRCode = (id) =>{
+        console.log("scaricando")
+        console.log(id)
+        qrCodeAPI.downloadQRCode(id).then(
+            (qrcode)=>{
+                qrcode.blob().then(
+                    blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = `travelcard-${id}.png`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                    }
+                )
+            }
+        )
+    }
+
+    const setTravelcards = (result) => {
+        const tmp = result.map((element) => {
+            return {
+                id : element.sub,
+                duration: element.duration === "1 year" ? "Annual" : "Monthly",
+                issued: dayjs(element.iat).format('YYYY-MM-DD HH:mm:ss'),
+                expired: dayjs(element.exp).format('YYYY-MM-DD HH:mm:ss'),
+                status: dayjs().format('YYYY-MM-DD HH:mm:ss') < dayjs(element.exp).format('YYYY-MM-DD HH:mm:ss') ? "VALID" : "EXPIRED",
+                zones: element.zid,
+                ownerId: element.ownerId,
+                jws : element.jws,
+            }
+        })
+        setData(tmp)
+        setLoading(false)
+    }
+
+    const searchTravelcards = () => {
+        if (typeTravelcardsSelected === 'all') {
+            getAllTravelcardsPurchased()
+        } else if (typeTravelcardsSelected === 'valid') {
+            setLoading(true)
+            travelerAPI.getMyTravelcardsValid(rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTravelcards(r)
+                    setNameTable('Valid Travelcards')
+                })
+                .catch(err => console.log(err))
+        } else if (typeTravelcardsSelected === 'expired') {
+            setLoading(true)
+            travelerAPI.getMyTravelcardsExpired(rangeDate, startDate.toISOString(), endDate.toISOString())
+                .then(r => {
+                    setTravelcards(r)
+                    setNameTable('Expired Travelcards')
+                })
+                .catch(err => console.log(err))
+        }
+
+    }
+
+    const getAllTravelcardsPurchased = () => {
+        setLoading(true);
+        travelerAPI.getMyTravelcards()
+            .then(r => {
+                setTravelcards(r)
+                setNameTable('All Travelcards')
+            })
+            .catch(err => console.log(err))
+    }
+
     return (
         <>{loading
             ?
             <CircularProgress />
             :
             <GenericTable
-                headCells={headCells}
-                rows={rows}
-                nameTable={"My TravelCards"}
-                FilterMenu={TravelcardsFilterMenu}
-            ></GenericTable>
+            headCells={headCells}
+            rows={data}
+            nameTable={nameTable}
+            FilterMenu={TravelcardsFilterMenu}
+            typeSelected={typeTravelcardsSelected}
+            setTypeSelected={setTypeTravelcardsSelected}
+            startDate={startDate}
+            endDate={endDate}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
+            searchTickets={searchTravelcards}
+            rangeDate={rangeDate}
+            setRangeDate={setRangeDate}
+            onDownloadQRCode={downloadQRCode}
+            />
         }
 
         </>
     );
 }
 
-function createData(id, type, purchase_date, expiration_date, status, allowed_zone, holder) {
-    return {
-        id,
-        type,
-        purchase_date,
-        expiration_date,
-        status, //if now < expiration date then valid otherwise status = EXPIRED
-        allowed_zone,
-        holder,
-    };
-}
 
 const headCells = [
     {
-        id: 'id',
+        id: 'ID',
         numeric: false,
         label: 'ID',
     },
     {
-        id: 'type',
+        id: 'duration',
         numeric: false,
         label: 'Type',
     },
@@ -65,23 +148,23 @@ const headCells = [
         label: 'Status', //if now < expiration date then valid otherwise status = EXPIRED
     },
     {
-        id: 'allowed_zones',
+        id: 'zid',
         numeric: false,
-        label: 'Zones allowed',
+        label: 'Zone Allowed',
     },
     {
         id: 'holder',
-        numeric: true,
+        numeric: false,
         label: 'Holder',
-    }
+    },
+    {
+        id: 'download',
+        numeric: false,
+        label: 'Download Travelcard QR Code',
+    },
 
 ];
 
-const rows=[
-    createData('1',"1 year", "20-01-2022","20-01-2023","VALID","AB","Giuseppe Neri"),
-    createData('2',"1 year", "20-01-2022","20-01-2023","VALID","AB","Giuseppe Neri"),
-    createData('3',"1 month", "20-01-2022","20-02-2022","EXPIRED","A","Giuseppe Neri"),
-]
 
 export default UserTravelCardsList
 

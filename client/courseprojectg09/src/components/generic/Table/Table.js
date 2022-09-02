@@ -19,12 +19,7 @@ import IconButton from "@mui/material/IconButton";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useLocation } from 'react-router-dom';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import TextField from '@mui/material/TextField';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-
+import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -80,7 +75,7 @@ function GenericTableHead(props) {
                             onClick={createSortHandler(headCell.id)}
                             hideSortIcon={true}
                         >
-                            {headCell.label}
+                            <b>{headCell.label}</b>
                             {orderBy === headCell.id ? (
                                 <Box component="span" sx={visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
@@ -174,7 +169,7 @@ const EnhancedTableToolbar = (props) => {
 
 
 export default function GenericTable(props) {
-    const {headCells, rows, nameTable, FilterMenu, onClickElement, onAddElement} = props
+    const {headCells, rows, nameTable, FilterMenu, onClickElement, onAddElement, onDownloadQRCode} = props
     const {typeSelected, setTypeSelected } = props //for filter menu
     const {selectedValue, handleTypeTicketsChange}=props //only for buy ticket form
     const {startDate, setStartDate, endDate, setEndDate, searchTickets, rangeDate, setRangeDate}=props
@@ -182,7 +177,6 @@ export default function GenericTable(props) {
     const [orderBy, setOrderBy] = React.useState('calories');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -260,7 +254,14 @@ export default function GenericTable(props) {
                                             }
 
                                             {Object.keys(row).map(function(key) {
-                                                return <TableCell key={key} align="center">{row[key]}</TableCell>
+                                                return key === "jws" ?
+                                                    <TableCell key={key} align="center">
+                                                        <IconButton aria-label="delete" onClick={()=>onDownloadQRCode(row.id)}>
+                                                            <ArrowCircleDownIcon
+                                                                fontSize="small"/>
+                                                        </IconButton>
+                                                    </TableCell> :
+                                                    <TableCell key={key} align="center">{row[key]}</TableCell>
                                             })
                                             }
                                         </TableRow>

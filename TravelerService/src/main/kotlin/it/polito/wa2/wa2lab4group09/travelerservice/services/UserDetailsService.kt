@@ -160,7 +160,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
             return travelcardPurchasedRepository
                 .findAllValidByUserDetails(userDetails.username, Timestamp.from(Instant.now()))
                 .map {
-                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration, it.ownerId)
                 }
         }
     }
@@ -179,7 +179,7 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
             return travelcardPurchasedRepository
                 .findAllExpiredByUserDetails(userDetails.username, Timestamp.from(Instant.now()))
                 .map {
-                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration)
+                    TravelcardPurchasedDTO(it.sub, it.iat, it.exp, it.zid, it.jws, it.userId, it.duration, it.ownerId)
                 }
         }
     }

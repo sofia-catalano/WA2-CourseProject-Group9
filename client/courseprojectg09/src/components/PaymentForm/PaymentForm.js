@@ -155,7 +155,7 @@ function PaymentForm(props) {
                         </Avatar>
                         <Box component="form" onSubmit={handleSubmit} sx={{p: 2}}>
                             <Typography variant="h3" sx={{ textAlign: 'center', color:'#1976d2' }}>
-                                {total} €
+                                {parseFloat(total).toFixed(2)} €
                             </Typography>
                             <Typography variant="subtitle1" sx={{ textAlign: 'center'}} >
                                 Insert data and proceed with payment

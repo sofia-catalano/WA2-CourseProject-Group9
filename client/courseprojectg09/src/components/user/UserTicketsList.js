@@ -10,15 +10,16 @@ import MenuItem from "@mui/material/MenuItem";
 import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 import travelerAPI from "../../api/TravelerAPI";
 import * as dayjs from 'dayjs'
+import qrCodeAPI from "../../api/QRCodeAPI";
 
 function UserTicketsList(props) {
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState([])
-    const [typeTicketsSelected, setTypeTicketsSelected] = useState('all')
-    const [nameTable, setNameTable] = useState('Tickets')
-    const [startDate, setStartDate] = useState(dayjs())
-    const [endDate, setEndDate] = useState(dayjs().add(1,'day'))
-    const [rangeDate, setRangeDate] = useState(false)
+    const [data, setData] = useState([]);
+    const [typeTicketsSelected, setTypeTicketsSelected] = useState('all');
+    const [nameTable, setNameTable] = useState('Tickets');
+    const [startDate, setStartDate] = useState(dayjs());
+    const [endDate, setEndDate] = useState(dayjs().add(1,'day'));
+    const [rangeDate, setRangeDate] = useState(false);
 
     useEffect(() => {
         getAllTicketsPurchased()
@@ -32,7 +33,8 @@ function UserTicketsList(props) {
                 acquired: dayjs(element.iat).format('YYYY-MM-DD HH:mm:ss'),
                 validated: element.validated ? dayjs(element.validated).format('YYYY-MM-DD HH:mm:ss') : '',
                 expired: element.validated ? dayjs(element.exp).format('YYYY-MM-DD HH:mm:ss') : '',
-                type: element.duration
+                type: element.duration,
+                jws : element.jws,
             }
         })
         setData(tmp)
@@ -50,9 +52,9 @@ function UserTicketsList(props) {
     }
 
     const searchTickets = () => {
-        if (typeTicketsSelected == 'all') {
+        if (typeTicketsSelected === 'all') {
             getAllTicketsPurchased()
-        } else if (typeTicketsSelected == 'validated') {
+        } else if (typeTicketsSelected === 'validated') {
             setLoading(true)
             travelerAPI.getMyTicketsValidated(rangeDate, startDate.toISOString(), endDate.toISOString())
                 .then(r => {
@@ -60,7 +62,7 @@ function UserTicketsList(props) {
                     setNameTable('Validated tickets')
                 })
                 .catch(err => console.log(err))
-        } else if (typeTicketsSelected == 'valid') {
+        } else if (typeTicketsSelected === 'valid') {
             setLoading(true)
             travelerAPI.getMyTicketsValid(rangeDate, startDate.toISOString(), endDate.toISOString())
                 .then(r => {
@@ -68,7 +70,7 @@ function UserTicketsList(props) {
                     setNameTable('Valid tickets')
                 })
                 .catch(err => console.log(err))
-        } else if (typeTicketsSelected == 'expired') {
+        } else if (typeTicketsSelected === 'expired') {
             setLoading(true)
             travelerAPI.getMyTicketsExpired(rangeDate, startDate.toISOString(), endDate.toISOString())
                 .then(r => {
@@ -80,6 +82,27 @@ function UserTicketsList(props) {
 
     }
 
+    const downloadQRCode = (id) =>{
+        console.log("scaricando")
+        console.log(id)
+        qrCodeAPI.downloadQRCode(id).then(
+            (qrcode)=>{
+                qrcode.blob().then(
+                    blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = `ticket-${id}.png`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                    }
+                )
+            }
+        )
+    }
 
     return (
         <>{loading
@@ -100,6 +123,7 @@ function UserTicketsList(props) {
                 searchTickets={searchTickets}
                 rangeDate={rangeDate}
                 setRangeDate={setRangeDate}
+                onDownloadQRCode={downloadQRCode}
             ></GenericTable>
         }
 
@@ -138,6 +162,11 @@ const headCells = [
         id: 'type',
         numeric: false,
         label: 'Type',
+    },
+    {
+        id: 'download',
+        numeric: false,
+        label: 'Download Tickets QR Code',
     },
 ];
 
