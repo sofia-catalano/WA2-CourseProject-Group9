@@ -1,4 +1,5 @@
 import Orders from "../model/Order";
+import Order from "../model/Order";
 
 const BASEURL = '/catalogue';
 
@@ -144,7 +145,10 @@ function buyTickets(numberOfTickets, ticketId, type, paymentInfo) {
         }).then((response) => {
             if (response.ok) {
                 console.log(response)
-                resolve();
+                response.body.getReader().read().then(({ done, value }) => {
+                    const string = new TextDecoder().decode(value);
+                    resolve(string);
+                });
             } else {
                 reject();
             }
@@ -183,13 +187,42 @@ function buyTravelcard( ticketId, type, paymentInfo, owner) {
         }).then((response) => {
             if (response.ok) {
                 console.log(response)
-                resolve();
+                response.body.getReader().read().then(({ done, value }) => {
+                    const string = new TextDecoder().decode(value);
+                    resolve(string);
+                });
             } else {
                 reject();
             }
         }).catch((err) => reject(err));
     });
 }
+
+function getOrderbyId(orderId) {
+    return new Promise((resolve, reject) => {
+        fetch(`${BASEURL}/orders/${orderId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    console.log(json)
+                    const order = Order.from(json);
+                    resolve(order);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => {
+            reject(err)
+        });
+    });
+}
+
 
 const catalogueAPI = {
     getCatalogue,
@@ -198,7 +231,8 @@ const catalogueAPI = {
     getTravelerOrders,
     addNewTicketToCatalogue,
     buyTickets,
-    buyTravelcard
+    buyTravelcard,
+    getOrderbyId
 };
 
 export default catalogueAPI;

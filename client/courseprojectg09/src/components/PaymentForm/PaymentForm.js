@@ -6,7 +6,6 @@ import Avatar from "@mui/material/Avatar";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {useState} from "react";
-import MenuItem from "@mui/material/MenuItem";
 import ShoppingCartSharpIcon from '@mui/icons-material/ShoppingCartSharp';
 import './PaymentForm.css'
 import Typography from "@mui/material/Typography";
@@ -17,6 +16,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from "dayjs";
 import Owner from "../../model/Owner";
+import ConfirmationModal from "../generic/ConfirmationModal/ConfirmationModal";
+import {Modal} from "@mui/material";
+import {useNavigate} from "react-router-dom";
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 const style = {
     position: 'absolute',
@@ -60,11 +63,50 @@ const typeTickets=[
 ];
 function PaymentForm(props) {
 
-    const {total, ticketId, numberOfTickets, selectedType, holder} = props;
+    const navigate = useNavigate();
+
+    const {total, ticketId, numberOfTickets, selectedType, holder, setPaymentModal} = props;
     const [creditCardNumber, setCreditCardNumber] = useState('');
     const [cardHolder, setCardHolder] = useState('');
     const [expirationDate, setExpirationDate] = useState(dayjs());
     const [cvv,setCvv]=useState('')
+    const [paymentResult, setPaymentResult]=useState('')
+
+    /*------------------------PAYMENT RESULT MODAL MANAGEMENT--------------------------*/
+    const [openResultModal, setOpenResultModal] = useState(false);
+    const [showError, setShowError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [confirmationText, setConfirmationText] = useState('');
+    const [cancelText, setCancelText] = useState('');
+    const [destination, setDestination] = useState('');
+
+    const handleCloseResultModal = () => {
+        setPaymentModal(false) ;
+    }
+
+    const handleConfirmResultModal = () =>{
+        if(paymentResult === 'CANCELED')
+            setOpenResultModal(false);
+        else
+            navigate(destination);
+    }
+
+    const handleResultModalText = (status) =>{
+        setCancelText('← Catalogue');
+        switch (status){
+            case 'ACCEPTED':
+                setConfirmationText('My Tickets →');
+                setDestination('/my/tickets');
+                break;
+            case 'CANCELED':
+                setConfirmationText('Retry ↩');
+                break;
+            default:
+                setConfirmationText('My Orders →');
+                setDestination('/my/orders');
+        }
+    }
+/*------------------------------------------------------------------------------------*/
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -81,10 +123,22 @@ function PaymentForm(props) {
             const owner = new Owner(holder.fiscal_code, holder.name, holder.surname, holder.address, `${holder.birthday}`, holder.telephone)
             ticketCatalogueAPIs.buyTravelcard(ticketId, selectedType, paymentInfo, owner).then( r =>{
                 console.log(r)
+                ticketCatalogueAPIs.getOrderbyId(r).then(order => {
+                    console.log(order);
+                    setPaymentResult(order.status);
+                    setOpenResultModal(true);
+                    handleResultModalText(order.status)
+                })
             })
         }else{
-            ticketCatalogueAPIs.buyTickets(numberOfTickets, ticketId, selectedType, paymentInfo).then( r =>{
+            ticketCatalogueAPIs.buyTickets(numberOfTickets, ticketId, selectedType, paymentInfo).then( r => {
                 console.log(r)
+                ticketCatalogueAPIs.getOrderbyId(r).then(order => {
+                    console.log(order);
+                    setPaymentResult(order.status);
+                    setOpenResultModal(true);
+                    handleResultModalText(order.status)
+                })
             })
         }
 
@@ -165,6 +219,22 @@ function PaymentForm(props) {
                             >
                                 Buy tickets
                             </Button>
+                            <Modal
+                                open={openResultModal}
+                                onClose={handleCloseResultModal}
+                                aria-labelledby="modal-modal-title"
+                                aria-describedby="modal-modal-description"
+                            >
+                                <ConfirmationModal
+                                    icon={<AccountBalanceIcon fontSize="large" sx={{color: '#ffeb3b' }}/>}
+                                    question={"Payment Result: " + paymentResult + "."}
+                                    confirmationText={confirmationText}
+                                    cancelText={cancelText}
+                                    handleConfirmation={handleConfirmResultModal}
+                                    handleCancel={handleCloseResultModal}
+                                    showError={showError}
+                                    errorMessage={errorMessage}/>
+                            </Modal>
                         </Box>
                     </Box>
                 </Container>

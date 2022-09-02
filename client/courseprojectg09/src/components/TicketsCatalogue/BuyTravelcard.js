@@ -223,7 +223,7 @@ function BuyTravelcard(props) {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <PaymentForm total={data.find(element => element.id===selectedValue) ? data.find(element => element.id===selectedValue).price : 0} ticketId={selectedValue} selectedType={selectedType} holder={holder}/>
+                    <PaymentForm total={data.find(element => element.id===selectedValue) ? data.find(element => element.id===selectedValue).price : 0} ticketId={selectedValue} selectedType={selectedType} holder={holder} setPaymentModal={setBuyTravelcardModal}/>
                 </Modal>
                 </>
             }

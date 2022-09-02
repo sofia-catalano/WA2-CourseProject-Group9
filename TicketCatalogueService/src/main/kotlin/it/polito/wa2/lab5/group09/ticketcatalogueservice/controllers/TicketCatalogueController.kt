@@ -181,7 +181,7 @@ class TicketCatalogueController(
                     .build()
                 kafkaTemplate.send(message)
                 log.info("Message sent with success")
-                ResponseEntity( order.orderId, HttpStatus.OK)
+                ResponseEntity( order.orderId.toString(), HttpStatus.OK)
             } else {
                 throw IllegalArgumentException("Your age is out of range!")
             }

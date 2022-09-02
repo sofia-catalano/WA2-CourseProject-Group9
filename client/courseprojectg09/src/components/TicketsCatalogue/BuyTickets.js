@@ -160,7 +160,7 @@ function BuyTickets(props) {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <PaymentForm total={total} ticketId={selectedValue} numberOfTickets={numberOfTickets} selectedType={selectedType}/>
+                    <PaymentForm total={total} ticketId={selectedValue} numberOfTickets={numberOfTickets} selectedType={selectedType} setPaymentModal={setBuyTicketsModal}/>
                 </Modal>
                 </>}
                 <Modal

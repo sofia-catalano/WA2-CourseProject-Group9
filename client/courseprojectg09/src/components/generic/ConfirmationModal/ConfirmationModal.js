@@ -25,7 +25,7 @@ const theme = createTheme();
 
 function ConfirmationModal(props) {
 
-    const {question, confirmationText, cancelText, handleConfirmation, handleCancel, showError, errorMessage} = props;
+    const {icon, question, confirmationText, cancelText, handleConfirmation, handleCancel, showError, errorMessage} = props;
 
     return (
         <Box sx={style}>
@@ -34,7 +34,7 @@ function ConfirmationModal(props) {
                     <CssBaseline />
                     <Box id="formStyle">
                         <Avatar id="iconFormStyle" sx={{ width: 60, height: 60, mb: 1, bgcolor: '#1976d2' }}>
-                            <RiUserStarFill style={iconStyle}/>
+                            {icon}
                         </Avatar>
                         <Box component="form" sx={{p: 2}}>
                             <Typography variant="h5" sx={{ textAlign: 'center', color:'#1976d2' }}>

@@ -32,6 +32,7 @@ function AdminsList(props) {
 
     useEffect(() => {
         if(dirty){
+            //fix fetch when no other admins are registered
             loginAPI.getAllAdmins()
                 .then((fetchedAdmins) => {
                     fetchedAdmins.forEach(function (obj) {
@@ -142,6 +143,7 @@ function AdminsList(props) {
                         aria-describedby="modal-modal-description"
                     >
                         <ConfirmationModal
+                            icon={<RiUserStarFill style={{color: '#ffeb3b', fontSize: "1.5em"}}/>}
                             question={"Do you really want to give to the admin: "+adminUsername+" the enrolling capability?"}
                             confirmationText={"Confirm"}
                             cancelText={"Cancel"}
