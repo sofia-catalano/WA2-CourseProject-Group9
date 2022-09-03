@@ -14,6 +14,7 @@ import {useUser} from "../UserProvider";
 import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
+import Loading from '../generic/Loading/Loading.js';
 
 function BuyTickets(props) {
     const [loading, setLoading] = useState(true);
@@ -115,7 +116,7 @@ function BuyTickets(props) {
     return (
         <>{loading
             ?
-            <CircularProgress />
+            <Loading loading={loading}/>
             :
             <Box component="form" onSubmit={handleSubmit} sx={{p: 2}}>
                 <GenericTable

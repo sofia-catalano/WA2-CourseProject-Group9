@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import catalogueAPI from "../../api/TicketCatalogueAPIs";
-
+import Loading from '../generic/Loading/Loading.js';
 const style = {
     position: 'absolute',
     top: '50%',
@@ -54,7 +54,7 @@ function UserOrdersList() {
     return (
         <>{loading
             ?
-            <CircularProgress/>
+            <Loading loading={loading}/>
             :
             <Grid container>
                 <Grid item xs={12}>

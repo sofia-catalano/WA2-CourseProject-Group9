@@ -16,6 +16,7 @@ import AdminRegistrationForm from "./AdminRegistrationForm/AdminRegistrationForm
 import {useEffect} from "react";
 import loginAPI from "../../api/LoginAPI";
 import ConfirmationModal from "../generic/ConfirmationModal/ConfirmationModal";
+import Loading from '../generic/Loading/Loading.js';
 
 function AdminsList(props) {
     const [loading, setLoading] = useState(true);
@@ -69,7 +70,7 @@ function AdminsList(props) {
     return (
         <>{loading
             ?
-            <CircularProgress/>
+            <Loading loading={loading}/>
             :
             <Box sx={{width: '90%', mt: 2, mr: 5, ml: 5}}>
                 <Typography

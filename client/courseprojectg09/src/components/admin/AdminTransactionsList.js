@@ -4,6 +4,7 @@ import GenericTable from "../generic/Table/Table.js";
 import {CircularProgress, Menu, Tooltip} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import paymentAPI from "../../api/PaymentAPI";
+import Loading from '../generic/Loading/Loading.js';
 
 function AdminTransactionsList(props) {
     const [loading, setLoading] = useState(false);
@@ -19,7 +20,7 @@ function AdminTransactionsList(props) {
     return (
         <>{loading
             ?
-            <CircularProgress/>
+            <Loading loading={loading}/>
             :
             <GenericTable
                 headCells={headCells}

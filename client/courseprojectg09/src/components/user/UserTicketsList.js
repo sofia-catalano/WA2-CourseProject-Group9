@@ -11,7 +11,8 @@ import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 import travelerAPI from "../../api/TravelerAPI";
 import * as dayjs from 'dayjs'
 import qrCodeAPI from "../../api/QRCodeAPI";
-
+import Backdrop from '@mui/material/Backdrop';
+import Loading from '../generic/Loading/Loading.js';
 function UserTicketsList(props) {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
@@ -107,7 +108,7 @@ function UserTicketsList(props) {
     return (
         <>{loading
             ?
-            <CircularProgress/>
+            <Loading loading={loading}/>
             :
             <GenericTable
                 headCells={headCells}

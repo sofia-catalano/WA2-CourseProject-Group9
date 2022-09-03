@@ -5,6 +5,7 @@ import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 import travelerAPI from "../../api/TravelerAPI";
 import moment from "moment";
 import * as dayjs from "dayjs";
+import Loading from '../generic/Loading/Loading.js';
 
 function AdminTravelcardsList(props) {
     const [loading, setLoading] = useState(true);
@@ -74,7 +75,7 @@ function AdminTravelcardsList(props) {
     return (
         <>{loading
             ?
-            <CircularProgress />
+            <Loading loading={loading}/>
             :
             <GenericTable
                 headCells={headCells}

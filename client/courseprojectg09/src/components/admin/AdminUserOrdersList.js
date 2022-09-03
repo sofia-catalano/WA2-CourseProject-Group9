@@ -8,6 +8,7 @@ import * as React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import ticketCatalogueAPIs from "../../api/TicketCatalogueAPIs";
 import {useLocation} from "react-router-dom";
+import Loading from '../generic/Loading/Loading.js';
 
 const style = {
     position: 'absolute',
@@ -67,7 +68,7 @@ function AdminUserOrdersList(props) {
     return (
         <>{loading
             ?
-            <CircularProgress/>
+            <Loading loading={loading}/>
             :
             <Grid container>
                 <Grid item xs={12}>

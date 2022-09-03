@@ -7,7 +7,7 @@ import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 import {useUser} from "../UserProvider";
 import travelerAPI from "../../api/TravelerAPI";
 import * as dayjs from 'dayjs'
-
+import Loading from '../generic/Loading/Loading.js';
 
 function AdminTicketsList(props) {
     const {loggedIn, userRole, setUserRole, setLoggedIn} = useUser()
@@ -91,7 +91,7 @@ function AdminTicketsList(props) {
         <>
             {loading
                 ?
-                <CircularProgress/>
+                <Loading loading={loading}/>
                 :
                 <GenericTable
                     headCells={headCells}

@@ -14,6 +14,7 @@ import {useUser} from "../UserProvider";
 import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
+import Loading from '../generic/Loading/Loading.js';
 
 function BuyTravelcard(props) {
     const {loggedIn, userRole, setUserRole, setLoggedIn} = useUser()
@@ -128,7 +129,7 @@ function BuyTravelcard(props) {
     return (
         <>{loading
             ?
-            <CircularProgress />
+            <Loading loading={loading}/>
             :
             <Box component="form" onSubmit={handleSubmit} sx={{p: 2}}>
                 <GenericTable
