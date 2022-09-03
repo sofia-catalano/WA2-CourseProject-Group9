@@ -5,7 +5,7 @@ const UserContext = createContext(null)
 const UserProvider = ({ children }) => {
     const [userRole, setUserRole] = useState('');
     const [loggedIn, setLoggedIn]= useState(false);
-
+    const [username, setUsername]= useState('')
     return (
         //This component will be used to encapsulate the whole App,
         //so all components will have access to the Context
@@ -14,7 +14,9 @@ const UserProvider = ({ children }) => {
                 userRole,
                 setUserRole,
                 loggedIn,
-                setLoggedIn
+                setLoggedIn,
+                username,
+                setUsername
             }}>
             {children}
         </UserContext.Provider>

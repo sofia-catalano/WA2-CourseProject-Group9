@@ -14,7 +14,7 @@ function logIn(username, password) {
         }).then((response) => {
             if (response.ok) {
                 sessionStorage.setItem('authorization', response.headers.get("authorization"));
-                resolve(response.headers.get("role"));
+                resolve();
             } else {
                 reject();
             }
@@ -136,6 +136,27 @@ function enrollAdmin(adminUsername){
         }).catch((err) => reject(err));
     });
 }
+function getUserData(){
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL + '/user/data', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': sessionStorage.getItem('authorization')
+            }
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
 
 
 
@@ -145,6 +166,7 @@ const loginAPI = {
     validateUser,
     registerAdmin,
     getAllAdmins,
+    getUserData,
     enrollAdmin
 };
 
