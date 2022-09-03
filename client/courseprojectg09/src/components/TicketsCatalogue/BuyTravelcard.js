@@ -14,6 +14,7 @@ import {useUser} from "../UserProvider";
 import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import Loading from '../generic/Loading/Loading.js';
 
 function BuyTravelcard(props) {

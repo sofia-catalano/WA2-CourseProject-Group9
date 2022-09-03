@@ -108,6 +108,7 @@ function AddForm(props) {
         if(props.edit){
             setTicketsType(props.data.type)
             setAllowedZones(props.data.zones)
+            setPrice(props.data.price)
             setMaxAge(props.data.maxAge)
             setMinAge(props.data.minAge)
         }
@@ -137,8 +138,9 @@ function AddForm(props) {
             catalogueAPI.editTicketFromCatalogue(ticketUpdate)
                 .then(()=>{
                     props.setDirty(true);
+                    props.setEdit(false);
                     props.setAddToCatalogueModal(false);
-                })
+                }).catch(err => console.log(err))
         }
 
     };

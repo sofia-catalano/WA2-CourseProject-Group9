@@ -207,6 +207,7 @@ function BuyTickets(props) {
                            setDirty={setDirty}
                            setAddToCatalogueModal={setAddToCatalogueModal}
                            edit={edit}
+                           setEdit={setEdit}
                            data={edit ? data.find(element => element.id===selectedValue) : ""}/>
                 </Modal>
             </Box>

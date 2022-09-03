@@ -38,9 +38,7 @@ class AdminController(
             ResponseEntity(t.message, HttpStatus.BAD_REQUEST)
         }
     }
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/admin/tickets")
+    @PutMapping("/catalogue/admin/tickets")
     suspend fun updateTicketCatalogue(@RequestHeader("Authorization") jwt:String,
                                       @RequestBody ticketUpdate: TicketCatalogue) : ResponseEntity<Any>{
         return try {

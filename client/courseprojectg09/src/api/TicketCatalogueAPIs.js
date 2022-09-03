@@ -142,6 +142,7 @@ function deleteTicketToCatalogue(ticketId) {
 }
 
 function editTicketFromCatalogue(ticket) {
+    console.log(ticket)
     return new Promise((resolve, reject) => {
         fetch(BASEURL + '/admin/tickets', {
             method: 'PUT',
@@ -152,15 +153,9 @@ function editTicketFromCatalogue(ticket) {
             body: JSON.stringify(ticket),
         }).then((response) => {
             if (response.ok) {
-                response.json().then((json) => {
-                    resolve()
-                }).catch((err) => {
-                    reject(err)
-                });
+                resolve()
             } else {
-                response.json().then((error) => {
-                    reject(error)
-                })
+                reject()
             }
         }).catch((err) => reject(err));
     });
