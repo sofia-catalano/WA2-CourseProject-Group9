@@ -12,6 +12,8 @@ import PaymentForm from "../PaymentForm/PaymentForm";
 import AddForm from './AddToCatalogue/AddToCatalogueForm';
 import {useUser} from "../UserProvider";
 import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function BuyTickets(props) {
     const [loading, setLoading] = useState(true);
@@ -55,11 +57,17 @@ function BuyTickets(props) {
                         price: element.price,
                         zones: element.zones,
                         minAge: element.minAge,
-                        maxAge: element.maxAge
+                        maxAge: element.maxAge,
                     })
                 }
             })
-
+            if(userRole === 'ADMIN'){
+                tmp.forEach((element)=>element.delete =
+                    <IconButton aria-label={'delete'}
+                                onClick={()=> handleDeleteElement(element)}>
+                            <DeleteIcon fontSize="small"/>
+                    </IconButton>
+                )}
             setData(tmp);
             console.log(tmp)
             if(tmp.length){
@@ -85,7 +93,6 @@ function BuyTickets(props) {
         if(currentElement!==undefined) setTotal(event.target.value*currentElement.price)
     }
     const handleTypeTicketsChange=(id)=>{
-        console.log(id)
         setSelectedValue(id)
         const currentElement=data.find(element => element.id===id)
         if(currentElement!==undefined) {
@@ -96,6 +103,15 @@ function BuyTickets(props) {
 
     const handleAddToCatalogueModal = () => setAddToCatalogueModal(true);
 
+    const handleDeleteElement = (element) =>{
+        setLoading(true)
+        setDirty(true)
+        catalogueAPI.deleteTicketToCatalogue(element.id)
+          .then(()=>{
+                  setLoading(false)
+                  setDirty(false)
+          })
+    }
     return (
         <>{loading
             ?
@@ -103,7 +119,7 @@ function BuyTickets(props) {
             :
             <Box component="form" onSubmit={handleSubmit} sx={{p: 2}}>
                 <GenericTable
-                    headCells={headCells}
+                    headCells={userRole === "ADMIN" ? adminHeadCells : headCells}
                     rows={data}
                     nameTable={userRole === "ADMIN" ? "Tickets list" : "Buy tickets"}
                     selectedValue={selectedValue}
@@ -220,6 +236,13 @@ const headCells = [
 
 ];
 
+const adminHeadCells=headCells.concat([
+    {
+        id: 'delete',
+        numeric: true,
+        label: 'Delete',
+    },
+])
 export default BuyTickets
 
 

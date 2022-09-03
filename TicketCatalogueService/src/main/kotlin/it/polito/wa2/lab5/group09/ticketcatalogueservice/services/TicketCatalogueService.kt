@@ -154,6 +154,20 @@ class TicketCatalogueService(
             throw IllegalArgumentException("Something weny wrong")
         }
     }
+
+    suspend fun deleteTicketToCatalogue(ticketId: ObjectId) {
+        try {
+            val ticketC= ticketCatalogueRepository.findById(ticketId).awaitFirstOrNull()
+            if(ticketC!=null){
+                ticketCatalogueRepository.delete(ticketC).subscribe()
+            }
+            else{
+                throw IllegalArgumentException("Ticket type not existing")
+            }
+        } catch (t: Throwable) {
+            throw IllegalArgumentException(t.message)
+        }
+    }
 }
 
 data class ActionTicket(val cmd: String, val quantity: Int, val zones: String, val type: String, val typeId: ObjectId)

@@ -4,6 +4,7 @@ import it.polito.wa2.lab5.group09.ticketcatalogueservice.dtos.toDTO
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogue
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.services.TicketCatalogueService
 import kotlinx.coroutines.flow.map
+import org.bson.types.ObjectId
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -33,6 +34,21 @@ class AdminController(
             ticketCatalogueService.addTicketToCatalogue(ticket)
             ResponseEntity("Ticket added to catalogue", HttpStatus.CREATED)
         } catch (t: Throwable) {
+            ResponseEntity(t.message, HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/catalogue/admin/tickets/{ticketId}")
+    suspend fun deleteTicketToCatalogue(
+        @PathVariable ticketId:ObjectId,
+        @RequestHeader("Authorization") jwt:String
+    ): ResponseEntity<Any> {
+        return try {
+            ticketCatalogueService.deleteTicketToCatalogue(ticketId)
+            ResponseEntity("Ticket deleted to catalogue", HttpStatus.OK)
+        } catch (t: Throwable) {
+            println(t)
             ResponseEntity(t.message, HttpStatus.BAD_REQUEST)
         }
     }

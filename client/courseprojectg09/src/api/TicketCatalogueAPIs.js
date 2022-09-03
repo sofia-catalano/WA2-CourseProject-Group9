@@ -121,6 +121,26 @@ function addNewTicketToCatalogue(ticketCatalogue) {
         }).catch((err) => reject(err));
     });
 }
+function deleteTicketToCatalogue(ticketId) {
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL + `/admin/tickets/${ticketId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': sessionStorage.getItem('authorization')
+            },
+        }).then((response) => {
+            if (response.ok) {
+                console.log(response)
+                resolve();
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
 
 function buyTickets(numberOfTickets, ticketId, type, paymentInfo) {
     return new Promise((resolve, reject) => {
@@ -232,7 +252,8 @@ const catalogueAPI = {
     addNewTicketToCatalogue,
     buyTickets,
     buyTravelcard,
-    getOrderbyId
+    getOrderbyId,
+    deleteTicketToCatalogue
 };
 
 export default catalogueAPI;
