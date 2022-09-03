@@ -5,7 +5,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-
+import {useUser} from "../UserProvider";
 const bull = (
     <Box
         component="span"
@@ -29,7 +29,7 @@ const card = (
                 <br />
             </Typography>
         </CardContent>
-        <CardActions style={{justifyContent: "space-around", marginBottom: "0.5rem"}}>
+       <CardActions style={{justifyContent: "space-around", marginBottom: "0.5rem"}}>
             <Button size="big" variant="contained" style={{minWidth: "10vw"}}  href="/user/login">
                 Log in
             </Button>
