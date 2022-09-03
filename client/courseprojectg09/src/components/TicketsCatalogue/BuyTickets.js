@@ -14,6 +14,7 @@ import {useUser} from "../UserProvider";
 import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import Loading from '../generic/Loading/Loading.js';
 
 function BuyTickets(props) {
@@ -27,6 +28,7 @@ function BuyTickets(props) {
     const [total,setTotal]=useState(0)
     const {loggedIn, userRole, setUserRole, setLoggedIn} = useUser()
     const [data, setData] = React.useState([]);
+    const [edit, setEdit] = React.useState(false)
 
     const findType = (duration) => {
         switch (duration) {
@@ -63,11 +65,20 @@ function BuyTickets(props) {
                 }
             })
             if(userRole === 'ADMIN'){
-                tmp.forEach((element)=>element.delete =
-                    <IconButton aria-label={'delete'}
-                                onClick={()=> handleDeleteElement(element)}>
+                tmp.forEach((element)=> {
+                    element.delete =
+                        <IconButton aria-label={'delete'}
+                                    onClick={()=> handleDeleteElement(element)}>
                             <DeleteIcon fontSize="small"/>
-                    </IconButton>
+                        </IconButton>
+
+                    element.edit =
+                        <IconButton aria-label={'edit'}
+                                    onClick={()=> handleEditElement(element)}>
+                            <EditIcon fontSize="small"/>
+                        </IconButton>
+
+                    }
                 )}
             setData(tmp);
             console.log(tmp)
@@ -112,6 +123,12 @@ function BuyTickets(props) {
                   setLoading(false)
                   setDirty(false)
           })
+    }
+
+    const handleEditElement = (element) =>{
+        setEdit(true)
+        setSelectedValue(element.id)
+        handleAddToCatalogueModal()
     }
     return (
         <>{loading
@@ -186,7 +203,11 @@ function BuyTickets(props) {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                  <AddForm type="ticket" setDirty={setDirty} setAddToCatalogueModal={setAddToCatalogueModal}/>
+                  <AddForm type="ticket"
+                           setDirty={setDirty}
+                           setAddToCatalogueModal={setAddToCatalogueModal}
+                           edit={edit}
+                           data={edit ? data.find(element => element.id===selectedValue) : ""}/>
                 </Modal>
             </Box>
 
@@ -240,8 +261,13 @@ const headCells = [
 const adminHeadCells=headCells.concat([
     {
         id: 'delete',
-        numeric: true,
+        numeric: false,
         label: 'Delete',
+    },
+    {
+        id: 'edit',
+        numeric: false,
+        label: 'Edit',
     },
 ])
 export default BuyTickets

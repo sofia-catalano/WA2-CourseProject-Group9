@@ -82,6 +82,11 @@ class TicketCatalogueService(
         }
     }
 
+    suspend fun updateTicket(ticketUpdate: TicketCatalogue ){
+        ticketCatalogueRepository.save(ticketUpdate).awaitFirst()
+    }
+
+
     @Transactional
     suspend fun updateOrder(paymentResult: PaymentResult, token: String) = coroutineScope {
         try {

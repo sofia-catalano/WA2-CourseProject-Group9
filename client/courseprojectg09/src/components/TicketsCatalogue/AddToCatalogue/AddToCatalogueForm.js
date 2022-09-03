@@ -5,12 +5,14 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Avatar from "@mui/material/Avatar";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import MenuItem from "@mui/material/MenuItem";
 import { IoTicketSharp } from "react-icons/io5";
 import './AddToCatalogueForm.css'
 import ticketCatalogueAPIs from "../../../api/TicketCatalogueAPIs";
 import TicketCatalogue from "../../../model/TicketCatalogue";
+import travelerAPI from "../../../api/TravelerAPI";
+import catalogueAPI from "../../../api/TicketCatalogueAPIs";
 const style = {
     position: 'absolute',
     top: '50%',
@@ -102,17 +104,43 @@ function AddForm(props) {
     const [maxAge, setMaxAge]=useState();
     const [price, setPrice] = useState("");
 
+    useEffect(() => {
+        if(props.edit){
+            setTicketsType(props.data.type)
+            setAllowedZones(props.data.zones)
+            setMaxAge(props.data.maxAge)
+            setMinAge(props.data.minAge)
+        }
+    }, [])
     const handleSubmit = (event) => {
         event.preventDefault();
         const priceString = `${parseFloat(price).toFixed(2)}`
         console.log({ticketsType, allowedZones, priceString, minAge, maxAge})
-        const ticketCatalogue = new TicketCatalogue(0, ticketsType, priceString, allowedZones, maxAge, minAge)
-        ticketCatalogueAPIs.addNewTicketToCatalogue(ticketCatalogue).then(r => {
-                console.log(r);
-                props.setDirty(true);
-                props.setAddToCatalogueModal(false);
+        if(!props.edit){
+            const ticketCatalogue = new TicketCatalogue(0, ticketsType, priceString, allowedZones, maxAge, minAge)
+            ticketCatalogueAPIs.addNewTicketToCatalogue(ticketCatalogue).then(r => {
+                    console.log(r);
+                    props.setDirty(true);
+                    props.setAddToCatalogueModal(false);
+                }
+            );
+        }else{
+            const ticketUpdate = {
+                id: props.data.id,
+                type: ticketsType,
+                price: priceString,
+                zones: allowedZones,
+                minAge: minAge,
+                maxAge: maxAge
             }
-        );
+
+            catalogueAPI.editTicketFromCatalogue(ticketUpdate)
+                .then(()=>{
+                    props.setDirty(true);
+                    props.setAddToCatalogueModal(false);
+                })
+        }
+
     };
 
     return (
@@ -205,7 +233,7 @@ function AddForm(props) {
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                             >
-                                Add to Catalogue
+                                {props.edit ? 'Edit ticket' : 'Add to Catalogue'}
                             </Button>
                         </Box>
                     </Box>
