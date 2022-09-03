@@ -112,7 +112,10 @@ function getAllAdmins(){
                     reject(err)
                 });
             } else {
-                reject();
+                response.body.getReader().read().then(({ done, value }) => {
+                    const string = new TextDecoder().decode(value);
+                    resolve(string)
+                });
             }
         }).catch((err) => reject(err));
     });
