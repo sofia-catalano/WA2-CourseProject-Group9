@@ -1,14 +1,23 @@
 # WA2-Course Project-Group09
 
-## Instructions for launching the application
-1. Configure the docker container
-2. Open Database section on Intellij and create a connection with the postgres container.
-3. Right-click on the database and add three new databases (New -> Database -> Ok)
-4. Modify the application properties of each module with the options that you have just set
-5. Build and run the docker-compose.yml in main folder
-6. Build and run all the microservices
+## Contributors
 
-## Instructions to use the application
+1) Sofia Catalano (https://github.com/sofia-catalano)
+2) Cristian Ernesto (https://github.com/cristianernestoo)
+3) Mariagrazia Paladino (https://github.com/Mariagrazia98)
+4) Francesco Policastro (https://github.com/francesco-plc)
+
+## Instructions for launching the application
+
+1. Configure the docker container, mount the docker-compose.yml .
+2. Open Database section on Intellij and create a connection with the mongo container.
+3. Build and run all the six microservices (API Gateway, Login Service, Traveler Service, TicketCatalogue Service, Payment Service, QRCode Service).
+4. Create an ADMIN User with the curl post found below in the APIs section.
+5. In order to launch the client go to client/courseprojectg09 then: npm install, npm start.
+6. Enjoy the application registering a new user.
+
+## APIs
+
 #### Registration of a user
 In order to create a user with username 'USER1' execute those commands:
 ```
