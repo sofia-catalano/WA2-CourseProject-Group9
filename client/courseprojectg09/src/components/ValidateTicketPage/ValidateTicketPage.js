@@ -4,11 +4,32 @@ import './ValidateTicketPage.css'
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from '@mui/material/Button';
+import QRCodeAPI from "../../api/QRCodeAPI";
+import ValidationResultModal from "./ValidationResultModal";
+import Grid from "@mui/material/Grid";
 
 export default function ValidateTicketPage() {
 
-    const [zone, setZone] = useState('')
-    const [data, setData] = useState('No result');
+    const [zone, setZone] = useState('');
+    const [openResultModal, setOpenResultModal] = useState(false);
+    const [result, setResult] = useState({});
+
+    const handleCloseResultModal = () => {
+        setOpenResultModal(false) ;
+    }
+
+    const validateTicket = (jwt) => {
+        QRCodeAPI.validateTicket(jwt, zone).then((r) => {
+            if (r["error"]) {
+                console.log(r);
+                setResult(r);
+            } else {
+                console.log(r);
+                setResult(r);
+            }
+            setOpenResultModal(true);
+        });
+    }
 
     const style = {
         bgcolor: '#1976d2',
@@ -65,11 +86,10 @@ export default function ValidateTicketPage() {
                     <Typography mt={1} mb={2} sx={{color: '#1976d2'}} variant="h6">
                         Zone: <span style={{borderRadius: 8, backgroundColor: '#1976d2', color:'#FFEB3BFF', fontSize:30}}>&nbsp;{zone}&nbsp;</span>
                     </Typography>
-                    {/*TODO: MODIFICARE 'onResult' implementando la reale validazione del qrCode + mostrando un messagio di risposta*/}
                     <QrReader
                         onResult={(result, error) => {
                             if (!!result) {
-                                setData(result?.text);
+                                validateTicket(result?.text)
                             }
 
                             if (!!error) {
@@ -79,15 +99,20 @@ export default function ValidateTicketPage() {
                         constraints={{
                             facingMode: 'user'
                         }}
-                        scanDelay={500}
+                        scanDelay={2000}
                         ViewFinder={ScanOverlay}
                     />
-                    <Typography my={2}>
-                        DATA: {data}
-                    </Typography>
-                    <Button variant='contained' onClick={()=> setZone('')}>
-                        ← Choose Zone
-                    </Button>
+                        <ValidationResultModal
+                            openResultModal={openResultModal}
+                            result={result}
+                            handleClose={handleCloseResultModal}
+                        />
+                    <Grid mt={3}>
+                        <Button  variant='contained' onClick={()=> setZone('')}>
+                            ← Choose Zone
+                        </Button>
+                    </Grid>
+
                 </div>
             }
         </Box>

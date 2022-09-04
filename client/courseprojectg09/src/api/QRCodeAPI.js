@@ -1,21 +1,24 @@
 const BASEURL = '/QRCode';
 
 //TODO: da completare quando sarà pronta lato BE
-function validateTicket(jwt) {
+function validateTicket(jwt, zid) {
     return new Promise((resolve, reject) => {
-        fetch(BASEURL+'/validateTicket', {
+        fetch(BASEURL+'/validateQRCode', {
             method: 'POST',
             headers : {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            body: JSON.stringify({ jwt }),
+            body: JSON.stringify({ jwt, zid }),
         }).then((response) => {
             if (response.ok) {
-                console.log(response)
-                resolve();
+                response.json().then((json) =>{
+                    resolve(json)
+                })
             } else {
-                reject();
+                response.json().then((error) =>{
+                    resolve(error)
+                })
             }
         }).catch((err) => reject(err));
     });
