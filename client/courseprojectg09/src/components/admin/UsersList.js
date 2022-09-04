@@ -8,6 +8,7 @@ import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import { Link as RouterLink} from 'react-router-dom';
 import travelerAPI from "../../api/TravelerAPI";
+import Loading from '../generic/Loading/Loading.js';
 
 function UsersList(props) {
     const [loading, setLoading] = useState(true);
@@ -34,7 +35,7 @@ function UsersList(props) {
     return (
         <>{loading
             ?
-            <CircularProgress />
+            <Loading loading={loading}/>
             :
             <Box sx={{width: '90%', mt: 2, mr: 5, ml: 5}}>
                 <Typography

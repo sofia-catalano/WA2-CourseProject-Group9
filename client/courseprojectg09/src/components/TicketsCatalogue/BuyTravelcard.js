@@ -12,6 +12,10 @@ import PaymentForm from "../PaymentForm/PaymentForm";
 import AddForm from './AddToCatalogue/AddToCatalogueForm.js';
 import {useUser} from "../UserProvider";
 import catalogueAPI from '../../api/TicketCatalogueAPIs.js';
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import Loading from '../generic/Loading/Loading.js';
 
 function BuyTravelcard(props) {
     const {loggedIn, userRole, setUserRole, setLoggedIn} = useUser()
@@ -65,7 +69,13 @@ function BuyTravelcard(props) {
                     })
                 }
             })
-
+            if(userRole === 'ADMIN'){
+                tmp.forEach((element)=>element.delete =
+                    <IconButton aria-label={'delete'}
+                                onClick={()=> handleDeleteElement(element)}>
+                        <DeleteIcon fontSize="small"/>
+                    </IconButton>
+                )}
             setData(tmp);
             if(tmp.length){
                 setSelectedType(tmp[0].type)
@@ -100,7 +110,6 @@ function BuyTravelcard(props) {
     };
 
     const handleTypeTicketsChange=(id)=>{
-        console.log(id)
         setSelectedValue(id)
         const currentElement=data.find(element => element.id===id)
         if(currentElement!==undefined) {
@@ -108,14 +117,24 @@ function BuyTravelcard(props) {
         }
     }
 
+    const handleDeleteElement = (element) =>{
+        setLoading(true)
+        setDirty(true)
+        catalogueAPI.deleteTicketToCatalogue(element.id)
+            .then(()=>{
+                setLoading(false)
+                setDirty(false)
+            })
+    }
+
     return (
         <>{loading
             ?
-            <CircularProgress />
+            <Loading loading={loading}/>
             :
             <Box component="form" onSubmit={handleSubmit} sx={{p: 2}}>
                 <GenericTable
-                    headCells={headCells}
+                    headCells={userRole === "ADMIN" ? adminHeadCells : headCells}
                     rows={data}
                     nameTable={userRole === "ADMIN" ? "Travelcards list" : "Buy travelcard"}
                     selectedValue={selectedValue}
@@ -283,5 +302,11 @@ const headCells = [
     },
 
 ];
-
+const adminHeadCells=headCells.concat([
+    {
+        id: 'delete',
+        numeric: true,
+        label: 'Delete',
+    },
+])
 export default BuyTravelcard

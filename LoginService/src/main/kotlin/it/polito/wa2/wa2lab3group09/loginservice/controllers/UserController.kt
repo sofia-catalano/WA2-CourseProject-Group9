@@ -2,28 +2,29 @@ package it.polito.wa2.wa2lab3group09.loginservice.controllers
 
 
 import it.polito.wa2.wa2lab3group09.loginservice.dtos.UserDTO
+import it.polito.wa2.wa2lab3group09.loginservice.security.JwtUtils
 import it.polito.wa2.wa2lab3group09.loginservice.services.UserService
 import org.bson.types.ObjectId
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.BindingResult
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 
 @RestController
 class UserController(val userService: UserService) {
+
+    @Value("\${application.jwt.jwtSecret}")
+    lateinit var key: String
+
     @PostMapping("/login/user/register")
     suspend fun registerUser(
         @RequestBody
         @Valid
         userDTO: UserDTO
     ): ResponseEntity<Any> {
-
-
-
         return try {
             val uuid: String? = userService.createUser(userDTO)
             val body = RegistrationResponseBody(uuid!!, userDTO.email)
@@ -50,7 +51,17 @@ class UserController(val userService: UserService) {
         }
     }
 
-
+    @GetMapping("/login/user/data")
+    suspend fun getUserData(@RequestHeader("Authorization") jwt:String) :  ResponseEntity<Any>{
+        val newToken = jwt.replace("Bearer", "")
+        return try {
+            val body= JwtUtils.getDetailsFromJwtToken(newToken, key)
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t : Throwable) {
+            val body = ErrorMessage(t.message)
+            ResponseEntity(body, HttpStatus.BAD_REQUEST)
+        }
+    }
 }
 
 data class VerificationInfo(val provisionalId: ObjectId, val activationCode: Int)

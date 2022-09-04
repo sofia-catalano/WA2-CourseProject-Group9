@@ -6,6 +6,7 @@ import travelerAPI from "../../api/TravelerAPI";
 import * as dayjs from "dayjs";
 import qrCodeAPI from "../../api/QRCodeAPI";
 import {TravelcardsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
+import Loading from '../generic/Loading/Loading.js';
 
 function UserTravelCardsList(props) {
     const [loading, setLoading] = useState(true);
@@ -96,7 +97,7 @@ function UserTravelCardsList(props) {
     return (
         <>{loading
             ?
-            <CircularProgress />
+            <Loading loading={loading}/>
             :
             <GenericTable
             headCells={headCells}

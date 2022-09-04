@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import ticketCatalogueAPIs from "../../api/TicketCatalogueAPIs";
+import Loading from '../generic/Loading/Loading.js';
 
 const style = {
     position: 'absolute',
@@ -69,7 +70,7 @@ function AdminOrdersList(props) {
     return (
         <>{loading
             ?
-            <CircularProgress/>
+               <Loading loading={loading}/>
             :
             <Grid container>
                 <Grid item xs={12}>

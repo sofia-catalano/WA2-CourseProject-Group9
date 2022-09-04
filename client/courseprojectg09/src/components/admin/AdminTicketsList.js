@@ -4,6 +4,7 @@ import GenericTable from "../generic/Table/Table";
 import {TicketsFilterMenu} from "../generic/FilterMenu/TicketsFilterMenu";
 import travelerAPI from "../../api/TravelerAPI";
 import * as dayjs from 'dayjs'
+import Loading from '../generic/Loading/Loading.js';
 
 function AdminTicketsList(props) {
     const [loading, setLoading] = useState(true);
@@ -78,7 +79,7 @@ function AdminTicketsList(props) {
     return (
         <>{loading
             ?
-            <CircularProgress/>
+            <Loading loading={loading}/>
             :
             <GenericTable
                 headCells={headCells}

@@ -21,7 +21,7 @@ const theme = createTheme();
 export default function LoginPage() {
 
     const [hidePassword, setHidePassword] = useState(true);
-    const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
+    const {loggedIn, userRole, setUserRole, setLoggedIn, setUsername}=useUser()
     const navigate=useNavigate()
     const showPassword = () => {
         setHidePassword(!hidePassword)
@@ -32,11 +32,14 @@ export default function LoginPage() {
         const data = new FormData(event.currentTarget);
         loginAPI
             .logIn(data.get('username'), data.get('password'))
-            .then((role)=>
+            .then(()=>
                 {
-                    setLoggedIn(true)
-                    setUserRole(role)
-                    navigate(role === "CUSTOMER"? '/my/tickets' : '/admin/travelers')
+                    loginAPI.getUserData().then((user)=>{
+                          setLoggedIn(true)
+                          setUserRole(user.role)
+                          navigate(user.role === "CUSTOMER"? '/my/tickets' : '/admin/travelers')
+                          setUsername(user.username)
+                    })
                 }
             )
             .catch((err)=>console.err(err))

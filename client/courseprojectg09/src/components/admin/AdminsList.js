@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import * as React from 'react';
-import {CircularProgress, Modal, TableCell} from "@mui/material";
+import { Modal, TableCell} from "@mui/material";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -16,10 +16,12 @@ import AdminRegistrationForm from "./AdminRegistrationForm/AdminRegistrationForm
 import {useEffect} from "react";
 import loginAPI from "../../api/LoginAPI";
 import ConfirmationModal from "../generic/ConfirmationModal/ConfirmationModal";
+import Loading from '../generic/Loading/Loading.js';
 
 function AdminsList(props) {
     const [loading, setLoading] = useState(true);
     const [admins, setAdmins] = useState([]);
+    const [hasCapability, setHasCapability] = useState(false);
     const [dirty, setDirty] = useState(true);
     const [open, setOpen] = React.useState(false);
     const [adminUsername, setAdminUsername] = useState('');
@@ -34,11 +36,14 @@ function AdminsList(props) {
         if(dirty){
             //fix fetch when no other admins are registered
             loginAPI.getAllAdmins()
-                .then((fetchedAdmins) => {
-                    fetchedAdmins.forEach(function (obj) {
-                        obj['isActive'] && delete obj['isActive'];
-                    })
-                    setAdmins(fetchedAdmins);
+                .then((r) => {
+                    if(r !== 'the current admin has not enroll capability') {
+                        setHasCapability(true)
+                        r.forEach(function (obj) {
+                            obj['isActive'] && delete obj['isActive'];
+                        })
+                        setAdmins(r);
+                    }
                     setLoading(false);
                     setDirty(false);
                 });
@@ -69,7 +74,7 @@ function AdminsList(props) {
     return (
         <>{loading
             ?
-            <CircularProgress/>
+            <Loading loading={loading}/>
             :
             <Box sx={{width: '90%', mt: 2, mr: 5, ml: 5}}>
                 <Typography
@@ -81,6 +86,7 @@ function AdminsList(props) {
                 >
                     Admins list
                 </Typography>
+                {hasCapability ?
                 <Box sx={{width: '90%', mt: 2, mr: 5, ml: 5}}>
                     <Paper sx={{width: '100%', mb: 2}}>
                         <Table>
@@ -123,39 +129,53 @@ function AdminsList(props) {
                             </TableBody>
                         </Table>
                     </Paper>
+                    <Box textAlign="center">
+                        <Button variant="contained" sx={{mx:5}} startIcon={<RiUserStarFill/>} onClick={handleOpen}>
+                            Register New Admin
+                        </Button>
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <AdminRegistrationForm handleClose={handleClose} setDirty={setDirty}/>
+                        </Modal>
+                        <Modal
+                            open={openModalCapability}
+                            onClose={handleCloseModalCapability}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <ConfirmationModal
+                                icon={<RiUserStarFill style={{color: '#ffeb3b', fontSize: "1.5em"}}/>}
+                                question={"Do you really want to give to the admin: "+adminUsername+" the enrolling capability?"}
+                                confirmationText={"Confirm"}
+                                cancelText={"Cancel"}
+                                handleConfirmation={() => handleConfirmationModal(adminUsername)}
+                                handleCancel={handleCloseModalCapability}
+                                showError={showError}
+                                errorMessage={errorMessage}/>
+                        </Modal>
+                    </Box>
                 </Box>
-                <Box textAlign="center">
-                    <Button variant="contained" sx={{mx:5}} startIcon={<RiUserStarFill/>} onClick={handleOpen}>
-                        Register New Admin
-                    </Button>
-                    <Modal
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
+                    :
+                    <Typography
+                        sx={{color: 'red'}}
+                        mt={5}
+                        variant="h4"
+                        id="title"
+                        component="div"
+                        align="center"
                     >
-                        <AdminRegistrationForm handleClose={handleClose} setDirty={setDirty}/>
-                    </Modal>
-                    <Modal
-                        open={openModalCapability}
-                        onClose={handleCloseModalCapability}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <ConfirmationModal
-                            icon={<RiUserStarFill style={{color: '#ffeb3b', fontSize: "1.5em"}}/>}
-                            question={"Do you really want to give to the admin: "+adminUsername+" the enrolling capability?"}
-                            confirmationText={"Confirm"}
-                            cancelText={"Cancel"}
-                            handleConfirmation={() => handleConfirmationModal(adminUsername)}
-                            handleCancel={handleCloseModalCapability}
-                            showError={showError}
-                            errorMessage={errorMessage}/>
-                    </Modal>
-                </Box>
+                        You don't have ENROLLING CAPABILITY!<br/>
+                        <span style={{color: 'red', fontSize: '26px'}}>
+                            You are not able to see other admins, create new ones or give them enrolling capability.
+                        </span>
+                    </Typography>
 
+                }
             </Box>
-
         }
         </>
     );

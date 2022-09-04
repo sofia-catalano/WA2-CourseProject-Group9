@@ -8,6 +8,7 @@ import {useUser} from "../UserProvider";
 import * as dayjs from "dayjs";
 import travelerAPI from "../../api/TravelerAPI";
 import {useEffect} from "react";
+import Loading from '../generic/Loading/Loading.js';
 
 function AdminUserTravelcardsList(props) {
     const {loggedIn, userRole, setUserRole, setLoggedIn}=useUser()
@@ -83,7 +84,7 @@ function AdminUserTravelcardsList(props) {
         <>
             {loading
             ?
-            <CircularProgress />
+            <Loading loading={loading}/>
             :
                 <GenericTable
                 headCells={headCells}

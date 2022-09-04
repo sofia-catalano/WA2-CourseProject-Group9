@@ -1,9 +1,11 @@
 package it.polito.wa2.lab5.group09.ticketcatalogueservice.controllers
 
+import it.polito.wa2.lab5.group09.ticketcatalogueservice.dtos.TicketCatalogueDTO
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.dtos.toDTO
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogue
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.services.TicketCatalogueService
 import kotlinx.coroutines.flow.map
+import org.bson.types.ObjectId
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -16,7 +18,7 @@ class AdminController(
     ) {
 
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/catalogue/admin/tickets")
     suspend fun addTicketToCatalogue(
         @RequestHeader("Authorization") jwt:String,
@@ -33,6 +35,32 @@ class AdminController(
             ticketCatalogueService.addTicketToCatalogue(ticket)
             ResponseEntity("Ticket added to catalogue", HttpStatus.CREATED)
         } catch (t: Throwable) {
+            ResponseEntity(t.message, HttpStatus.BAD_REQUEST)
+        }
+    }
+    @PutMapping("/catalogue/admin/tickets")
+    suspend fun updateTicketCatalogue(@RequestHeader("Authorization") jwt:String,
+                                      @RequestBody ticketUpdate: TicketCatalogue) : ResponseEntity<Any>{
+        return try {
+            ticketCatalogueService.updateTicket(ticketUpdate)
+            ResponseEntity(HttpStatus.OK)
+        } catch (t : Throwable){
+            val error = ErrorMessage(t.message)
+            ResponseEntity(error, HttpStatus.BAD_REQUEST)
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/catalogue/admin/tickets/{ticketId}")
+    suspend fun deleteTicketToCatalogue(
+        @PathVariable ticketId:ObjectId,
+        @RequestHeader("Authorization") jwt:String
+    ): ResponseEntity<Any> {
+        return try {
+            ticketCatalogueService.deleteTicketToCatalogue(ticketId)
+            ResponseEntity("Ticket deleted to catalogue", HttpStatus.OK)
+        } catch (t: Throwable) {
+            println(t)
             ResponseEntity(t.message, HttpStatus.BAD_REQUEST)
         }
     }
@@ -64,6 +92,5 @@ class AdminController(
             ResponseEntity(t.message, HttpStatus.BAD_REQUEST)
         }
     }
-
 
 }

@@ -82,6 +82,11 @@ class TicketCatalogueService(
         }
     }
 
+    suspend fun updateTicket(ticketUpdate: TicketCatalogue ){
+        ticketCatalogueRepository.save(ticketUpdate).awaitFirst()
+    }
+
+
     @Transactional
     suspend fun updateOrder(paymentResult: PaymentResult, token: String) = coroutineScope {
         try {
@@ -152,6 +157,20 @@ class TicketCatalogueService(
             ticketCatalogueRepository.save(ticket).subscribe()
         } catch (t: Throwable) {
             throw IllegalArgumentException("Something weny wrong")
+        }
+    }
+
+    suspend fun deleteTicketToCatalogue(ticketId: ObjectId) {
+        try {
+            val ticketC= ticketCatalogueRepository.findById(ticketId).awaitFirstOrNull()
+            if(ticketC!=null){
+                ticketCatalogueRepository.delete(ticketC).subscribe()
+            }
+            else{
+                throw IllegalArgumentException("Ticket type not existing")
+            }
+        } catch (t: Throwable) {
+            throw IllegalArgumentException(t.message)
         }
     }
 }

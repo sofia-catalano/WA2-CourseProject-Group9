@@ -121,6 +121,45 @@ function addNewTicketToCatalogue(ticketCatalogue) {
         }).catch((err) => reject(err));
     });
 }
+function deleteTicketToCatalogue(ticketId) {
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL + `/admin/tickets/${ticketId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': sessionStorage.getItem('authorization')
+            },
+        }).then((response) => {
+            if (response.ok) {
+                console.log(response)
+                resolve();
+            } else {
+                reject();
+            }
+        }).catch((err) => reject(err));
+    });
+}
+
+function editTicketFromCatalogue(ticket) {
+    console.log(ticket)
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL + '/admin/tickets', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': sessionStorage.getItem('authorization')
+            },
+            body: JSON.stringify(ticket),
+        }).then((response) => {
+            if (response.ok) {
+                resolve()
+            } else {
+                reject()
+            }
+        }).catch((err) => reject(err));
+    });
+}
 
 function buyTickets(numberOfTickets, ticketId, type, paymentInfo) {
     return new Promise((resolve, reject) => {
@@ -232,7 +271,9 @@ const catalogueAPI = {
     addNewTicketToCatalogue,
     buyTickets,
     buyTravelcard,
-    getOrderbyId
+    getOrderbyId,
+    deleteTicketToCatalogue,
+    editTicketFromCatalogue
 };
 
 export default catalogueAPI;

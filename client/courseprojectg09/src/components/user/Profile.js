@@ -11,7 +11,7 @@ import {useParams} from "react-router-dom";
 import travelerAPI from "../../api/TravelerAPI";
 import {useUser} from "../UserProvider";
 import {CircularProgress, Divider, List, ListItem, Stack} from "@mui/material";
-
+import Loading from '../generic/Loading/Loading.js';
 
 export default function UserProfile() {
     let { user } = useParams();
@@ -83,7 +83,7 @@ export default function UserProfile() {
     }
 
     return (
-        <>{ loading ?  <CircularProgress /> :
+        <>{ loading ?  <Loading loading={loading}/> :
         <Box sx={{width: '90%', mt: 2, mr: 5, ml: 5}}>
             <Typography
                 sx={{color: '#1976d2'}}

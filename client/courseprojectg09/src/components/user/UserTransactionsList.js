@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import MenuItem from "@mui/material/MenuItem";
 import paymentAPI from "../../api/PaymentAPI";
-
+import Loading from '../generic/Loading/Loading.js';
 function UserTransactionsList(props) {
     const [loading, setLoading] = useState(false);
     const [transactions, setTransactions] = useState([])
@@ -27,7 +27,7 @@ function UserTransactionsList(props) {
     return (
         <>{loading
             ?
-            <CircularProgress/>
+            <Loading loading={loading}/>
             :
             <GenericTable
                 headCells={headCells}
