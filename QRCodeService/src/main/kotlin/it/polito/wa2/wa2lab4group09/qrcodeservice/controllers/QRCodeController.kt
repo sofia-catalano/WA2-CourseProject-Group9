@@ -33,11 +33,10 @@ class QRCodeController(val qrCodeService: QRCodeService) {
             .body(resource)
     }
 
-    //TODO GESTIRE LA VALIDATE DI UNA TRAVELCARD
     @PostMapping("/QRCode/validateQRCode")
     suspend fun validateQRCode(@RequestBody validationInfo: ValidationInfo) : ResponseEntity<Any>{
         return try {
-            val body = qrCodeService.validateTicket(validationInfo)
+            val body : Any = qrCodeService.validateTicket(validationInfo)
             ResponseEntity(body, HttpStatus.OK)
         } catch (t : Throwable){
             val error = ErrorMessage("Ticket expired or ticket zone not allowed!")
@@ -45,9 +44,9 @@ class QRCodeController(val qrCodeService: QRCodeService) {
         }
     }
 
-    //TODO: validate qrCode
 
     data class ValidationInfo(val jwt : String, val zid : String)
     data class ValidationToTravelerService(val expiration : Date, val ticketId: String, val zid: String)
+    data class TravelcardToTravelerService(val ticketId: String, val zid: String)
     data class ErrorMessage(val error: String?)
 }

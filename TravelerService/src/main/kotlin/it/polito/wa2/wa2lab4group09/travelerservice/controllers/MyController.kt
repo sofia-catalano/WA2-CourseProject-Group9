@@ -225,7 +225,20 @@ class MyController(val userDetailsService: UserDetailsService) {
     @PostMapping("/traveler/checkTicket")
     suspend fun checkTicket(@RequestBody validationToTravelerService: ValidationToTravelerService) : ResponseEntity<Any>{
         return try {
+            println("getting info $validationToTravelerService")
             val body = userDetailsService.checkTicket(validationToTravelerService)
+            ResponseEntity(body, HttpStatus.OK)
+        } catch (t : Throwable){
+            val error = ErrorMessage(t.message)
+            ResponseEntity(error, HttpStatus.OK)
+        }
+    }
+
+    @PostMapping("/traveler/checkTravelcard")
+    suspend fun checkTravelcard(@RequestBody travelcardToTravelerService: TravelcardToTravelerService) : ResponseEntity<Any>{
+        return try {
+            println("getting info $travelcardToTravelerService")
+            val body = userDetailsService.checkTravelcard(travelcardToTravelerService)
             ResponseEntity(body, HttpStatus.OK)
         } catch (t : Throwable){
             val error = ErrorMessage(t.message)
@@ -241,4 +254,6 @@ data class ErrorMessage(val error: String?)
 data class UserDetailsUpdate(val name : String?, val surname : String?, val address : String?, val date_of_birth : String?, val telephone_number : String?)
 data class ActionTravelcard(val cmd : String, val zones : String, val type : String, val typeId: ObjectId, val owner: TravelcardOwnerDTO)
 data class ValidationToTravelerService(val expiration : Timestamp, val ticketId: String, val zid : String)
+data class TravelcardToTravelerService(val ticketId: String, val zid: String)
+
 

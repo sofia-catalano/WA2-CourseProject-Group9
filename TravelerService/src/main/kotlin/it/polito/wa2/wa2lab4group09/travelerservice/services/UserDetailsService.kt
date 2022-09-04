@@ -2,10 +2,7 @@ package it.polito.wa2.wa2lab4group09.travelerservice.services
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import it.polito.wa2.wa2lab4group09.travelerservice.controllers.ActionTicket
-import it.polito.wa2.wa2lab4group09.travelerservice.controllers.ActionTravelcard
-import it.polito.wa2.wa2lab4group09.travelerservice.controllers.UserDetailsUpdate
-import it.polito.wa2.wa2lab4group09.travelerservice.controllers.ValidationToTravelerService
+import it.polito.wa2.wa2lab4group09.travelerservice.controllers.*
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TicketPurchasedDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.TravelcardPurchasedDTO
 import it.polito.wa2.wa2lab4group09.travelerservice.dtos.toDTO
@@ -258,6 +255,15 @@ class UserDetailsService(val userDetailsRepository: UserDetailsRepository,
             throw IllegalArgumentException("You are not allowed to use this ticket in this zone!")
         } else {
             throw IllegalArgumentException("Ticket expired at ${ticketPurchased.exp}")
+        }
+    }
+
+    suspend fun checkTravelcard(travelcardToTravelerService: TravelcardToTravelerService) : TravelcardPurchasedDTO{
+        val travelcardPurchased = travelcardPurchasedRepository.findById(ObjectId(travelcardToTravelerService.ticketId)).awaitFirst()
+         if(travelcardPurchased.zid.contains(travelcardToTravelerService.zid)){
+            return travelcardPurchased.toDTO()
+        } else {
+            throw IllegalArgumentException("You are not allowed to use this ticket in this zone!")
         }
     }
 

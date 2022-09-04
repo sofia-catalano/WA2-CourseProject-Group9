@@ -35,6 +35,7 @@ class WebSecurityConfig{
             .csrf().disable()
             .authorizeExchange()
             .pathMatchers("/traveler/checkTicket").permitAll()
+            .pathMatchers("/traveler/checkTravelcard").permitAll()
             .and()
             .addFilterAt(authorizationFilter, SecurityWebFiltersOrder.AUTHORIZATION)
             .authorizeExchange()

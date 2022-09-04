@@ -8,8 +8,6 @@ import java.util.Date
 import java.sql.Timestamp
 
 
-//TODO implement validFrom and type of a ticket
-
 /*
 @Entity
 @Table(name="ticket_purchased")
