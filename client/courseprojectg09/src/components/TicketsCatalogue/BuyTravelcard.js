@@ -34,6 +34,7 @@ function BuyTravelcard(props) {
         telephone: ''
     });
     const [data, setData] = React.useState([]);
+    const [edit, setEdit] = React.useState(false)
 
     const findType = (duration) => {
         switch (duration) {
@@ -70,11 +71,19 @@ function BuyTravelcard(props) {
                 }
             })
             if(userRole === 'ADMIN'){
-                tmp.forEach((element)=>element.delete =
-                    <IconButton aria-label={'delete'}
-                                onClick={()=> handleDeleteElement(element)}>
-                        <DeleteIcon fontSize="small"/>
-                    </IconButton>
+                tmp.forEach((element)=> {
+                    element.delete =
+                            <IconButton aria-label={'delete'}
+                                        onClick={()=> handleDeleteElement(element)}>
+                                <DeleteIcon fontSize="small"/>
+                            </IconButton>
+
+                    element.edit =
+                        <IconButton aria-label={'edit'}
+                                    onClick={()=> handleEditElement(element)}>
+                            <EditIcon fontSize="small"/>
+                        </IconButton>
+                    }
                 )}
             setData(tmp);
             if(tmp.length){
@@ -125,6 +134,12 @@ function BuyTravelcard(props) {
                 setLoading(false)
                 setDirty(false)
             })
+    }
+
+    const handleEditElement = (element) =>{
+        setEdit(true)
+        setSelectedValue(element.id)
+        handleAddToCatalogueModal()
     }
 
     return (
@@ -252,7 +267,14 @@ function BuyTravelcard(props) {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                  <AddForm type="travelcard" setDirty={setDirty} setAddToCatalogueModal={setAddToCatalogueModal}/>
+                  <AddForm
+                      type="travelcard"
+                      setDirty={setDirty}
+                      setAddToCatalogueModal={setAddToCatalogueModal}
+                      edit={edit}
+                      setEdit={setEdit}
+                      data={edit ? data.find(element => element.id===selectedValue) : ""}
+                  />
                 </Modal>
             </Box>
 
@@ -305,8 +327,13 @@ const headCells = [
 const adminHeadCells=headCells.concat([
     {
         id: 'delete',
-        numeric: true,
+        numeric: false,
         label: 'Delete',
     },
+    {
+        id: 'edit',
+        numeric: false,
+        label: 'Edit',
+    }
 ])
 export default BuyTravelcard

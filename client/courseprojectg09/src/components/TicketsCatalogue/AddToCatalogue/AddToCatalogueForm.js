@@ -127,7 +127,7 @@ function AddForm(props) {
             );
         }else{
             const ticketUpdate = {
-                id: props.data.id,
+                ticketId: props.data.id,
                 type: ticketsType,
                 price: priceString,
                 zones: allowedZones,

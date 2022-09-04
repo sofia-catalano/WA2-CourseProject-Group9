@@ -1,6 +1,5 @@
 package it.polito.wa2.lab5.group09.ticketcatalogueservice.controllers
 
-import it.polito.wa2.lab5.group09.ticketcatalogueservice.dtos.TicketCatalogueDTO
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.dtos.toDTO
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.entities.TicketCatalogue
 import it.polito.wa2.lab5.group09.ticketcatalogueservice.services.TicketCatalogueService
