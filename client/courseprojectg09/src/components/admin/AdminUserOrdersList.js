@@ -75,7 +75,7 @@ function AdminUserOrdersList(props) {
                     <GenericTable
                         headCells={headCellsTickets}
                         rows={userTicketOrders}
-                        nameTable={"All Orders (Tickets)"}
+                        nameTable={`${username}'s orders (Tickets)`}
                         onClickElement={handleOpenTicketsDetailsModal}
                     />
                     <Modal
@@ -99,7 +99,7 @@ function AdminUserOrdersList(props) {
                     <GenericTable
                         headCells={headCellsTravelerCards}
                         rows={userTravelcardOrders}
-                        nameTable={"All Orders (Travelcards)"}
+                        nameTable={`${username}'s orders (Travelcards)`}
                         onClickElement={handleOpenTravelerCardsDetailsModal}
                     />
                     <Modal
