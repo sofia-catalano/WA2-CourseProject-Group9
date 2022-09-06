@@ -69,7 +69,7 @@ function UserTravelCardsList(props) {
             travelerAPI.getMyTravelcardsValid(rangeDate, startDate.toISOString(), endDate.toISOString())
                 .then(r => {
                     setTravelcards(r)
-                    setNameTable('Valid Travelcards')
+                    setNameTable('My valid Travelcards')
                 })
                 .catch(err => console.log(err))
         } else if (typeTravelcardsSelected === 'expired') {
@@ -77,7 +77,7 @@ function UserTravelCardsList(props) {
             travelerAPI.getMyTravelcardsExpired(rangeDate, startDate.toISOString(), endDate.toISOString())
                 .then(r => {
                     setTravelcards(r)
-                    setNameTable('Expired Travelcards')
+                    setNameTable('My expired Travelcards')
                 })
                 .catch(err => console.log(err))
         }
@@ -89,7 +89,7 @@ function UserTravelCardsList(props) {
         travelerAPI.getMyTravelcards()
             .then(r => {
                 setTravelcards(r)
-                setNameTable('All Travelcards')
+                setNameTable('My Travelcards')
             })
             .catch(err => console.log(err))
     }

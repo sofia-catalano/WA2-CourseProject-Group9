@@ -47,7 +47,7 @@ function UserTicketsList(props) {
         travelerAPI.getMyTickets(rangeDate, startDate && startDate.toISOString(), endDate && endDate.toISOString())
             .then(r => {
                 setTickets(r)
-                setNameTable('All tickets')
+                setNameTable('My tickets')
             })
             .catch(err => console.log(err))
     }
@@ -60,7 +60,7 @@ function UserTicketsList(props) {
             travelerAPI.getMyTicketsValidated(rangeDate, startDate.toISOString(), endDate.toISOString())
                 .then(r => {
                     setTickets(r)
-                    setNameTable('Validated tickets')
+                    setNameTable('My validated tickets')
                 })
                 .catch(err => console.log(err))
         } else if (typeTicketsSelected === 'valid') {
@@ -68,7 +68,7 @@ function UserTicketsList(props) {
             travelerAPI.getMyTicketsValid(rangeDate, startDate.toISOString(), endDate.toISOString())
                 .then(r => {
                     setTickets(r)
-                    setNameTable('Valid tickets')
+                    setNameTable('My valid tickets')
                 })
                 .catch(err => console.log(err))
         } else if (typeTicketsSelected === 'expired') {
@@ -76,7 +76,7 @@ function UserTicketsList(props) {
             travelerAPI.getMyTicketsExpired(rangeDate, startDate.toISOString(), endDate.toISOString())
                 .then(r => {
                     setTickets(r)
-                    setNameTable('Expired tickets')
+                    setNameTable('My expired tickets')
                 })
                 .catch(err => console.log(err))
         }
