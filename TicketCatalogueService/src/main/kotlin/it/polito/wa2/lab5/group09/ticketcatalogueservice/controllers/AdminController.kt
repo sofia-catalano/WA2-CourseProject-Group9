@@ -17,7 +17,7 @@ class AdminController(
     ) {
 
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @PostMapping("/catalogue/admin/tickets")
     suspend fun addTicketToCatalogue(
         @RequestHeader("Authorization") jwt:String,
@@ -49,7 +49,7 @@ class AdminController(
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @DeleteMapping("/catalogue/admin/tickets/{ticketId}")
     suspend fun deleteTicketToCatalogue(
         @PathVariable ticketId:ObjectId,
@@ -65,7 +65,7 @@ class AdminController(
     }
 
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @GetMapping("/catalogue/admin/orders")
     suspend fun getAllUsersOrders(@RequestHeader("Authorization") jwt:String) : ResponseEntity<Any> {
         return try {
@@ -79,7 +79,7 @@ class AdminController(
 
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @GetMapping("/catalogue/admin/orders/{userId}")
     suspend fun getUserOrders(@PathVariable userId:String, @RequestHeader("Authorization") jwt:String ) : ResponseEntity<Any>{
         return try {
