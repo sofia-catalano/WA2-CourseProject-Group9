@@ -172,7 +172,8 @@ function PaymentForm(props) {
                                 margin="normal"
                                 required
                                 fullWidth
-                                inputProps={{ maxLength: 16, minLength:16 }}
+                                type="text"
+                                inputProps={{ maxLength: 16,minLength:16,  pattern: "[0-9]*" }}
                                 value={creditCardNumber}
                                 onChange={(event)=>setCreditCardNumber(event.target.value)}
                             />
@@ -201,9 +202,8 @@ function PaymentForm(props) {
                                 margin="normal"
                                 required
                                 fullWidth
-                                type="number"
                                 value={cvv}
-                                inputProps={{ maxLength: 3, minLength:3 }}
+                                inputProps={{ maxLength: 3,minLength:3,  pattern: "[0-9]*" }}
                                 onChange={(event)=>setCvv(event.target.value)}
                             />
                             <TextField
