@@ -135,12 +135,12 @@ const headCells = [
     },
     {
         id: 'purchase_date',
-        numeric: false,
+        numeric: true,
         label: 'Purchase Date',
     },
     {
         id: 'expiration_date',
-        numeric: false,
+        numeric: true,
         label: 'Expiration Date',
     },
     {

@@ -1,6 +1,6 @@
 import { useState, useEffect} from 'react';
 import * as React from 'react';
-import {CircularProgress, Divider, List, ListItem, Stack} from "@mui/material";
+import {CircularProgress, Divider, List, ListItem, Grid} from "@mui/material";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -47,33 +47,43 @@ function UsersList(props) {
                 >
                     Users list
                 </Typography>
-                <Box sx={{width: '90%', mt: 2, mr: 5, ml: 5}}>
+                <Box sx={{width: '100%', mt: 2, mr: 5, ml: 5}}>
                     <Paper sx={{width: '100%'}}>
                         <List sx={style} aria-label="user-list">
                         {data.map( user => {
                             return(
                                 <Box textAlign="center" key={user}>
                                     <ListItem key={user}>
-                                        <Stack spacing={10} direction="row">
-                                            <Typography sx={{mr: 5}} variant="subtitle1" gutterBottom>
-                                                {user.username}
-                                            </Typography>
-                                            <Link component={RouterLink} to={{pathname: `/admin/traveler/${user.username}/profile`}}>
-                                                <Button variant="outlined">Profile</Button>
-                                            </Link>
-                                            <Link component={RouterLink}
-                                                  to={`/admin/traveler/${user.username}/orders`}
-                                                  state={user.username}
-                                            >
-                                                <Button variant="outlined" >Orders</Button>
-                                            </Link>
-                                            <Link component={RouterLink} to={{pathname: `/admin/traveler/${user.username}/tickets`}}>
-                                                <Button variant="outlined">Tickets</Button>
-                                            </Link>
-                                            <Link component={RouterLink} to={{pathname: `/admin/traveler/${user.username}/travelcards`}}>
-                                                <Button variant="outlined">Travelcards</Button>
-                                            </Link>
-                                        </Stack>
+                                        <Grid container spacing={3}>
+                                            <Grid item xs={4}>
+                                                <Typography sx={{mr: 5}} variant="subtitle1" gutterBottom>
+                                                    {user.username}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <Link component={RouterLink} to={{pathname: `/admin/traveler/${user.username}/profile`}}>
+                                                    <Button variant="outlined">Profile</Button>
+                                                </Link>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <Link component={RouterLink}
+                                                      to={`/admin/traveler/${user.username}/orders`}
+                                                      state={user.username}
+                                                >
+                                                    <Button variant="outlined" >Orders</Button>
+                                                </Link>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <Link component={RouterLink} to={{pathname: `/admin/traveler/${user.username}/tickets`}}>
+                                                    <Button variant="outlined">Tickets</Button>
+                                                </Link>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <Link component={RouterLink} to={{pathname: `/admin/traveler/${user.username}/travelcards`}}>
+                                                    <Button variant="outlined">Travelcards</Button>
+                                                </Link>
+                                            </Grid>
+                                        </Grid>
                                     </ListItem>
                                     <Divider/>
                                 </Box>

@@ -34,6 +34,7 @@ export default function UserProfile() {
         else {
             travelerAPI.getMyProfile().then(r =>
             {
+                console.log(r)
                 setUserData(r)
                 setLoading(false)
             })
@@ -124,6 +125,7 @@ export default function UserProfile() {
                     InputProps={{
                         readOnly: !edit,
                     }}
+                    disabled={!edit}
                     variant="standard"
                     required={edit}
                     onChange={handleChange("name")}
@@ -137,6 +139,7 @@ export default function UserProfile() {
                     InputProps={{
                         readOnly: !edit,
                     }}
+                    disabled={!edit}
                     variant="standard"
                     required={edit}
                     onChange={handleChange("surname")}
@@ -150,6 +153,7 @@ export default function UserProfile() {
                     InputProps={{
                         readOnly: !edit,
                     }}
+                    disabled={!edit}
                     variant="standard"
                     onChange={handleChange("address")}
                 />
@@ -161,6 +165,7 @@ export default function UserProfile() {
                         readOnly: !edit,
                     }}
                     //type="date"
+                    disabled={!edit}
                     variant="standard"
                     onChange={handleChange("date_of_birth")}
                 />
@@ -171,53 +176,12 @@ export default function UserProfile() {
                     InputProps={{
                         readOnly: !edit,
                     }}
+                    disabled={!edit}
                     type="tel"
                     variant="standard"
                     onChange={handleChange("telephone_number")}
                 />
-                {/*
-                <TextField
-                    id="email"
-                    label="Email"
-                    defaultValue={values.email}
-                    InputProps={{
-                        readOnly: !edit,
-                    }}
-                    type="email"
-                    variant="standard"
-                    required={edit}
-                    onChange={handleChange("email")}
-                    error={values.email === ""}
-                    helperText={edit ? "Required" : ""}
-                />
-                <TextField
-                    id="password"
-                    label="Password"
-                    defaultValue={values.password}
-                    InputProps={{
-                        readOnly: !edit,
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                    edge="end"
-                                >
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                            </InputAdornment>
-                        )
-                    }}
-                    type={showPassword ? 'text' : 'password'}
-                    variant="standard"
-                    required={edit}
-                    onChange={handleChange("password")}
-                    error={values.password === ""}
-                    helperText={edit ? "Required" : ""}
 
-                />
-                */}
             </Box>
             {user === undefined &&
                 <Box
