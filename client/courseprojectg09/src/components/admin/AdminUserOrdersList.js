@@ -1,39 +1,16 @@
 import {useState, useEffect} from "react";
-import {CircularProgress, Menu, Modal} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import GenericTable from "../generic/Table/Table";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import * as React from "react";
-import MenuItem from "@mui/material/MenuItem";
 import ticketCatalogueAPIs from "../../api/TicketCatalogueAPIs";
 import {useLocation} from "react-router-dom";
 import Loading from '../generic/Loading/Loading.js';
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
 
 function AdminUserOrdersList(props) {
 
     const username = useLocation().state;
 
-    const [loading, setLoading] = useState(false);
-    const [openTicketsModal, setOpenTicketsModal] = useState(false);
-    const [openTravelerCardsModal, setOpenTravelerCardsModal] = useState(false);
-    const handleOpenTicketsDetailsModal = () => setOpenTicketsModal(true);
-    const handleCloseTicketsDetailsModal = () => setOpenTicketsModal(false);
-    const handleOpenTravelerCardsDetailsModal = () => setOpenTravelerCardsModal(true);
-    const handleCloseTravelerCardsDetailsModal = () => setOpenTravelerCardsModal(false);
-
+    const [loading, setLoading] = useState(true);
     const [userTicketOrders, setUserTicketOrders] = useState([])
     const [userTravelcardOrders, setUserTravelcardOrders] = useState([])
 
@@ -61,6 +38,7 @@ function AdminUserOrdersList(props) {
             })
             setUserTicketOrders(tmp1);
             setUserTravelcardOrders(tmp2);
+            setLoading(false)
         });
     }, []);
 
@@ -76,59 +54,21 @@ function AdminUserOrdersList(props) {
                         headCells={headCellsTickets}
                         rows={userTicketOrders}
                         nameTable={`${username}'s orders (Tickets)`}
-                        onClickElement={handleOpenTicketsDetailsModal}
                     />
-                    <Modal
-                        open={openTicketsModal}
-                        onClose={handleCloseTicketsDetailsModal}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Order Tickets Details:
-                            </Typography>
-                            <Typography id="modal-modal-description" sx={{mt: 2}}
-                                        onClick={() => console.log("Vai alla pagina my tickets a questo ticket")}>
-                                TicketID1
-                            </Typography>
-                        </Box>
-                    </Modal>
                 </Grid>
                 <Grid item xs={12}>
                     <GenericTable
                         headCells={headCellsTravelerCards}
                         rows={userTravelcardOrders}
                         nameTable={`${username}'s orders (Travelcards)`}
-                        onClickElement={handleOpenTravelerCardsDetailsModal}
                     />
-                    <Modal
-                        open={openTravelerCardsModal}
-                        onClose={handleCloseTravelerCardsDetailsModal}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Order Travelcard Details:
-                            </Typography>
-                            <Typography id="modal-modal-description" sx={{mt: 2}}>
-                                TravelerCardID1
-                            </Typography>
-                        </Box>
-                    </Modal>
-                </Grid>
-                <Grid item xs={12} style={{marginLeft: "3vw"}}>
-                    <Typography>
-                        Click an element to see further details.
-                    </Typography>
                 </Grid>
             </Grid>
         }
 
         </>
     );
-};
+}
 
 const headCellsTickets = [
     {
