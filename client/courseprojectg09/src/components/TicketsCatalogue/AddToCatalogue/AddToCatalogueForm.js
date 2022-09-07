@@ -11,8 +11,9 @@ import { IoTicketSharp } from "react-icons/io5";
 import './AddToCatalogueForm.css'
 import ticketCatalogueAPIs from "../../../api/TicketCatalogueAPIs";
 import TicketCatalogue from "../../../model/TicketCatalogue";
-import travelerAPI from "../../../api/TravelerAPI";
 import catalogueAPI from "../../../api/TicketCatalogueAPIs";
+import Typography from "@mui/material/Typography";
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -103,6 +104,7 @@ function AddForm(props) {
     const [minAge, setMinAge]=useState();
     const [maxAge, setMaxAge]=useState();
     const [price, setPrice] = useState("");
+    const [showError, setShowError] = useState(false);
 
     useEffect(() => {
         if(props.edit){
@@ -117,32 +119,44 @@ function AddForm(props) {
         event.preventDefault();
         const priceString = `${parseFloat(price).toFixed(2)}`
         console.log({ticketsType, allowedZones, priceString, minAge, maxAge})
-        if(!props.edit){
-            const ticketCatalogue = new TicketCatalogue(0, ticketsType, priceString, allowedZones, maxAge, minAge)
-            ticketCatalogueAPIs.addNewTicketToCatalogue(ticketCatalogue).then(r => {
-                    console.log(r);
-                    props.setDirty(true);
-                    props.setAddToCatalogueModal(false);
-                }
-            );
-        }else{
-            const ticketUpdate = {
-                ticketId: props.data.id,
-                type: ticketsType,
-                price: priceString,
-                zones: allowedZones,
-                minAge: minAge,
-                maxAge: maxAge
-            }
 
-            catalogueAPI.editTicketFromCatalogue(ticketUpdate)
-                .then(()=>{
-                    props.setDirty(true);
-                    props.setEdit(false);
-                    props.setAddToCatalogueModal(false);
-                }).catch(err => console.log(err))
+        if(checkAge()){
+            if(!props.edit){
+                const ticketCatalogue = new TicketCatalogue(0, ticketsType, priceString, allowedZones, maxAge, minAge)
+                ticketCatalogueAPIs.addNewTicketToCatalogue(ticketCatalogue).then(r => {
+                        console.log(r);
+                        props.setDirty(true);
+                        props.setAddToCatalogueModal(false);
+                    }
+                );
+            }else{
+                const ticketUpdate = {
+                    ticketId: props.data.id,
+                    type: ticketsType,
+                    price: priceString,
+                    zones: allowedZones,
+                    minAge: minAge,
+                    maxAge: maxAge
+                }
+
+                catalogueAPI.editTicketFromCatalogue(ticketUpdate)
+                    .then(()=>{
+                        props.setDirty(true);
+                        props.setEdit(false);
+                        props.setAddToCatalogueModal(false);
+                    }).catch(err => console.log(err))
+            }
+        }else{
+            setShowError(true);
         }
 
+
+    };
+
+    const checkAge = () => {
+        if(minAge && maxAge && maxAge > minAge){
+            return true
+        }else return (minAge && !maxAge) || (!minAge && maxAge) || (!minAge && !maxAge);
     };
 
     return (
@@ -211,7 +225,7 @@ function AddForm(props) {
                             />
                             <TextField
                                 id="minAge"
-                                label="min Age"
+                                label="Min Age"
                                 type="number"
                                 margin="normal"
                                 fullWidth
@@ -221,7 +235,7 @@ function AddForm(props) {
                             />
                             <TextField
                                 id="maxAge"
-                                label="max Age"
+                                label="Max Age"
                                 type="number"
                                 margin="normal"
                                 fullWidth
@@ -237,6 +251,13 @@ function AddForm(props) {
                             >
                                 {props.edit ? 'Edit ticket' : 'Add to Catalogue'}
                             </Button>
+                            {showError ?
+                                (
+                                    <Typography sx={{display: "block", color:"red", textAlign:"center"}}>
+                                        Max Age must be grater than Min Age!
+                                    </Typography>
+                                ) : ''
+                            }
                         </Box>
                     </Box>
                 </Container>
