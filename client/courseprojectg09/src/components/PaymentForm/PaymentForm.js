@@ -127,23 +127,29 @@ function PaymentForm(props) {
         if(holder){
             const owner = new Owner(holder.fiscal_code, holder.name, holder.surname, holder.address, `${holder.birthday}`, holder.telephone)
             ticketCatalogueAPIs.buyTravelcard(ticketId, selectedType, paymentInfo, owner).then( r =>{
-                console.log(r)
-                ticketCatalogueAPIs.getOrderbyId(r).then(order => {
-                    console.log(order);
-                    setPaymentResult(order.status);
-                    setOpenResultModal(true);
-                    handleResultModalText(order.status)
-                })
+                if(r["error"]){
+                    setErrorMessage(r["error"]);
+                    setShowError(true);
+                }else{
+                    ticketCatalogueAPIs.getOrderbyId(r).then(order => {
+                        setPaymentResult(order.status);
+                        setOpenResultModal(true);
+                        handleResultModalText(order.status)
+                    })
+                }
             })
         }else{
             ticketCatalogueAPIs.buyTickets(numberOfTickets, ticketId, selectedType, paymentInfo).then( r => {
-                console.log(r)
-                ticketCatalogueAPIs.getOrderbyId(r).then(order => {
-                    console.log(order);
-                    setPaymentResult(order.status);
-                    setOpenResultModal(true);
-                    handleResultModalText(order.status)
-                })
+                if(r["error"]){
+                    setErrorMessage(r["error"]);
+                    setShowError(true);
+                }else{
+                    ticketCatalogueAPIs.getOrderbyId(r).then(order => {
+                        setPaymentResult(order.status);
+                        setOpenResultModal(true);
+                        handleResultModalText(order.status)
+                    })
+                }
             })
         }
 
@@ -224,6 +230,13 @@ function PaymentForm(props) {
                             >
                                 Buy tickets
                             </Button>
+                            {showError ?
+                                (
+                                    <Typography sx={{display: "block", color:"red", textAlign:"center"}}>
+                                        {errorMessage}
+                                    </Typography>
+                                ) : ''
+                            }
                             <Modal
                                 open={openResultModal}
                                 onClose={handleCloseResultModal}

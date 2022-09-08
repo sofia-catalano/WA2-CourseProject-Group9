@@ -189,7 +189,11 @@ function buyTickets(numberOfTickets, ticketId, type, paymentInfo) {
                     resolve(string);
                 });
             } else {
-                reject();
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
             }
         }).catch((err) => reject(err));
     });
@@ -231,7 +235,11 @@ function buyTravelcard( ticketId, type, paymentInfo, owner) {
                     resolve(string);
                 });
             } else {
-                reject();
+                response.json().then((json) => {
+                    resolve(json);
+                }).catch((err) => {
+                    reject(err)
+                });
             }
         }).catch((err) => reject(err));
     });
