@@ -116,10 +116,11 @@ function PaymentForm(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         let expDate;
-        if(expirationDate.month().toString().length === 1){
-            expDate = `0${expirationDate.month() + 1}/${expirationDate.year().toString().slice(-2)}`
+        let expMonth = expirationDate.month() + 1;
+        if(expMonth.toString().length === 1){
+            expDate = `0${expMonth}/${expirationDate.year().toString().slice(-2)}`
         }else{
-            expDate = `${expirationDate.month() + 1}/${expirationDate.year().toString().slice(-2)}`
+            expDate = `${expMonth}/${expirationDate.year().toString().slice(-2)}`
         }
         console.log(expDate)
         const paymentInfo = new PaymentInfo(creditCardNumber, expDate, cvv, cardHolder)
