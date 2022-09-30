@@ -7,6 +7,15 @@
 3) Mariagrazia Paladino (https://github.com/Mariagrazia98)
 4) Francesco Policastro (https://github.com/francesco-plc)
 
+
+## Description
+
+Design and implement an web-based information system that supports a public transport company in managing the ticketing process and in granting automatic access to the vehicles.
+The system will support two kinds of human users, travelers and administrators, as well as a set of embedded systems controlling the turnstiles at the entrance and exit gates.
+Travelers will be able to register and create an account by providing a valid e-mail address they are in control of. Once logged in, travelers can manage their profile, buy tickets and travelcards, consult the list of their purchases and download single travel documents in the form of QRCodes encoding a JWS (JSON Web Signature).
+QRCode readers located at the entrance of the transport stations will validate the JWS and drive/block the corresponding turnstiles. Administrators can manage ticket and travelcard types, by creating, updating and modifying their properties (validity period, price, usage conditions) as well as access reports about purchases and transits, both of single travelers and of the company as a whole for a selectable time period.
+The system was implemented using a microservice architecture and guarantee the needed level of scalability and availability.
+
 ## Instructions for launching the application
 
 1. Configure the docker container, mount the docker-compose.yml .
